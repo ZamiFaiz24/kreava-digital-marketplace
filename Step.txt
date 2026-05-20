@@ -1,0 +1,23 @@
+Phase 1 — Branding & Landing Page
+Fokus:
+visual identity
+public marketplace feel
+Halaman:
+landing page
+marketplace explore
+product detail
+
+Phase 2 — Auth & Dashboard
+Baru masuk:
+login
+seller dashboard
+admin dashboard
+customer library
+
+Phase 3 — Business Features
+
+Lalu:
+checkout
+download
+analytics
+moderation
