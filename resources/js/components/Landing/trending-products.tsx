@@ -4,7 +4,17 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Star, ShoppingCart } from 'lucide-react'
 
-const products = [
+type LandingProduct = {
+  title: string
+  creator: string
+  rating: number
+  reviews: number
+  price: string
+  category: string
+  gradient?: string
+}
+
+const fallbackProducts: LandingProduct[] = [
   {
     title: 'Modern UI Kit Pro',
     creator: 'Design Studio X',
@@ -61,7 +71,14 @@ const products = [
   }
 ]
 
-export function TrendingProducts() {
+const gradientOptions = [
+  'from-primary/20 to-accent/20',
+  'from-accent/20 to-primary/20',
+  'from-primary/20 via-accent/20 to-primary/20',
+  'from-accent/20 via-primary/20 to-accent/20',
+]
+
+export function TrendingProducts({ products = fallbackProducts }: { products?: LandingProduct[] }) {
   return (
     <section className="py-20 md:py-28 bg-background relative">
       <div className="container mx-auto px-4">
@@ -80,13 +97,13 @@ export function TrendingProducts() {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
+          {products.map((product, index) => (
             <Card
-              key={product.title}
+              key={`${product.title}-${index}`}
               className="group overflow-hidden border border-border hover:border-primary/30 hover:shadow-lg transition-all cursor-pointer"
             >
               {/* Thumbnail */}
-              <div className={`aspect-video bg-gradient-to-br ${product.gradient} rounded-t-lg relative overflow-hidden group-hover:scale-105 transition-transform`}>
+              <div className={`aspect-video bg-gradient-to-br ${product.gradient ?? gradientOptions[index % gradientOptions.length]} rounded-t-lg relative overflow-hidden group-hover:scale-105 transition-transform`}>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <ShoppingCart size={48} className="text-foreground/10" />
                 </div>

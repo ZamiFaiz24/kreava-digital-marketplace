@@ -3,7 +3,15 @@
 import { Card } from '@/components/ui/card'
 import { Star } from 'lucide-react'
 
-const testimonials = [
+type LandingTestimonial = {
+  name: string
+  role: string
+  content: string
+  avatar: string
+  rating: number
+}
+
+const fallbackTestimonials: LandingTestimonial[] = [
   {
     name: 'Sarah Chen',
     role: 'UI/UX Designer',
@@ -48,7 +56,7 @@ const testimonials = [
   }
 ]
 
-export function Testimonials() {
+export function Testimonials({ testimonials = fallbackTestimonials }: { testimonials?: LandingTestimonial[] }) {
   return (
     <section className="py-20 md:py-28 bg-background relative">
       <div className="container mx-auto px-4">
@@ -64,9 +72,9 @@ export function Testimonials() {
 
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial) => (
+          {testimonials.map((testimonial, index) => (
             <Card
-              key={testimonial.name}
+              key={`${testimonial.name}-${index}`}
               className="p-6 border border-border hover:border-primary/30 hover:shadow-lg transition-all group"
             >
               {/* Rating */}

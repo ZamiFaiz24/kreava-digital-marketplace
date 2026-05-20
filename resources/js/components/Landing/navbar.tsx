@@ -13,11 +13,17 @@ export function Navbar() {
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-            <span className="font-bold text-lg text-primary-foreground">K</span>
-          </div>
-          <span className="font-bold text-xl text-foreground hidden sm:inline">KREAVA</span>
+        <div className="flex items-center gap-3">
+          <img
+            src="/images/Logo.png"
+            alt="KREAVA mark"
+            className="h-10 w-10 object-contain object-bottom"
+          />
+          <img
+            src="/images/Brand.png"
+            alt="KREAVA"
+            className="hidden h-9 w-[180px] object-contain object-bottom sm:block"
+          />
         </div>
 
         {/* Desktop Navigation */}

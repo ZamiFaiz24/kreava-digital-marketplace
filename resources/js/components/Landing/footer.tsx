@@ -11,11 +11,17 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           {/* Brand */}
           <div className="md:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <span className="font-bold text-lg text-primary-foreground">K</span>
-              </div>
-              <span className="font-bold text-xl text-foreground">KREAVA</span>
+            <div className="mb-4 flex items-center gap-3">
+              <img
+                src="/images/Logo.png"
+                alt="KREAVA mark"
+                className="h-10 w-10 object-contain object-bottom"
+              />
+              <img
+                src="/images/Brand.png"
+                alt="KREAVA"
+                className="h-8 w-[165px] object-contain object-bottom"
+              />
             </div>
             <p className="text-sm text-foreground/60 mb-6">
               Empowering digital creators to monetize their work and build sustainable businesses.

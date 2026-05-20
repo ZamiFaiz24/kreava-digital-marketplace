@@ -3,7 +3,14 @@
 import { Card } from '@/components/ui/card'
 import { ArrowRight } from 'lucide-react'
 
-const categories = [
+type LandingCategory = {
+  title: string
+  description: string
+  icon?: string
+  gradient?: string
+}
+
+const fallbackCategories: LandingCategory[] = [
   {
     title: 'UI Kits',
     description: 'Complete design systems and component libraries',
@@ -42,7 +49,7 @@ const categories = [
   }
 ]
 
-export function CategoriesSection() {
+export function CategoriesSection({ categories = fallbackCategories }: { categories?: LandingCategory[] }) {
   return (
     <section id="categories" className="py-20 md:py-28 bg-background relative">
       <div className="container mx-auto px-4">
@@ -56,13 +63,13 @@ export function CategoriesSection() {
 
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <Card
-              key={category.title}
+              key={`${category.title}-${index}`}
               className="group relative overflow-hidden p-6 cursor-pointer transition-all hover:shadow-lg border border-border hover:border-primary/30"
             >
               {/* Gradient Background */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-5 transition-opacity`} />
+              <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient ?? 'from-primary to-accent'} opacity-0 group-hover:opacity-5 transition-opacity`} />
               
               <div className="relative z-10">
                 {/* Icon */}
