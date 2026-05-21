@@ -31,7 +31,7 @@ class PageController extends Controller
             ->orderByDesc('products_count')
             ->limit(6)
             ->get()
-            ->map(fn ($category) => [
+            ->map(fn($category) => [
                 'title' => $category->name,
                 'description' => $categoryDescriptions[$category->slug] ?? 'Explore premium digital assets from top creators.',
                 'icon' => strtoupper(substr($category->name, 0, 1)),
@@ -48,7 +48,7 @@ class PageController extends Controller
             ->latest()
             ->limit(6)
             ->get()
-            ->map(fn ($product) => [
+            ->map(fn($product) => [
                 'title' => $product->title,
                 'creator' => $product->seller?->store_name ?? 'Independent Creator',
                 'rating' => round((float) ($product->reviews_avg_rating ?? 0), 1),
@@ -92,7 +92,7 @@ class PageController extends Controller
     public function marketplace(Request $request)
     {
         $query = Product::query()
-            ->with(['seller', 'category'])
+            ->with(['seller', 'category', 'images'])
             ->withCount('reviews')
             ->withAvg('reviews as reviews_avg_rating', 'rating')
             ->where('status', 'published');
@@ -114,16 +114,25 @@ class PageController extends Controller
         $products = $query->latest()->paginate(12);
 
         $products->getCollection()->transform(function ($product) {
+            $images = $product->images
+                ->map(fn($image) => [
+                    'id' => $image->id,
+                    'url' => $image->url,
+                    'alt' => $product->title,
+                ])
+                ->values();
+
             return [
                 'id' => $product->id,
                 'slug' => $product->slug,
                 'title' => $product->title,
-                'thumbnail' => $product->thumbnail ?? '/images/Logo.png',
+                'thumbnail' => $images->first()['url'] ?? $product->thumbnail ?? '/images/Brand.png',
                 'price' => (float) $product->price,
                 'old_price' => null,
                 'rating' => round((float) ($product->reviews_avg_rating ?? 0), 1),
                 'reviews_count' => (int) $product->reviews_count,
                 'trending' => (bool) $product->is_featured,
+                'images' => $images,
                 'category' => [
                     'id' => $product->category?->id,
                     'name' => $product->category?->name ?? 'Digital Product',
@@ -142,7 +151,7 @@ class PageController extends Controller
             ->withCount('products')
             ->orderBy('name')
             ->get()
-            ->map(fn ($category) => [
+            ->map(fn($category) => [
                 'id' => $category->id,
                 'name' => $category->name,
                 'slug' => $category->slug,

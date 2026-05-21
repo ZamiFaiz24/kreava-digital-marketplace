@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Link } from '@inertiajs/react'
 import { LayoutGrid, List } from 'lucide-react'
 import type { MarketplacePageProps } from '@/types/marketplace'
 import PageHeader from '@/components/shared/page-header'
@@ -18,7 +19,8 @@ export default function MarketplaceScreen({
 }: MarketplacePageProps) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [searchQuery, setSearchQuery] = useState(filters.query || '')
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(filters.category)
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
+  filters.category ?? undefined)  
   const [sortBy, setSortBy] = useState(filters.sort || 'newest')
 
   const handleSearch = (query: string) => {
@@ -40,6 +42,14 @@ export default function MarketplaceScreen({
       <PageHeader
         title="Jelajahi Produk"
         description="Temukan UI kit, template, icon, dan aset digital terbaik dari para kreator berbakat"
+        action={
+          <Link
+            href={route('landing')}
+            className="inline-flex items-center rounded-lg border border-input bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            Kembali ke Landing
+          </Link>
+        }
       />
 
       {/* Main Content */}

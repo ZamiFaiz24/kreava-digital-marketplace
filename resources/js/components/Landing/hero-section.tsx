@@ -1,5 +1,6 @@
 'use client'
 
+import { Link } from '@inertiajs/react'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Sparkles } from 'lucide-react'
 
@@ -33,16 +34,19 @@ export function HeroSection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 text-base group" size="lg">
-              Start Selling Today
-              <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition" />
+            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 text-base group" size="lg">
+              <Link href={route('marketplace')}>
+                Explore Marketplace
+                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition" />
+              </Link>
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              asChild
+              variant="outline"
               className="border-primary/30 text-primary hover:bg-primary/5 px-8 h-12 text-base"
               size="lg"
             >
-              Watch Demo
+              <Link href={route('marketplace')}>Watch Demo</Link>
             </Button>
           </div>
 

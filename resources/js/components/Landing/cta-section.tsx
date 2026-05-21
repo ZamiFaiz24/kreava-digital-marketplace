@@ -1,5 +1,6 @@
 'use client'
 
+import { Link } from '@inertiajs/react'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Zap } from 'lucide-react'
 
@@ -42,16 +43,19 @@ export function CTASection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 text-base group" size="lg">
-              Become a Creator
-              <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition" />
+            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 text-base group" size="lg">
+              <Link href={route('marketplace')}>
+                Become a Creator
+                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition" />
+              </Link>
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              asChild
+              variant="outline"
               className="border-primary/30 text-primary hover:bg-primary/5 px-8 h-12 text-base"
               size="lg"
             >
-              Learn More
+              <Link href={route('marketplace')}>Browse Products</Link>
             </Button>
           </div>
 
