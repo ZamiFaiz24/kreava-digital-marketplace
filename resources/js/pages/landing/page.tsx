@@ -1,13 +1,13 @@
 import LandingLayout from '@/layouts/landing-layout'
-import { Navbar } from '@/components/Landing/navbar'
-import { HeroSection } from '@/components/Landing/hero-section'
-import { CategoriesSection } from '@/components/Landing/categories-section'
-import { TrendingProducts } from '@/components/Landing/trending-products'
-import { DashboardPreview } from '@/components/Landing/dashboard-preview'
-import { WhyKreava } from '@/components/Landing/why-kreava'
-import { Testimonials } from '@/components/Landing/testimonials'
-import { CTASection } from '@/components/Landing/cta-section'
-import { Footer } from '@/components/Landing/footer'
+import { Navbar } from '@/components/landing/navbar'
+import { HeroSection } from '@/components/landing/hero-section'
+import { CategoriesSection } from '@/components/landing/categories-section'
+import { TrendingProducts } from '@/components/landing/trending-products'
+import { DashboardPreview } from '@/components/landing/dashboard-preview'
+import { WhyKreava } from '@/components/landing/why-kreava'
+import { Testimonials } from '@/components/landing/testimonials'
+import { CTASection } from '@/components/landing/cta-section'
+import { Footer } from '@/components/landing/footer'
 
 type LandingCategory = {
   title: string

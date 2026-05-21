@@ -2,6 +2,7 @@
 
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from '@inertiajs/react'
 import { Button } from '@/components/ui/button'
 
 export function Navbar() {
@@ -28,9 +29,9 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          <a href="#marketplace" className="text-sm text-foreground/70 hover:text-foreground transition">
+          <Link href={route('marketplace')} className="text-sm text-foreground/70 hover:text-foreground transition">
             Marketplace
-          </a>
+          </Link>
           <a href="#explore" className="text-sm text-foreground/70 hover:text-foreground transition">
             Explore
           </a>
@@ -65,9 +66,9 @@ export function Navbar() {
       {isOpen && (
         <div className="md:hidden border-t border-border bg-background">
           <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-            <a href="#marketplace" className="text-sm text-foreground/70 hover:text-foreground transition">
+            <Link href={route('marketplace')} className="text-sm text-foreground/70 hover:text-foreground transition">
               Marketplace
-            </a>
+            </Link>
             <a href="#explore" className="text-sm text-foreground/70 hover:text-foreground transition">
               Explore
             </a>
