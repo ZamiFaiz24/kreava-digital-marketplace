@@ -8,7 +8,7 @@ interface RelatedProductsProps {
 
 export default function RelatedProducts({
   products,
-  title = 'Produk Terkait',
+  title = 'Related Products',
 }: RelatedProductsProps) {
   if (products.length === 0) {
     return null

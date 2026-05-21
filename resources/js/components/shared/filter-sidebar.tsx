@@ -14,17 +14,17 @@ interface FilterSidebarProps {
 }
 
 const PRICE_RANGES = [
-  { label: 'Rp 0 - Rp 100rb', min: 0, max: 100000 },
-  { label: 'Rp 100rb - Rp 500rb', min: 100000, max: 500000 },
-  { label: 'Rp 500rb - Rp 1jt', min: 500000, max: 1000000 },
-  { label: 'Di atas Rp 1jt', min: 1000000, max: Infinity },
+  { label: '$0 - $100', min: 0, max: 100 },
+  { label: '$100 - $500', min: 100, max: 500 },
+  { label: '$500 - $1,000', min: 500, max: 1000 },
+  { label: 'Above $1,000', min: 1000, max: Infinity },
 ]
 
 const RATINGS = [
-  { label: '5 Bintang', value: 5 },
-  { label: '4+ Bintang', value: 4 },
-  { label: '3+ Bintang', value: 3 },
-  { label: '2+ Bintang', value: 2 },
+  { label: '5 Stars', value: 5 },
+  { label: '4+ Stars', value: 4 },
+  { label: '3+ Stars', value: 3 },
+  { label: '2+ Stars', value: 2 },
 ]
 
 export default function FilterSidebar({
@@ -56,7 +56,7 @@ export default function FilterSidebar({
           onClick={() => toggleSection('category')}
           className="flex w-full items-center justify-between font-semibold text-foreground hover:text-primary"
         >
-          Kategori
+          Categories
           <ChevronDown
             className={`h-4 w-4 transition-transform ${openSections.category ? 'rotate-180' : ''}`}
           />
@@ -72,7 +72,7 @@ export default function FilterSidebar({
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              Semua Kategori
+              All Categories
             </button>
 
             {categories.map((category) => (
@@ -99,7 +99,7 @@ export default function FilterSidebar({
           onClick={() => toggleSection('price')}
           className="flex w-full items-center justify-between font-semibold text-foreground hover:text-primary"
         >
-          Harga
+          Price
           <ChevronDown
             className={`h-4 w-4 transition-transform ${openSections.price ? 'rotate-180' : ''}`}
           />
@@ -142,7 +142,7 @@ export default function FilterSidebar({
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              Semua Rating
+              All Ratings
             </button>
 
             {RATINGS.map((rating) => (

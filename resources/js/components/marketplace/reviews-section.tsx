@@ -17,7 +17,7 @@ export default function ReviewsSection({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-foreground">Ulasan Pelanggan</h2>
+      <h2 className="text-2xl font-bold text-foreground">Customer Reviews</h2>
 
       {/* Rating Summary */}
       <div className="rounded-xl border border-border bg-card p-6">
@@ -36,7 +36,7 @@ export default function ReviewsSection({
                 />
               ))}
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">Berdasarkan {totalReviews} ulasan</p>
+            <p className="mt-2 text-sm text-muted-foreground">Based on {totalReviews} reviews</p>
           </div>
 
           {/* Rating Distribution */}
@@ -47,7 +47,7 @@ export default function ReviewsSection({
 
               return (
                 <div key={stars} className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{stars} bintang</span>
+                  <span className="text-sm text-muted-foreground">{stars} stars</span>
                   <div className="h-2 flex-1 rounded-full bg-muted">
                     <div
                       className="h-full rounded-full bg-yellow-400"
@@ -105,7 +105,7 @@ export default function ReviewsSection({
                     {review.helpful_count && review.helpful_count > 0 && (
                       <div className="mt-3">
                         <button className="text-xs text-muted-foreground hover:text-foreground">
-                          Membantu ({review.helpful_count})
+                          Helpful ({review.helpful_count})
                         </button>
                       </div>
                     )}
@@ -117,7 +117,7 @@ export default function ReviewsSection({
         </div>
       ) : (
         <div className="rounded-lg border border-dashed border-border bg-card p-8 text-center">
-          <p className="text-sm text-muted-foreground">Belum ada ulasan</p>
+          <p className="text-sm text-muted-foreground">No reviews yet</p>
         </div>
       )}
     </div>

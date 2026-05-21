@@ -36,6 +36,8 @@ export default function ProductDetailScreen({
   const images = product.images && product.images.length > 0
     ? product.images
     : [{ url: product.thumbnail, alt: product.title }]
+  const categoryName = typeof product.category === 'string' ? product.category : product.category.name
+  const categorySlug = typeof product.category === 'string' ? product.category : product.category.slug
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,8 +49,8 @@ export default function ProductDetailScreen({
               Marketplace
             </a>
             <span className="text-muted-foreground">/</span>
-            <a href={`/marketplace?category=${product.category}`} className="text-primary hover:underline">
-              {typeof product.category === 'string' ? product.category : product.category.name}
+            <a href={`/marketplace?category=${categorySlug}`} className="text-primary hover:underline">
+              {categoryName}
             </a>
             <span className="text-muted-foreground">/</span>
             <span className="text-foreground">{product.title}</span>
@@ -70,11 +72,11 @@ export default function ProductDetailScreen({
             <div>
               <h1 className="text-3xl font-bold text-foreground">{product.title}</h1>
               <p className="mt-2 text-sm text-muted-foreground">
-                Ditambahkan {formatDate(product.created_at || '')}
+                Added {formatDate(product.created_at || '')}
               </p>
               {product.downloads_count !== undefined && (
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {product.downloads_count.toLocaleString('id-ID')} unduhan
+                  {product.downloads_count.toLocaleString('en-US')} downloads
                 </p>
               )}
             </div>
@@ -99,7 +101,7 @@ export default function ProductDetailScreen({
                     ))}
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {product.reviews_count} ulasan
+                    {product.reviews_count} reviews
                   </p>
                 </div>
               </div>
@@ -107,7 +109,7 @@ export default function ProductDetailScreen({
 
             {/* Price Card */}
             <div className="rounded-xl border border-border bg-gradient-to-br from-primary/10 to-accent/10 p-6">
-              <p className="text-sm text-muted-foreground">Harga</p>
+              <p className="text-sm text-muted-foreground">Price</p>
               <p className="text-4xl font-bold text-primary">{formatPrice(product.price)}</p>
               {product.old_price && (
                 <p className="mt-1 text-sm line-through text-muted-foreground">
@@ -120,7 +122,7 @@ export default function ProductDetailScreen({
             <div className="space-y-3">
               <button className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
                 <Download className="h-5 w-5" />
-                Beli & Unduh
+                Buy & Download
               </button>
 
               <div className="grid grid-cols-2 gap-3">
@@ -138,7 +140,7 @@ export default function ProductDetailScreen({
 
                 <button className="flex items-center justify-center gap-2 rounded-lg border border-input px-4 py-2 hover:border-primary hover:bg-primary/5">
                   <Share2 className="h-5 w-5" />
-                  <span className="text-sm font-medium">Bagikan</span>
+                  <span className="text-sm font-medium">Share</span>
                 </button>
               </div>
             </div>
@@ -156,7 +158,7 @@ export default function ProductDetailScreen({
         {/* Description Section */}
         {product.long_description && (
           <div className="mt-12 space-y-4 rounded-xl border border-border bg-card p-6">
-            <h2 className="text-2xl font-bold text-foreground">Deskripsi</h2>
+            <h2 className="text-2xl font-bold text-foreground">Description</h2>
             <div
               className="prose prose-sm max-w-none text-foreground dark:prose-invert"
               dangerouslySetInnerHTML={{ __html: product.long_description }}

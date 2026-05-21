@@ -9,7 +9,7 @@ interface SearchInputProps {
 }
 
 export default function SearchInput({
-  placeholder = 'Cari produk, UI kit, template...',
+  placeholder = 'Search products, UI kits, templates...',
   value = '',
   onChange,
   onSubmit,

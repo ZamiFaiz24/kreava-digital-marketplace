@@ -1,17 +1,17 @@
 export function formatNumber(value: number): string {
-  return new Intl.NumberFormat('id-ID').format(value)
+  return new Intl.NumberFormat('en-US').format(value)
 }
 
 export function formatPrice(value: number): string {
-  return new Intl.NumberFormat('id-ID', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'IDR',
+    currency: 'USD',
     maximumFractionDigits: 0,
   }).format(value)
 }
 
 export function formatPriceSimple(value: number): string {
-  return `Rp${new Intl.NumberFormat('id-ID', {
+  return `$${new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 0,
   }).format(value)}`
 }
@@ -19,7 +19,7 @@ export function formatPriceSimple(value: number): string {
 export function formatDate(value: string): string {
   if (!value) return '-'
 
-  return new Intl.DateTimeFormat('id-ID', {
+  return new Intl.DateTimeFormat('en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -33,13 +33,13 @@ export function formatRelativeDate(value: string): string {
   const diffMs = Date.now() - date.getTime()
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
 
-  if (diffDays <= 0) return 'Hari ini'
-  if (diffDays === 1) return 'Kemarin'
-  if (diffDays < 7) return `${diffDays} hari lalu`
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)} bulan lalu`
+  if (diffDays <= 0) return 'Today'
+  if (diffDays === 1) return 'Yesterday'
+  if (diffDays < 7) return `${diffDays} days ago`
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`
+  if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`
 
-  return `${Math.floor(diffDays / 365)} tahun lalu`
+  return `${Math.floor(diffDays / 365)} years ago`
 }
 
 export function generateStars(rating: number): number[] {

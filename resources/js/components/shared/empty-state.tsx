@@ -8,8 +8,8 @@ interface EmptyStateProps {
 }
 
 export default function EmptyState({
-  title = 'Tidak ada produk ditemukan',
-  description = 'Coba ubah filter atau cari dengan kata kunci yang berbeda',
+  title = 'No products found',
+  description = 'Try adjusting the filters or searching with different keywords',
   icon,
   action,
 }: EmptyStateProps) {

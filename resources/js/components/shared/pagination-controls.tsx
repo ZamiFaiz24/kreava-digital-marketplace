@@ -61,9 +61,9 @@ export default function PaginationControls({
   return (
     <div className="flex flex-col items-center justify-between gap-4 border-t border-border px-4 py-6 sm:flex-row">
       <p className="text-sm text-muted-foreground">
-        Menampilkan <span className="font-medium text-foreground">{startItem}</span> hingga{' '}
-        <span className="font-medium text-foreground">{endItem}</span> dari{' '}
-        <span className="font-medium text-foreground">{total}</span> produk
+        Showing <span className="font-medium text-foreground">{startItem}</span> to{' '}
+        <span className="font-medium text-foreground">{endItem}</span> of{' '}
+        <span className="font-medium text-foreground">{total}</span> products
       </p>
 
       <div className="flex items-center gap-1">

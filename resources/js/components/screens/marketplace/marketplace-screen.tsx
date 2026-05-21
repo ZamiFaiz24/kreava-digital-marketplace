@@ -40,14 +40,14 @@ export default function MarketplaceScreen({
     <div className="min-h-screen bg-background">
       {/* Header */}
       <PageHeader
-        title="Jelajahi Produk"
-        description="Temukan UI kit, template, icon, dan aset digital terbaik dari para kreator berbakat"
+        title="Browse Products"
+        description="Discover UI kits, templates, icons, and premium digital assets from talented creators"
         action={
           <Link
             href={route('landing')}
             className="inline-flex items-center rounded-lg border border-input bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
           >
-            Kembali ke Landing
+            Back to Home
           </Link>
         }
       />
@@ -75,7 +75,7 @@ export default function MarketplaceScreen({
             <div className="mb-8 flex items-center justify-between gap-4">
               <div>
                 <p className="text-sm text-muted-foreground">
-                  {pagination.total} produk ditemukan
+                  {pagination.total} products found
                 </p>
               </div>
 
@@ -86,11 +86,11 @@ export default function MarketplaceScreen({
                   onChange={(e) => handleSortChange(e.target.value)}
                   className="rounded-lg border border-input bg-card px-3 py-2 text-sm text-foreground"
                 >
-                  <option value="newest">Terbaru</option>
+                  <option value="newest">Newest</option>
                   <option value="trending">Trending</option>
-                  <option value="price_low">Harga: Rendah ke Tinggi</option>
-                  <option value="price_high">Harga: Tinggi ke Rendah</option>
-                  <option value="rating">Rating Tertinggi</option>
+                  <option value="price_low">Price: Low to High</option>
+                  <option value="price_high">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
                 </select>
 
                 {/* View Mode Toggle */}
@@ -149,8 +149,8 @@ export default function MarketplaceScreen({
               </>
             ) : (
               <EmptyState
-                title="Produk tidak ditemukan"
-                description="Coba ubah filter atau cari dengan kata kunci yang berbeda"
+                title="No products found"
+                description="Try adjusting the filters or search with different keywords"
               />
             )}
           </main>
