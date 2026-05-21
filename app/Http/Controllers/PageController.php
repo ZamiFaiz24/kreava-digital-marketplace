@@ -186,4 +186,120 @@ class PageController extends Controller
     {
         return Inertia::render('welcome');
     }
+
+    /**
+     * Show a single product detail page.
+     */
+    public function product($slug)
+    {
+        $product = Product::query()
+            ->with(['seller', 'category', 'images', 'reviews.user'])
+            ->withCount('reviews')
+            ->withAvg('reviews as reviews_avg_rating', 'rating')
+            ->where('slug', $slug)
+            ->where('status', 'published')
+            ->firstOrFail();
+
+        $images = $product->images
+            ->map(fn($image) => [
+                'id' => $image->id,
+                'url' => $image->url,
+                'alt' => $product->title,
+            ])
+            ->values();
+
+        $mappedProduct = [
+            'id' => $product->id,
+            'slug' => $product->slug,
+            'title' => $product->title,
+            'thumbnail' => $images->first()['url'] ?? $product->thumbnail ?? '/images/Brand.png',
+            'price' => (float) $product->price,
+            'old_price' => null,
+            'rating' => round((float) ($product->reviews_avg_rating ?? 0), 1),
+            'reviews_count' => (int) $product->reviews_count,
+            'trending' => (bool) $product->is_featured,
+            'images' => $images,
+            'category' => [
+                'id' => $product->category?->id,
+                'name' => $product->category?->name ?? 'Digital Product',
+                'slug' => $product->category?->slug ?? 'digital-product',
+            ],
+            'seller' => [
+                'id' => $product->seller?->id,
+                'name' => $product->seller?->store_name ?? 'Independent Creator',
+                'slug' => $product->seller?->slug ?? '',
+                'avatar' => $product->seller?->logo,
+            ],
+            'downloads_count' => $product->downloads_count ?? 0,
+            'long_description' => $product->long_description ?? null,
+            'created_at' => $product->created_at?->toDateTimeString(),
+        ];
+
+        $reviews = $product->reviews()
+            ->with('user')
+            ->latest()
+            ->limit(10)
+            ->get()
+            ->map(fn($r) => [
+                'id' => $r->id,
+                'author' => $r->user?->name ?? 'Buyer',
+                'avatar' => strtoupper(substr($r->user?->name ?? 'B', 0, 1)),
+                'rating' => (int) $r->rating,
+                'comment' => $r->comment,
+                'created_at' => $r->created_at->toDateTimeString(),
+            ])
+            ->values();
+
+        $rating_breakdown = [
+            'five_star' => $product->reviews()->where('rating', 5)->count(),
+            'four_star' => $product->reviews()->where('rating', 4)->count(),
+            'three_star' => $product->reviews()->where('rating', 3)->count(),
+            'two_star' => $product->reviews()->where('rating', 2)->count(),
+            'one_star' => $product->reviews()->where('rating', 1)->count(),
+        ];
+
+        $related = Product::query()
+            ->where('id', '!=', $product->id)
+            ->whereHas('category', fn($q) => $q->where('id', $product->category?->id))
+            ->where('status', 'published')
+            ->with(['seller', 'images', 'category'])
+            ->withCount('reviews')
+            ->withAvg('reviews as reviews_avg_rating', 'rating')
+            ->latest()
+            ->limit(4)
+            ->get()
+            ->map(function ($p) {
+                $imgs = $p->images->map(fn($img) => ['id' => $img->id, 'url' => $img->url, 'alt' => $p->title])->values();
+                return [
+                    'id' => $p->id,
+                    'slug' => $p->slug,
+                    'title' => $p->title,
+                    'thumbnail' => $imgs->first()['url'] ?? $p->thumbnail ?? '/images/Brand.png',
+                    'price' => (float) $p->price,
+                    'rating' => round((float) ($p->reviews_avg_rating ?? 0), 1),
+                    'reviews_count' => (int) ($p->reviews_count ?? 0),
+
+                    'seller' => [
+                        'id' => $p->seller?->id,
+                        'name' => $p->seller?->store_name ?? 'Independent Creator',
+                        'slug' => $p->seller?->slug ?? '',
+                        'avatar' => $p->seller?->logo,
+                    ],
+
+                    'category' => [
+                        'id' => $p->category?->id,
+                        'name' => $p->category?->name ?? 'Digital Product',
+                        'slug' => $p->category?->slug ?? 'digital-product',
+                    ],
+                ];
+            })
+            ->values();
+
+        return Inertia::render('marketplace/product', [
+            'product' => $mappedProduct,
+            'reviews' => $reviews,
+            'rating_breakdown' => $rating_breakdown,
+            'related_products' => $related,
+        ]);
+    }
 }
