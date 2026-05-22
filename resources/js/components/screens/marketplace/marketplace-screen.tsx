@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { Link } from '@inertiajs/react'
 import { LayoutGrid, List } from 'lucide-react'
 import type { MarketplacePageProps } from '@/types/marketplace'
 import PageHeader from '@/components/shared/page-header'
@@ -42,14 +41,6 @@ export default function MarketplaceScreen({
       <PageHeader
         title="Browse Products"
         description="Discover UI kits, templates, icons, and premium digital assets from talented creators"
-        action={
-          <Link
-            href={route('landing')}
-            className="inline-flex items-center rounded-lg border border-input bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-          >
-            Back to Home
-          </Link>
-        }
       />
 
       {/* Main Content */}

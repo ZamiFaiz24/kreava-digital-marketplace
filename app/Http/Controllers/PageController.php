@@ -188,6 +188,14 @@ class PageController extends Controller
     }
 
     /**
+     * Show the creators page.
+     */
+    public function creators()
+    {
+        return Inertia::render('creators/page');
+    }
+
+    /**
      * Show a single product detail page.
      */
     public function product($slug)

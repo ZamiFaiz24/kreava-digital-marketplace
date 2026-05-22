@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import MarketplaceHeader from '@/components/layout/marketplace-header'
+import PublicNavbar from '@/components/layout/public-navbar'
 
 interface PublicLayoutProps {
   children: ReactNode
@@ -10,7 +10,7 @@ export default function PublicLayout({
 }: PublicLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
-      <MarketplaceHeader />
+      <PublicNavbar variant="marketplace" />
 
       <main>
         {children}

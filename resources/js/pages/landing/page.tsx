@@ -1,5 +1,5 @@
 import LandingLayout from '@/layouts/landing-layout'
-import { Navbar } from '@/components/landing/navbar'
+import PublicNavbar from '@/components/layout/public-navbar'
 import { HeroSection } from '@/components/landing/hero-section'
 import { CategoriesSection } from '@/components/landing/categories-section'
 import { TrendingProducts } from '@/components/landing/trending-products'
@@ -43,7 +43,7 @@ export default function LandingPage({ categories, trendingProducts, testimonials
   return (
     <LandingLayout title="KREAVA - Create. Sell. Inspire.">
       <main className="min-h-screen bg-background">
-        <Navbar />
+        <PublicNavbar variant="landing" />
         <HeroSection />
         <CategoriesSection categories={categories} />
         <TrendingProducts products={trendingProducts} />

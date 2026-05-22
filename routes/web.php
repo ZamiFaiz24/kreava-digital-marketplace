@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PageController::class, 'landing'])->name('landing');
 Route::get('/marketplace', [PageController::class, 'marketplace'])->name('marketplace');
 Route::get('/products/{slug}', [PageController::class, 'product'])->name('product.show');
+Route::get('/creators', [PageController::class, 'creators'])->name('creators');
 Route::get('/welcome', [PageController::class, 'welcome'])->name('welcome');
 
 Route::middleware(['auth'])->group(function () {
