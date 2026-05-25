@@ -26,15 +26,29 @@ class PageController extends Controller
             'music-audio' => 'Music, SFX, and audio assets for content',
         ];
 
+        $categoryLinks = [
+            'ui-kits' => '/marketplace?category=ui-kits',
+            'templates' => '/marketplace?category=templates',
+            'source-code' => '/marketplace?category=source-code',
+            'ebooks' => '/marketplace?category=ebooks',
+            'icons' => '/marketplace?category=icons',
+            'mockups' => '/marketplace?category=mockups',
+            'fonts' => '/marketplace?category=fonts',
+            'music-audio' => '/marketplace?category=music-audio',
+        ];
+
         $categories = Category::query()
             ->withCount('products')
             ->orderByDesc('products_count')
-            ->limit(6)
+            ->limit(8)
             ->get()
             ->map(fn($category) => [
+                'slug' => $category->slug,
                 'title' => $category->name,
                 'description' => $categoryDescriptions[$category->slug] ?? 'Explore premium digital assets from top creators.',
-                'icon' => strtoupper(substr($category->name, 0, 1)),
+                'icon' => $category->icon,
+                'href' => $categoryLinks[$category->slug] ?? '/marketplace?category=' . $category->slug,
+                'count' => (int) $category->products_count,
             ])
             ->values();
 

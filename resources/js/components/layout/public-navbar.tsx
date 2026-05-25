@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Link } from '@inertiajs/react'
-import { Menu, X, Search, ShoppingCart, Heart, ChevronDown } from 'lucide-react'
+import { Menu, X, Search, ShoppingCart, Heart, ChevronDown, ArrowRight } from 'lucide-react'
+import type { LandingCategory } from '@/types/landing'
+import { getCategoryIcon } from '@/lib/category-icons'
 
 type PublicNavbarVariant = 'landing' | 'marketplace'
 
@@ -17,9 +19,10 @@ const categoryLinks = [
 
 interface PublicNavbarProps {
   variant?: PublicNavbarVariant
+  categories?: LandingCategory[]
 }
 
-export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps) {
+export default function PublicNavbar({ variant = 'landing', categories = [] }: PublicNavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
@@ -36,9 +39,17 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
   const isMarketplace = variant === 'marketplace'
   const primaryNavHref = isMarketplace ? route('landing') : route('marketplace')
   const primaryNavLabel = isMarketplace ? 'Home' : 'Marketplace'
+  const landingCategories = categories.length > 0 ? categories : []
 
   return (
-    <header
+    <>
+      {variant === 'landing' && (
+        <div className="bg-primary/95 text-primary-foreground text-sm text-center">
+          <div className="mx-auto max-w-7xl px-4 py-1 sm:px-6 lg:px-8">New: Free templates this month — <a href="/marketplace?tag=new" className="underline">Explore now</a></div>
+        </div>
+      )}
+
+      <header
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         isMarketplace
           ? isScrolled
@@ -54,7 +65,11 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
           <img
             src="/images/Logo/LogoFull.png"
             alt="KREAVA"
-            className="-ml-4 h-[120px] w-[120px] object-contain sm:-ml-5 sm:h-[156px] sm:w-[156px]"
+            className={
+              isMarketplace
+                ? 'h-10 w-10 object-contain sm:h-12 sm:w-12'
+                : '-ml-4 h-[120px] w-[120px] object-contain sm:-ml-5 sm:h-[156px] sm:w-[156px]'
+            }
           />
         </Link>
 
@@ -62,9 +77,6 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
           <Link href={primaryNavHref} className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground">
             {primaryNavLabel}
           </Link>
-          <a href={isMarketplace ? '/marketplace' : '#explore'} className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground">
-            Explore
-          </a>
           {isMarketplace ? (
             <div className="group relative">
               <button className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground">
@@ -85,9 +97,84 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
               </div>
             </div>
           ) : (
-            <a href="#pricing" className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground">
-              Pricing
-            </a>
+            <div className="group relative">
+              <button className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground">
+                Categories
+                <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+              </button>
+
+              <div className="invisible absolute left-1/2 top-full z-50 mt-3 w-[min(92vw,960px)] -translate-x-1/2 translate-y-2 rounded-[28px] border border-border bg-background p-4 opacity-0 shadow-2xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+                  <div>
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">Browse categories</p>
+                        <h3 className="mt-1 text-xl font-bold text-foreground">Explore by category</h3>
+                      </div>
+                      <Link href={route('marketplace')} className="inline-flex items-center gap-2 text-sm font-medium text-primary">
+                        View all
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
+                      {(landingCategories.length > 0 ? landingCategories : categoryLinks.map((item) => ({
+                        slug: item.href,
+                        title: item.label,
+                        description: 'Browse products in this category',
+                        icon: 'sparkles',
+                        href: item.href,
+                        count: undefined,
+                      }))).map((category) => {
+                        const Icon = getCategoryIcon(category.icon)
+
+                        return (
+                          <Link
+                            key={category.slug}
+                            href={category.href}
+                            className="group/item rounded-2xl border border-border bg-muted/30 p-4 transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted/60"
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                                <Icon className="h-5 w-5" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="font-medium text-foreground">{category.title}</span>
+                                  {category.count !== undefined && (
+                                    <span className="rounded-full bg-background px-2 py-0.5 text-[11px] text-foreground/50">
+                                      {category.count}
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="mt-1 line-clamp-2 text-xs leading-5 text-foreground/60">{category.description}</p>
+                              </div>
+                            </div>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="rounded-[24px] border border-border bg-background p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Featured path</p>
+                    <h4 className="mt-2 text-xl font-bold text-foreground">Need inspiration?</h4>
+                    <p className="mt-3 text-sm leading-6 text-foreground/60">
+                      Start with UI Kits, Templates, or Source Code to find products that fit your workflow.
+                    </p>
+
+                    <div className="mt-5 space-y-2">
+                      <Link href={route('marketplace')} className="block rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+                        Browse marketplace
+                      </Link>
+                      <Link href={route('creators')} className="block rounded-xl border border-input px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-muted">
+                        Meet creators
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
           {isMarketplace && (
             <Link href={route('creators')} className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground">
@@ -95,6 +182,17 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
             </Link>
           )}
         </div>
+
+        {variant === 'landing' && (
+          <div className="hidden items-center gap-2 md:flex">
+            <a href="/seller/register" className="rounded-xl border border-input px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted">
+              Sell on KREAVA
+            </a>
+            <Link href="/login" className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+              Login
+            </Link>
+          </div>
+        )}
 
         {isMarketplace && (
           <div className="hidden flex-1 px-6 lg:block">
@@ -109,34 +207,32 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
           </div>
         )}
 
-        <div className="hidden items-center gap-2 md:flex">
-          {isMarketplace && (
-            <>
-              <a
-                href="/seller/register"
-                className="hidden px-3 py-2 text-sm font-medium border border-input rounded-xl text-foreground/70 transition hover:text-foreground hover:bg-muted lg:block"
-              >
-                Sell
-              </a>
-              <button className="hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
-                <Heart className="h-4 w-4" />
-              </button>
-              <button className="relative hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
-                <ShoppingCart className="h-4 w-4" />
-                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                  2
-                </span>
-              </button>
-            </>
-          )}
+        {isMarketplace && (
+          <div className="hidden items-center gap-2 md:flex">
+            <a
+              href="/seller/register"
+              className="hidden rounded-xl border border-input px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground lg:block"
+            >
+              Sell
+            </a>
+            <button className="hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
+              <Heart className="h-4 w-4" />
+            </button>
+            <button className="relative hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
+              <ShoppingCart className="h-4 w-4" />
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                2
+              </span>
+            </button>
 
-          <a href="/login" className="rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted">
-            Login
-          </a>
-          <a href="/register" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
-            Register
-          </a>
-        </div>
+            <a href="/login" className="rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted">
+              Login
+            </a>
+            <a href="/register" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+              Register
+            </a>
+          </div>
+        )}
 
         <button
           onClick={() => setIsOpen((value) => !value)}
@@ -153,9 +249,6 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
             <Link href={primaryNavHref} className="text-sm text-foreground/80 transition hover:text-foreground">
               {primaryNavLabel}
             </Link>
-            <a href={isMarketplace ? '/marketplace' : '#explore'} className="text-sm text-foreground/80 transition hover:text-foreground">
-              Explore
-            </a>
             {isMarketplace ? (
               <div className="space-y-2">
                 <div className="text-sm font-medium text-foreground/80">Categories</div>
@@ -172,9 +265,37 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
                 </div>
               </div>
             ) : (
-              <a href="#categories" className="text-sm text-foreground/80 transition hover:text-foreground">
-                Categories
-              </a>
+              <div className="space-y-2">
+                <div className="text-sm font-medium text-foreground/80">Categories</div>
+                <div className="grid grid-cols-1 gap-2">
+                  {(landingCategories.length > 0 ? landingCategories : categoryLinks.map((item) => ({
+                    slug: item.href,
+                    title: item.label,
+                    description: 'Browse products in this category',
+                    icon: 'sparkles',
+                    href: item.href,
+                    count: undefined,
+                  }))).map((category) => {
+                    const Icon = getCategoryIcon(category.icon)
+
+                    return (
+                      <Link
+                        key={category.slug}
+                        href={category.href}
+                        className="flex items-center gap-3 rounded-2xl border border-input px-3 py-3 text-sm text-foreground/80 transition hover:bg-muted hover:text-foreground"
+                      >
+                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <span className="flex-1 text-left">
+                          <span className="block font-medium text-foreground">{category.title}</span>
+                          <span className="block text-xs text-foreground/50">{category.description}</span>
+                        </span>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
             )}
 
             {isMarketplace ? (
@@ -187,8 +308,8 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
                 </a>
               </div>
             ) : (
-              <a href="#pricing" className="text-sm text-foreground/80 transition hover:text-foreground">
-                Pricing
+              <a href="/seller/register" className="text-sm text-foreground/80 transition hover:text-foreground">
+                Sell on KREAVA
               </a>
             )}
 
@@ -204,5 +325,6 @@ export default function PublicNavbar({ variant = 'landing' }: PublicNavbarProps)
         </div>
       )}
     </header>
+    </>
   )
 }

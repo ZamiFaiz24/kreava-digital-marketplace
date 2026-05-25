@@ -8,12 +8,7 @@ import { WhyKreava } from '@/components/landing/why-kreava'
 import { Testimonials } from '@/components/landing/testimonials'
 import { CTASection } from '@/components/landing/cta-section'
 import { Footer } from '@/components/landing/footer'
-
-type LandingCategory = {
-  title: string
-  description: string
-  icon?: string
-}
+import type { LandingCategory } from '@/types/landing'
 
 type LandingProduct = {
   title: string
@@ -43,7 +38,7 @@ export default function LandingPage({ categories, trendingProducts, testimonials
   return (
     <LandingLayout title="KREAVA - Create. Sell. Inspire.">
       <main className="min-h-screen bg-background">
-        <PublicNavbar variant="landing" />
+        <PublicNavbar variant="landing" categories={categories} />
         <HeroSection />
         <CategoriesSection categories={categories} />
         <TrendingProducts products={trendingProducts} />

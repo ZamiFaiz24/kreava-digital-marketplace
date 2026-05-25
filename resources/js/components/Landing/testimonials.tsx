@@ -57,6 +57,29 @@ const fallbackTestimonials: LandingTestimonial[] = [
 ]
 
 export function Testimonials({ testimonials = fallbackTestimonials }: { testimonials?: LandingTestimonial[] }) {
+  const renderAvatar = (avatar: string, name: string) => {
+    if (!avatar) return null
+
+    // If avatar looks like a path to an image, render an <img>
+    const looksLikePath = avatar.includes('/') || avatar.endsWith('.jpg') || avatar.endsWith('.png')
+    if (looksLikePath) {
+      const src = avatar.startsWith('/') ? avatar : `/${avatar}`
+      return (
+        <img
+          src={src}
+          alt={name}
+          className="h-12 w-12 rounded-full object-cover"
+          onError={(e) => {
+            // show a small generic placeholder if the asset is missing
+            ;(e.currentTarget as HTMLImageElement).src = '/images/Brand.png'
+          }}
+        />
+      )
+    }
+
+    // Otherwise render as text/emoji
+    return <div className="text-2xl">{avatar}</div>
+  }
   return (
     <section className="py-20 md:py-28 bg-background relative">
       <div className="container mx-auto px-4">
@@ -91,7 +114,7 @@ export function Testimonials({ testimonials = fallbackTestimonials }: { testimon
 
               {/* Author */}
               <div className="flex items-center gap-3 pt-4 border-t border-border">
-                <div className="text-2xl">{testimonial.avatar}</div>
+                <div>{renderAvatar(testimonial.avatar, testimonial.name)}</div>
                 <div>
                   <p className="font-semibold text-foreground">{testimonial.name}</p>
                   <p className="text-xs text-foreground/60">{testimonial.role}</p>
