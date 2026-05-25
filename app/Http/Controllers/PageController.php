@@ -39,7 +39,7 @@ class PageController extends Controller
             ->values();
 
         $trendingProducts = Product::query()
-            ->with(['seller:id,store_name', 'category:id,name'])
+            ->with(['seller.user:id,name,avatar', 'seller:id,user_id,store_name,slug,logo', 'category:id,name'])
             ->withCount('reviews')
             ->withAvg('reviews as reviews_avg_rating', 'rating')
             ->where('status', 'published')
@@ -55,11 +55,12 @@ class PageController extends Controller
                 'reviews' => $product->reviews_count,
                 'price' => '$' . number_format((float) $product->price, 0),
                 'category' => $product->category?->name ?? 'Digital Product',
+                'avatar' => $product->seller?->user?->avatar,
             ])
             ->values();
 
         $testimonials = Review::query()
-            ->with(['user:id,name', 'product:id,title'])
+            ->with(['user:id,name,avatar', 'product:id,title'])
             ->whereNotNull('comment')
             ->where('comment', '!=', '')
             ->orderByDesc('rating')
@@ -73,7 +74,7 @@ class PageController extends Controller
                     'name' => $name,
                     'role' => 'Customer',
                     'content' => $review->comment,
-                    'avatar' => strtoupper(substr($name, 0, 1)),
+                    'avatar' => $review->user?->avatar,
                     'rating' => max(1, min(5, (int) $review->rating)),
                 ];
             })
@@ -92,7 +93,7 @@ class PageController extends Controller
     public function marketplace(Request $request)
     {
         $query = Product::query()
-            ->with(['seller', 'category', 'images'])
+            ->with(['seller.user:id,name,avatar', 'seller:id,user_id,store_name,slug,logo', 'category', 'images'])
             ->withCount('reviews')
             ->withAvg('reviews as reviews_avg_rating', 'rating')
             ->where('status', 'published');
@@ -142,7 +143,7 @@ class PageController extends Controller
                     'id' => $product->seller?->id,
                     'name' => $product->seller?->store_name ?? 'Independent Creator',
                     'slug' => $product->seller?->slug ?? '',
-                    'avatar' => $product->seller?->logo,
+                    'avatar' => $product->seller?->user?->avatar ?? $product->seller?->logo,
                 ],
             ];
         });
@@ -201,7 +202,7 @@ class PageController extends Controller
     public function product($slug)
     {
         $product = Product::query()
-            ->with(['seller', 'category', 'images', 'reviews.user'])
+            ->with(['seller.user:id,name,avatar', 'seller:id,user_id,store_name,slug,logo', 'category', 'images', 'reviews.user'])
             ->withCount('reviews')
             ->withAvg('reviews as reviews_avg_rating', 'rating')
             ->where('slug', $slug)
@@ -236,7 +237,7 @@ class PageController extends Controller
                 'id' => $product->seller?->id,
                 'name' => $product->seller?->store_name ?? 'Independent Creator',
                 'slug' => $product->seller?->slug ?? '',
-                'avatar' => $product->seller?->logo,
+                'avatar' => $product->seller?->user?->avatar ?? $product->seller?->logo,
             ],
             'downloads_count' => $product->downloads_count ?? 0,
             'long_description' => $product->long_description ?? null,
@@ -251,7 +252,7 @@ class PageController extends Controller
             ->map(fn($r) => [
                 'id' => $r->id,
                 'author' => $r->user?->name ?? 'Buyer',
-                'avatar' => strtoupper(substr($r->user?->name ?? 'B', 0, 1)),
+                'avatar' => $r->user?->avatar,
                 'rating' => (int) $r->rating,
                 'comment' => $r->comment,
                 'created_at' => $r->created_at->toDateTimeString(),
@@ -270,7 +271,7 @@ class PageController extends Controller
             ->where('id', '!=', $product->id)
             ->whereHas('category', fn($q) => $q->where('id', $product->category?->id))
             ->where('status', 'published')
-            ->with(['seller', 'images', 'category'])
+            ->with(['seller.user:id,name,avatar', 'seller:id,user_id,store_name,slug,logo', 'images', 'category'])
             ->withCount('reviews')
             ->withAvg('reviews as reviews_avg_rating', 'rating')
             ->latest()
@@ -291,7 +292,7 @@ class PageController extends Controller
                         'id' => $p->seller?->id,
                         'name' => $p->seller?->store_name ?? 'Independent Creator',
                         'slug' => $p->seller?->slug ?? '',
-                        'avatar' => $p->seller?->logo,
+                        'avatar' => $p->seller?->user?->avatar ?? $p->seller?->logo,
                     ],
 
                     'category' => [

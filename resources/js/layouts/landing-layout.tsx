@@ -17,7 +17,7 @@ export default function LandingLayout({ children, title = 'KREAVA - Create. Sell
         <meta property="og:image" content="/images/Brand.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content="/images/Brand.png" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/public/favicon.ico" sizes="any" />
         <link rel="icon" href="/images/Logo.png" type="image/png" />
         <link rel="apple-touch-icon" href="/images/Logo.png" />
       </Head>
