@@ -4,7 +4,7 @@ import type { MarketplacePageProps } from '@/types/marketplace'
 
 export default function MarketplaceLandingPage(props: MarketplacePageProps) {
   return (
-    <PublicLayout>
+    <PublicLayout categories={props.categories}>
       <MarketplaceScreen {...props} />
     </PublicLayout>
   )

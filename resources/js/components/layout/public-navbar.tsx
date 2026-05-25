@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link } from '@inertiajs/react'
 import { Menu, X, Search, ShoppingCart, Heart, ChevronDown, ArrowRight } from 'lucide-react'
 import type { LandingCategory } from '@/types/landing'
+import type { Category as MarketplaceCategory } from '@/types/marketplace'
 import { getCategoryIcon } from '@/lib/category-icons'
 
 type PublicNavbarVariant = 'landing' | 'marketplace'
@@ -19,7 +20,16 @@ const categoryLinks = [
 
 interface PublicNavbarProps {
   variant?: PublicNavbarVariant
-  categories?: LandingCategory[]
+  categories?: Array<LandingCategory | MarketplaceCategory>
+}
+
+interface NavbarCategoryItem {
+  slug: string
+  title: string
+  href: string
+  description?: string
+  count?: number
+  icon?: string | null
 }
 
 export default function PublicNavbar({ variant = 'landing', categories = [] }: PublicNavbarProps) {
@@ -39,7 +49,42 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
   const isMarketplace = variant === 'marketplace'
   const primaryNavHref = isMarketplace ? route('landing') : route('marketplace')
   const primaryNavLabel = isMarketplace ? 'Home' : 'Marketplace'
-  const landingCategories = categories.length > 0 ? categories : []
+  const landingCategories: NavbarCategoryItem[] = categories.map((category) =>
+    'name' in category
+      ? {
+          slug: category.slug,
+          title: category.name,
+          href: `/marketplace?category=${category.slug}`,
+          count: category.count ?? category.products_count,
+          icon: category.icon,
+        }
+      : {
+          slug: category.slug,
+          title: category.title,
+          href: category.href,
+          description: category.description,
+          count: category.count,
+          icon: category.icon,
+        },
+  )
+  const marketplaceCategories: NavbarCategoryItem[] = categories.map((category) =>
+    'name' in category
+      ? {
+          slug: category.slug,
+          title: category.name,
+          href: `/marketplace?category=${category.slug}`,
+          count: category.count ?? category.products_count,
+          icon: category.icon,
+        }
+      : {
+          slug: category.slug,
+          title: category.title,
+          href: category.href,
+          description: category.description,
+          count: category.count,
+          icon: category.icon,
+        },
+  )
 
   return (
     <>
@@ -84,14 +129,24 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                 <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
               </button>
 
-              <div className="invisible absolute left-0 top-full z-50 mt-2 w-52 translate-y-1 rounded-2xl border border-border bg-background p-2 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                {categoryLinks.map((category) => (
+              <div className="invisible absolute left-0 top-full z-50 mt-2 w-64 translate-y-1 rounded-2xl border border-border bg-background p-2 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                {(marketplaceCategories.length > 0
+                  ? marketplaceCategories
+                  : categoryLinks.map((category) => ({
+                      slug: category.href,
+                      title: category.label,
+                      href: category.href,
+                      count: undefined,
+                    }))).map((category) => (
                   <a
                     key={category.href}
                     href={category.href}
-                    className="block rounded-xl px-3 py-2 text-sm text-foreground/80 transition hover:bg-muted hover:text-foreground"
+                    className="flex items-center justify-between rounded-xl px-3 py-2 text-sm text-foreground/80 transition hover:bg-muted hover:text-foreground"
                   >
-                    {category.label}
+                    <span>{category.title}</span>
+                    {category.count !== undefined && (
+                      <span className="text-xs text-foreground/40">{category.count}</span>
+                    )}
                   </a>
                 ))}
               </div>
@@ -125,7 +180,7 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                         icon: 'sparkles',
                         href: item.href,
                         count: undefined,
-                      }))).map((category) => {
+                      } as NavbarCategoryItem))).map((category) => {
                         const Icon = getCategoryIcon(category.icon)
 
                         return (
@@ -275,7 +330,7 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                     icon: 'sparkles',
                     href: item.href,
                     count: undefined,
-                  }))).map((category) => {
+                  } as NavbarCategoryItem))).map((category) => {
                     const Icon = getCategoryIcon(category.icon)
 
                     return (
