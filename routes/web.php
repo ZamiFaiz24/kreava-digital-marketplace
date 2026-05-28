@@ -1,7 +1,11 @@
 <?php
 
 use Inertia\Inertia;
-use App\Http\Controllers\PageController;
+use App\Http\Controllers\Pages\CreatorsController;
+use App\Http\Controllers\Pages\LandingController;
+use App\Http\Controllers\Pages\MarketplaceController;
+use App\Http\Controllers\Pages\ProductController;
+use App\Http\Controllers\Pages\WelcomeController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Seller\ProductsController as SellerProductsController;
 use App\Http\Controllers\Seller\OrdersController as SellerOrdersController;
@@ -9,11 +13,11 @@ use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [PageController::class, 'landing'])->name('landing');
-Route::get('/marketplace', [PageController::class, 'marketplace'])->name('marketplace');
-Route::get('/products/{slug}', [PageController::class, 'product'])->name('product.show');
-Route::get('/creators', [PageController::class, 'creators'])->name('creators');
-Route::get('/welcome', [PageController::class, 'welcome'])->name('welcome');
+Route::get('/', LandingController::class)->name('landing');
+Route::get('/marketplace', MarketplaceController::class)->name('marketplace');
+Route::get('/products/{slug}', ProductController::class)->name('product.show');
+Route::get('/creators', CreatorsController::class)->name('creators');
+Route::get('/welcome', WelcomeController::class)->name('welcome');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {
