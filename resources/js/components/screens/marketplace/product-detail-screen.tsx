@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Link, usePage } from '@inertiajs/react'
 import { Download, Share2, Heart } from 'lucide-react'
 import type { ProductDetailPageProps } from '@/types/marketplace'
 import CreatorInfoCard from '@/components/shared/creator-info-card'
@@ -8,6 +9,7 @@ import ProductGallery from '@/components/marketplace/product-gallery'
 import ReviewsSection from '@/components/marketplace/reviews-section'
 import RelatedProducts from '@/components/marketplace/related-products'
 import { formatPrice, formatDate } from '@/lib/marketplace-utils'
+import type { SharedData } from '@/types'
 
 export default function ProductDetailScreen({
   product,
@@ -22,6 +24,7 @@ export default function ProductDetailScreen({
   related_products = [],
   is_following = false,
 }: ProductDetailPageProps) {
+  const { auth } = usePage<SharedData>().props
   const [isFollowing, setIsFollowing] = useState(is_following)
   const [isWishlisted, setIsWishlisted] = useState(false)
 
@@ -38,6 +41,10 @@ export default function ProductDetailScreen({
     : [{ url: product.thumbnail, alt: product.title }]
   const categoryName = typeof product.category === 'string' ? product.category : product.category.name
   const categorySlug = typeof product.category === 'string' ? product.category : product.category.slug
+  const isAuthenticated = Boolean(auth.user)
+  const loginRedirect = typeof window !== 'undefined'
+    ? `${window.location.pathname}${window.location.search}`
+    : `/products/${product.slug}`
 
   return (
     <div className="min-h-screen bg-background">
@@ -120,10 +127,20 @@ export default function ProductDetailScreen({
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <button className="w-full flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
-                <Download className="h-5 w-5" />
-                Buy & Download
-              </button>
+              {isAuthenticated ? (
+                <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
+                  <Download className="h-5 w-5" />
+                  Buy & Download
+                </button>
+              ) : (
+                <Link
+                  href={`${route('login')}?redirect=${encodeURIComponent(loginRedirect)}`}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  <Download className="h-5 w-5" />
+                  Login to Buy & Download
+                </Link>
+              )}
 
               <div className="grid grid-cols-2 gap-3">
                 <button

@@ -1,10 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import { Menu, X, Search, ShoppingCart, Heart, ChevronDown, ArrowRight } from 'lucide-react'
 import type { LandingCategory } from '@/types/landing'
 import type { Category as MarketplaceCategory } from '@/types/marketplace'
+import type { SharedData } from '@/types'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { UserMenuContent } from '@/components/user-menu-content'
 import { getCategoryIcon } from '@/lib/category-icons'
 
 type PublicNavbarVariant = 'landing' | 'marketplace'
@@ -35,6 +39,7 @@ interface NavbarCategoryItem {
 export default function PublicNavbar({ variant = 'landing', categories = [] }: PublicNavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const { auth } = usePage<SharedData>().props
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,6 +55,7 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
   const primaryNavHref = isMarketplace ? route('landing') : route('marketplace')
   const primaryNavLabel = isMarketplace ? 'Home' : 'Marketplace'
   const sellerCtaHref = `${route('register')}?intent=seller`
+  const isAuthenticated = Boolean(auth?.user)
   const normalizedCategories: NavbarCategoryItem[] = categories.map((category) =>
     'name' in category
       ? {
@@ -68,6 +74,8 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
           icon: category.icon,
         },
   )
+
+  const triggerLabel = auth?.user?.name?.charAt(0)?.toUpperCase() || 'U'
 
   return (
     <>
@@ -226,9 +234,29 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
             <Link href={sellerCtaHref} className="rounded-xl border border-input px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted">
               Sell on KREAVA
             </Link>
-            <Link href={route('login')} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
-              Login
-            </Link>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-2 rounded-xl border border-input bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted">
+                    <Avatar className="h-8 w-8 overflow-hidden rounded-full">
+                      <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
+                      <AvatarFallback className="rounded-full bg-muted text-xs text-foreground">
+                        {triggerLabel}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="max-w-[120px] truncate">{auth.user.name}</span>
+                    <ChevronDown className="h-4 w-4 text-foreground/60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end">
+                  <UserMenuContent user={auth.user} />
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href={route('login')} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+                Login
+              </Link>
+            )}
           </div>
         )}
 
@@ -263,12 +291,39 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
               </span>
             </button>
 
-            <Link href={route('login')} className="rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted">
-              Login
-            </Link>
-            <Link href={route('register')} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
-              Register
-            </Link>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex w-full items-center justify-between rounded-lg border border-input px-3 py-2 text-left text-sm font-medium text-foreground transition hover:bg-muted">
+                    <span className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8 overflow-hidden rounded-full">
+                        <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
+                        <AvatarFallback className="rounded-full bg-muted text-xs text-foreground">
+                          {triggerLabel}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="flex flex-col text-left">
+                        <span className="font-medium text-foreground">{auth.user.name}</span>
+                        <span className="text-xs text-foreground/50">Account</span>
+                      </span>
+                    </span>
+                    <ChevronDown className="h-4 w-4 text-foreground/60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="start">
+                  <UserMenuContent user={auth.user} />
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link href={route('login')} className="rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted">
+                  Login
+                </Link>
+                <Link href={route('register')} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         )}
 
@@ -351,14 +406,41 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
               </Link>
             )}
 
-            <div className="flex gap-2 border-t border-border pt-3">
-              <Link href={route('login')} className="flex-1 rounded-lg border border-input px-3 py-2 text-center text-sm font-medium text-foreground">
-                Login
-              </Link>
-              <Link href={route('register')} className="flex-1 rounded-lg bg-primary px-3 py-2 text-center text-sm font-semibold text-primary-foreground">
-                Register
-              </Link>
-            </div>
+            {isAuthenticated ? (
+              <div className="border-t border-border pt-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex w-full items-center justify-between rounded-lg border border-input px-3 py-3 text-left text-sm font-medium text-foreground transition hover:bg-muted">
+                      <span className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8 overflow-hidden rounded-full">
+                          <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
+                          <AvatarFallback className="rounded-full bg-muted text-xs text-foreground">
+                            {triggerLabel}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="flex flex-col text-left">
+                          <span className="font-medium text-foreground">{auth.user.name}</span>
+                          <span className="text-xs text-foreground/50">Account</span>
+                        </span>
+                      </span>
+                      <ChevronDown className="h-4 w-4 text-foreground/60" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[calc(100vw-2rem)] max-w-56" align="start">
+                    <UserMenuContent user={auth.user} />
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <div className="flex gap-2 border-t border-border pt-3">
+                <Link href={route('login')} className="flex-1 rounded-lg border border-input px-3 py-2 text-center text-sm font-medium text-foreground">
+                  Login
+                </Link>
+                <Link href={route('register')} className="flex-1 rounded-lg bg-primary px-3 py-2 text-center text-sm font-semibold text-primary-foreground">
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}

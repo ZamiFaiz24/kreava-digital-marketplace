@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
@@ -22,7 +22,8 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
-    const { data, setData, post, processing, errors, reset } = useForm<LoginForm>({
+    const { url } = usePage<{ url: string }>();
+    const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
         remember: false,
@@ -35,9 +36,17 @@ export default function Login({ status, canResetPassword }: LoginProps) {
         });
     };
 
+    const loginRedirect = new URLSearchParams(url.split('?')[1] || '').get('redirect');
+
     return (
         <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
             <Head title="Log in" />
+
+            {loginRedirect && (
+                <div className="mb-4 rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-foreground/70">
+                    After login you will be returned to the page you were viewing.
+                </div>
+            )}
 
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">

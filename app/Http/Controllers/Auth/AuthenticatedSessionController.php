@@ -18,6 +18,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(Request $request): Response
     {
+        if ($request->filled('redirect')) {
+            $request->session()->put('url.intended', $request->string('redirect')->toString());
+        }
+
         return Inertia::render('auth/login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
@@ -35,7 +39,7 @@ class AuthenticatedSessionController extends Controller
 
         $redirectRoute = $request->user()?->role === 'seller'
             ? 'seller.dashboard'
-            : 'dashboard';
+            : 'marketplace';
 
         return redirect()->intended(route($redirectRoute, absolute: false));
     }
