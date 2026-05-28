@@ -49,25 +49,8 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
   const isMarketplace = variant === 'marketplace'
   const primaryNavHref = isMarketplace ? route('landing') : route('marketplace')
   const primaryNavLabel = isMarketplace ? 'Home' : 'Marketplace'
-  const landingCategories: NavbarCategoryItem[] = categories.map((category) =>
-    'name' in category
-      ? {
-          slug: category.slug,
-          title: category.name,
-          href: `/marketplace?category=${category.slug}`,
-          count: category.count ?? category.products_count,
-          icon: category.icon,
-        }
-      : {
-          slug: category.slug,
-          title: category.title,
-          href: category.href,
-          description: category.description,
-          count: category.count,
-          icon: category.icon,
-        },
-  )
-  const marketplaceCategories: NavbarCategoryItem[] = categories.map((category) =>
+  const sellerCtaHref = `${route('register')}?intent=seller`
+  const normalizedCategories: NavbarCategoryItem[] = categories.map((category) =>
     'name' in category
       ? {
           slug: category.slug,
@@ -130,8 +113,8 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
               </button>
 
               <div className="invisible absolute left-0 top-full z-50 mt-2 w-64 translate-y-1 rounded-2xl border border-border bg-background p-2 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                {(marketplaceCategories.length > 0
-                  ? marketplaceCategories
+                {(normalizedCategories.length > 0
+                  ? normalizedCategories
                   : categoryLinks.map((category) => ({
                       slug: category.href,
                       title: category.label,
@@ -173,7 +156,7 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
-                      {(landingCategories.length > 0 ? landingCategories : categoryLinks.map((item) => ({
+                      {(normalizedCategories.length > 0 ? normalizedCategories : categoryLinks.map((item) => ({
                         slug: item.href,
                         title: item.label,
                         description: 'Browse products in this category',
@@ -240,10 +223,10 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
 
         {variant === 'landing' && (
           <div className="hidden items-center gap-2 md:flex">
-            <a href="/seller/register" className="rounded-xl border border-input px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted">
+            <Link href={sellerCtaHref} className="rounded-xl border border-input px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-muted">
               Sell on KREAVA
-            </a>
-            <Link href="/login" className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+            </Link>
+            <Link href={route('login')} className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
               Login
             </Link>
           </div>
@@ -264,12 +247,12 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
 
         {isMarketplace && (
           <div className="hidden items-center gap-2 md:flex">
-            <a
-              href="/seller/register"
+            <Link
+              href={sellerCtaHref}
               className="hidden rounded-xl border border-input px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground lg:block"
             >
               Sell
-            </a>
+            </Link>
             <button className="hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
               <Heart className="h-4 w-4" />
             </button>
@@ -280,12 +263,12 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
               </span>
             </button>
 
-            <a href="/login" className="rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted">
+            <Link href={route('login')} className="rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted">
               Login
-            </a>
-            <a href="/register" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
+            </Link>
+            <Link href={route('register')} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90">
               Register
-            </a>
+            </Link>
           </div>
         )}
 
@@ -323,7 +306,7 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
               <div className="space-y-2">
                 <div className="text-sm font-medium text-foreground/80">Categories</div>
                 <div className="grid grid-cols-1 gap-2">
-                  {(landingCategories.length > 0 ? landingCategories : categoryLinks.map((item) => ({
+                  {(normalizedCategories.length > 0 ? normalizedCategories : categoryLinks.map((item) => ({
                     slug: item.href,
                     title: item.label,
                     description: 'Browse products in this category',
@@ -358,23 +341,23 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                 <Link href={route('creators')} className="text-sm text-foreground/80 transition hover:text-foreground">
                   Creators
                 </Link>
-                <a href="/seller/register" className="text-sm text-foreground/80 transition hover:text-foreground">
+                <Link href={sellerCtaHref} className="text-sm text-foreground/80 transition hover:text-foreground">
                   Sell on Kreava
-                </a>
+                </Link>
               </div>
             ) : (
-              <a href="/seller/register" className="text-sm text-foreground/80 transition hover:text-foreground">
+              <Link href={sellerCtaHref} className="text-sm text-foreground/80 transition hover:text-foreground">
                 Sell on KREAVA
-              </a>
+              </Link>
             )}
 
             <div className="flex gap-2 border-t border-border pt-3">
-              <a href="/login" className="flex-1 rounded-lg border border-input px-3 py-2 text-center text-sm font-medium text-foreground">
+              <Link href={route('login')} className="flex-1 rounded-lg border border-input px-3 py-2 text-center text-sm font-medium text-foreground">
                 Login
-              </a>
-              <a href="/register" className="flex-1 rounded-lg bg-primary px-3 py-2 text-center text-sm font-semibold text-primary-foreground">
+              </Link>
+              <Link href={route('register')} className="flex-1 rounded-lg bg-primary px-3 py-2 text-center text-sm font-semibold text-primary-foreground">
                 Register
-              </a>
+              </Link>
             </div>
           </div>
         </div>
