@@ -6,15 +6,29 @@ import AnalyticsSection from '../../components/seller/dashboard/analytics-sectio
 import RecentOrders from '../../components/seller/dashboard/recent-orders';
 import TopProducts from '../../components/seller/dashboard/top-products';
 import QuickActions from '../../components/seller/dashboard/quick-actions';
-import {
+import type {
+  Order,
+  Product,
+  RevenueDataPoint,
+  SellerDashboardStats,
+  SellerProfile,
+} from '../../types/seller';
+
+interface SellerDashboardPageProps {
+  sellerProfile: SellerProfile;
+  dashboardStats: SellerDashboardStats;
+  revenueData: RevenueDataPoint[];
+  recentOrders: Order[];
+  topProducts: Product[];
+}
+
+export default function SellerDashboardPage({
+  sellerProfile,
   dashboardStats,
   revenueData,
   recentOrders,
   topProducts,
-  sellerProfile,
-} from '../../lib/mock-data';
-
-export default function SellerDashboardPage() {
+}: SellerDashboardPageProps) {
   return (
     <DashboardLayout>
       {/* Welcome Banner */}

@@ -1,16 +1,30 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePage } from '@inertiajs/react';
 import Sidebar from './sidebar';
 import Navbar from './navbar';
-import { sidebarNavItems, sellerProfile } from '../../../lib/mock-data';
+
+const sidebarNavItems = [
+  { label: 'Dashboard', icon: 'grid', href: '/seller/dashboard' },
+  { label: 'Products', icon: 'package', href: '/seller/products' },
+  { label: 'Orders', icon: 'shopping-cart', href: '/seller/orders' },
+  { label: 'Analytics', icon: 'bar-chart-2', href: '/seller/analytics' },
+  { label: 'Customers', icon: 'users', href: '/seller/customers' },
+  { label: 'Payouts', icon: 'wallet', href: '/seller/payouts' },
+  { label: 'Settings', icon: 'settings', href: '/seller/settings' },
+];
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { auth } = usePage<{ auth: { user?: { name?: string; avatar?: string | null } } }>().props;
+
+  const sellerName = auth?.user?.name || 'Seller';
+  const sellerAvatar = auth?.user?.avatar || '/images/Brand.png';
 
   return (
     <div className="flex h-screen bg-background">
@@ -18,8 +32,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="hidden lg:block">
         <Sidebar
           navItems={sidebarNavItems}
-          sellerName={sellerProfile.name}
-          sellerAvatar={sellerProfile.avatar}
+          sellerName={sellerName}
+          sellerAvatar={sellerAvatar}
         />
       </div>
 
@@ -29,8 +43,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div onClick={(e) => e.stopPropagation()}>
             <Sidebar
               navItems={sidebarNavItems}
-              sellerName={sellerProfile.name}
-              sellerAvatar={sellerProfile.avatar}
+              sellerName={sellerName}
+              sellerAvatar={sellerAvatar}
             />
           </div>
         </div>
@@ -39,8 +53,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar
-          sellerName={sellerProfile.name}
-          sellerAvatar={sellerProfile.avatar}
+          sellerName={sellerName}
+          sellerAvatar={sellerAvatar}
           onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
         />
 
