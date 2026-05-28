@@ -19,12 +19,14 @@ class UsersSeeder extends Seeder
 
     public function run(): void
     {
+        $defaultPassword = Hash::make('password123');
+
         // Admin
         User::updateOrCreate([
             'email' => 'admin@example.com',
         ], [
             'name' => 'Admin User',
-            'password' => Hash::make('password123'),
+            'password' => $defaultPassword,
             'role' => 'admin',
             'avatar' => 'images/avatars/admin/admin-1.jpg',
         ]);
@@ -35,7 +37,7 @@ class UsersSeeder extends Seeder
             'email' => 'seller@example.com',
         ], [
             'name' => 'Seller User',
-            'password' => Hash::make('password123'),
+            'password' => $defaultPassword,
             'role' => 'seller',
             'avatar' => 'images/avatars/sellers/seller-1.jpg',
         ]);
@@ -44,14 +46,20 @@ class UsersSeeder extends Seeder
             'email' => 'customer@example.com',
         ], [
             'name' => 'Customer User',
-            'password' => Hash::make('password123'),
+            'password' => $defaultPassword,
             'role' => 'customer',
             'avatar' => 'images/avatars/customers/customer-1.jpg',
         ]);
 
         // Additional random users: customers and sellers
-        $customers = User::factory()->count(27)->create(['role' => 'customer']);
-        $sellers = User::factory()->count(4)->create(['role' => 'seller']);
+        $customers = User::factory()->count(27)->create([
+            'role' => 'customer',
+            'password' => $defaultPassword,
+        ]);
+        $sellers = User::factory()->count(4)->create([
+            'role' => 'seller',
+            'password' => $defaultPassword,
+        ]);
 
         foreach ($customers->values() as $index => $user) {
             $user->update([
