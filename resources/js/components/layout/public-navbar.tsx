@@ -118,19 +118,27 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
       }`}
     >
       <nav className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href={route('landing')} className="flex items-center">
-          <img
-            src="/images/Logo/LogoFull.png"
-            alt="KREAVA"
-            className={
-              isMarketplace
-                ? 'h-10 w-10 object-contain sm:h-12 sm:w-12'
-                : '-ml-4 h-[120px] w-[120px] object-contain sm:-ml-5 sm:h-[156px] sm:w-[156px]'
-            }
-          />
+        <Link href={route('landing')} className="mr-4 flex items-center">
+          {isMarketplace ? (
+            <div className="relative h-11 w-11 overflow-hidden rounded-xl">
+              <img
+                src="/images/Logo/LogoMark.png"
+                alt="KREAVA"
+                className="absolute left-1/2 top-1/2 h-[115px] w-[115px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
+              />
+            </div>
+          ) : (
+            <div className="relative h-14 w-40 overflow-hidden sm:h-16 sm:w-48">
+              <img
+                src="/images/Logo/LogoFull.png"
+                alt="KREAVA"
+                className="absolute left-1/2 top-1/2 h-[180px] w-[180px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
+              />
+            </div>
+          )}
         </Link>
 
-        <div className="hidden items-center gap-1 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
           <Link href={primaryNavHref} className="rounded-lg px-3 py-2 text-sm font-medium text-foreground/70 transition hover:bg-muted hover:text-foreground">
             {primaryNavLabel}
           </Link>
