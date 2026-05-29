@@ -11,6 +11,8 @@ use App\Http\Controllers\Seller\ProductsController as SellerProductsController;
 use App\Http\Controllers\Seller\OrdersController as SellerOrdersController;
 use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController;
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
+use App\Http\Controllers\Customer\OrdersController as CustomerOrdersController;
+use App\Http\Controllers\Customer\DownloadsController as CustomerDownloadsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', LandingController::class)->name('landing');
@@ -23,6 +25,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+
+    // Customer routes
+    Route::get('orders', [CustomerOrdersController::class, 'index'])->name('orders.index');
+    Route::get('downloads', [CustomerDownloadsController::class, 'index'])->name('downloads.index');
 
     Route::prefix('seller')->name('seller.')->middleware('role:seller')->group(function () {
         Route::get('dashboard', SellerDashboardController::class)->name('dashboard');

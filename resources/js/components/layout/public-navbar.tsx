@@ -281,15 +281,19 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
             >
               Sell
             </Link>
-            <button className="hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
-              <Heart className="h-4 w-4" />
-            </button>
-            <button className="relative hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
-              <ShoppingCart className="h-4 w-4" />
-              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                2
-              </span>
-            </button>
+            {isAuthenticated && (
+              <>
+                <button className="hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
+                  <Heart className="h-4 w-4" />
+                </button>
+                <button className="relative hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
+                  <ShoppingCart className="h-4 w-4" />
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                    2
+                  </span>
+                </button>
+              </>
+            )}
 
             {isAuthenticated ? (
               <DropdownMenu>
