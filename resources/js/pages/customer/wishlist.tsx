@@ -2,17 +2,19 @@ import PublicLayout from '@/layouts/public-layout';
 import { Heart, ShoppingCart, ArrowRight } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
+import { formatPriceSimple } from '@/lib/marketplace-utils';
 
 interface WishlistItem {
     id: number;
     product: {
         id: number;
-        name: string;
+        title: string;
         slug: string;
         price: number;
+        thumbnail?: string;
         images: Array<{
             id: number;
-            image_path: string;
+            url: string;
         }>;
         seller: {
             id: number;
@@ -77,8 +79,14 @@ export default function Wishlist({ wishlist }: Props) {
                                 <div className="relative h-48 overflow-hidden bg-muted">
                                     {item.product.images?.[0] ? (
                                         <img
-                                            src={item.product.images[0].image_path}
-                                            alt={item.product.name}
+                                            src={item.product.images[0].url}
+                                            alt={item.product.title}
+                                            className="h-full w-full object-cover transition group-hover:scale-105"
+                                        />
+                                    ) : item.product.thumbnail ? (
+                                        <img
+                                            src={item.product.thumbnail}
+                                            alt={item.product.title}
                                             className="h-full w-full object-cover transition group-hover:scale-105"
                                         />
                                     ) : (
@@ -97,13 +105,13 @@ export default function Wishlist({ wishlist }: Props) {
 
                                 {/* Product Info */}
                                 <div className="p-4">
-                                    <h3 className="font-semibold text-foreground line-clamp-2">{item.product.name}</h3>
+                                    <h3 className="font-semibold text-foreground line-clamp-2">{item.product.title}</h3>
                                     <p className="mt-1 text-xs text-foreground/60">{item.product.seller.name}</p>
 
                                     <div className="mt-4 flex items-end justify-between">
                                         <div>
                                             <p className="text-xs text-foreground/60">Price</p>
-                                            <p className="text-lg font-bold text-foreground">Rp {item.product.price.toLocaleString('id-ID')}</p>
+                                            <p className="text-lg font-bold text-foreground">{formatPriceSimple(item.product.price)}</p>
                                         </div>
                                     </div>
 
