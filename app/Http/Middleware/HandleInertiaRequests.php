@@ -38,13 +38,33 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
-        return array_merge(parent::share($request), [
+        $shared = array_merge(parent::share($request), [
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
-            'auth' => [
-                'user' => $request->user(),
-            ],
         ]);
+
+        $user = $request->user();
+
+        if ($user) {
+            // attach lightweight counts to the user model so frontend badges can read them
+            try {
+                $user->wishlist_count = $user->wishlist ? $user->wishlist->items()->count() : 0;
+            } catch (\Throwable $e) {
+                $user->wishlist_count = 0;
+            }
+
+            try {
+                $user->cart_count = $user->cart ? $user->cart->items()->count() : 0;
+            } catch (\Throwable $e) {
+                $user->cart_count = 0;
+            }
+        }
+
+        $shared['auth'] = [
+            'user' => $user,
+        ];
+
+        return $shared;
     }
 }

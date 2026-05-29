@@ -13,6 +13,7 @@ use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
 use App\Http\Controllers\Customer\OrdersController as CustomerOrdersController;
 use App\Http\Controllers\Customer\DownloadsController as CustomerDownloadsController;
+use App\Http\Controllers\Customer\WishlistController as CustomerWishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', LandingController::class)->name('landing');
@@ -29,6 +30,10 @@ Route::middleware(['auth'])->group(function () {
     // Customer routes
     Route::get('orders', [CustomerOrdersController::class, 'index'])->name('orders.index');
     Route::get('downloads', [CustomerDownloadsController::class, 'index'])->name('downloads.index');
+    Route::get('wishlist', [CustomerWishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('wishlist/toggle/{product}', [CustomerWishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::get('wishlist/check/{product}', [CustomerWishlistController::class, 'check'])->name('wishlist.check');
+    Route::delete('wishlist/{item}', [CustomerWishlistController::class, 'remove'])->name('wishlist.remove');
 
     Route::prefix('seller')->name('seller.')->middleware('role:seller')->group(function () {
         Route::get('dashboard', SellerDashboardController::class)->name('dashboard');

@@ -5,6 +5,7 @@ import type { Category } from '@/types/marketplace'
 interface PublicLayoutProps {
   children: ReactNode
   categories?: Category[]
+  title?: string
 }
 
 export default function PublicLayout({

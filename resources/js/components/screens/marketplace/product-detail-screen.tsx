@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, usePage } from '@inertiajs/react'
 import { Download, Share2, Heart } from 'lucide-react'
 import type { ProductDetailPageProps } from '@/types/marketplace'
@@ -28,23 +28,67 @@ export default function ProductDetailScreen({
   const [isFollowing, setIsFollowing] = useState(is_following)
   const [isWishlisted, setIsWishlisted] = useState(false)
 
+  const isAuthenticated = Boolean(auth.user)
+  const loginRedirect = typeof window !== 'undefined'
+    ? `${window.location.pathname}${window.location.search}`
+    : `/products/${product.slug}`
+
   const handleFollow = () => {
     setIsFollowing(!isFollowing)
   }
 
-  const handleWishlist = () => {
-    setIsWishlisted(!isWishlisted)
+  const handleWishlist = async () => {
+    if (!isAuthenticated) return
+
+    try {
+      const response = await fetch(route('wishlist.toggle', product.id), {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        credentials: 'same-origin',
+      })
+
+      if (response.ok) {
+        const json = await response.json()
+        // backend returns { added: true|false }
+        setIsWishlisted(Boolean(json.added))
+      }
+    } catch (err) {
+      console.error('Wishlist toggle failed', err)
+    }
   }
+
+  useEffect(() => {
+    let mounted = true
+    const checkWishlist = async () => {
+      if (!isAuthenticated) return
+
+      try {
+        const res = await fetch(route('wishlist.check', product.id), {
+          headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          credentials: 'same-origin',
+        })
+        if (!res.ok) return
+        const json = await res.json()
+        if (mounted) setIsWishlisted(Boolean(json.inWishlist))
+      } catch (err) {
+        // ignore
+      }
+    }
+
+    checkWishlist()
+    return () => { mounted = false }
+  }, [isAuthenticated, product.id])
 
   const images = product.images && product.images.length > 0
     ? product.images
     : [{ url: product.thumbnail, alt: product.title }]
   const categoryName = typeof product.category === 'string' ? product.category : product.category.name
   const categorySlug = typeof product.category === 'string' ? product.category : product.category.slug
-  const isAuthenticated = Boolean(auth.user)
-  const loginRedirect = typeof window !== 'undefined'
-    ? `${window.location.pathname}${window.location.search}`
-    : `/products/${product.slug}`
+  
 
   return (
     <div className="min-h-screen bg-background">

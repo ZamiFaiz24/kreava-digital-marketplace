@@ -77,6 +77,27 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
 
   const triggerLabel = auth?.user?.name?.charAt(0)?.toUpperCase() || 'U'
 
+  // Badge counts (optional — backend may provide these on auth.user)
+  const userAny = auth?.user as any
+  const wishlistCount = Number(userAny?.wishlist_count ?? userAny?.wishlist?.items_count ?? 0)
+  const cartCount = Number(userAny?.cart_count ?? userAny?.cart?.items_count ?? 0)
+
+  const formatBadge = (n: number, cap = 99) => {
+    if (n <= 0) return null
+    if (n > cap) return `${cap}+`
+    return String(n)
+  }
+
+  // Safe route resolver - Ziggy's `route()` will throw if a named route isn't available
+  const safeRoute = (name: string, fallback = '#') => {
+    try {
+      // @ts-ignore - route is injected by Ziggy
+      return route(name)
+    } catch (err) {
+      return fallback
+    }
+  }
+
   return (
     <>
       {variant === 'landing' && (
@@ -283,15 +304,22 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
             </Link>
             {isAuthenticated && (
               <>
-                <button className="hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
+                <Link href={safeRoute('wishlist.index', '/wishlist')} className="relative hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex" aria-label="Wishlist">
                   <Heart className="h-4 w-4" />
-                </button>
-                <button className="relative hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex">
+                  {formatBadge(wishlistCount, 10) && (
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                      {formatBadge(wishlistCount, 10)}
+                    </span>
+                  )}
+                </Link>
+                <Link href={safeRoute('cart.index', '/cart')} className="relative hidden h-9 w-9 items-center justify-center rounded-lg text-foreground/70 transition hover:bg-muted hover:text-foreground lg:flex" aria-label="Cart">
                   <ShoppingCart className="h-4 w-4" />
-                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                    2
-                  </span>
-                </button>
+                  {formatBadge(cartCount, 10) && (
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                      {formatBadge(cartCount, 10)}
+                    </span>
+                  )}
+                </Link>
               </>
             )}
 
