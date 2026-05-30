@@ -11,13 +11,21 @@ class OrdersController extends Controller
 {
     public function index()
     {
-        $orders = Order::where('user_id', Auth::id())
+        $baseQuery = Order::where('user_id', Auth::id());
+
+        $orders = $baseQuery
             ->with(['items.product', 'items.product.seller'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return Inertia::render('customer/orders', [
             'orders' => $orders,
+            'summary' => [
+                'total_orders' => (clone $baseQuery)->count(),
+                'paid_orders' => (clone $baseQuery)->where('payment_status', 'paid')->count(),
+                'pending_orders' => (clone $baseQuery)->where('payment_status', 'pending')->count(),
+                'total_spent' => (float) (clone $baseQuery)->where('payment_status', 'paid')->sum('total_price'),
+            ],
         ]);
     }
 }
