@@ -3,6 +3,7 @@ import type { Product } from '@/types/marketplace'
 import { formatPriceSimple, generateStars } from '@/lib/marketplace-utils'
 import { addProductToCart } from '@/lib/cart'
 import { useState } from 'react'
+import { useToast } from '@/components/ui/use-toast'
 
 interface ProductCardProps {
   product: Product
@@ -12,13 +13,17 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, onClick, href = '#' }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false)
+  const { toast } = useToast()
   const stars = generateStars(product.rating)
 
   const handleAddToCart = async () => {
     try {
       setIsAdding(true)
       await addProductToCart(product.id)
-      window.location.href = route('cart.index')
+      toast({
+        title: 'Added to cart',
+        description: `${product.title} has been added to your cart.`,
+      })
     } catch (error) {
       console.error('Failed to add product to cart', error)
     } finally {

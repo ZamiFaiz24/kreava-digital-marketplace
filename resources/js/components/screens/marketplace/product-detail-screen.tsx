@@ -11,6 +11,7 @@ import RelatedProducts from '@/components/marketplace/related-products'
 import { formatPrice, formatDate } from '@/lib/marketplace-utils'
 import type { SharedData } from '@/types'
 import { addProductToCart } from '@/lib/cart'
+import { useToast } from '@/components/ui/use-toast'
 
 export default function ProductDetailScreen({
   product,
@@ -26,8 +27,11 @@ export default function ProductDetailScreen({
   is_following = false,
 }: ProductDetailPageProps) {
   const { auth } = usePage<SharedData>().props
+  const { toast } = useToast()
   const [isFollowing, setIsFollowing] = useState(is_following)
   const [isWishlisted, setIsWishlisted] = useState(false)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [isBuyingNow, setIsBuyingNow] = useState(false)
 
   const isAuthenticated = Boolean(auth.user)
   const loginRedirect = typeof window !== 'undefined'
@@ -66,10 +70,30 @@ export default function ProductDetailScreen({
     if (!isAuthenticated) return
 
     try {
+      setIsAddingToCart(true)
+      await addProductToCart(product.id)
+      toast({
+        title: 'Added to cart',
+        description: `${product.title} has been added to your cart.`,
+      })
+    } catch (err) {
+      console.error('Add to cart failed', err)
+    } finally {
+      setIsAddingToCart(false)
+    }
+  }
+
+  const handleBuyNow = async () => {
+    if (!isAuthenticated) return
+
+    try {
+      setIsBuyingNow(true)
       await addProductToCart(product.id)
       window.location.href = route('cart.index')
     } catch (err) {
-      console.error('Add to cart failed', err)
+      console.error('Buy now failed', err)
+    } finally {
+      setIsBuyingNow(false)
     }
   }
 
@@ -184,10 +208,24 @@ export default function ProductDetailScreen({
             {/* Action Buttons */}
             <div className="space-y-3">
               {isAuthenticated ? (
-                <button onClick={handleAddToCart} className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
-                  <Download className="h-5 w-5" />
-                  Add to Cart
-                </button>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    <Download className="h-5 w-5" />
+                    {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+                  </button>
+                  <button
+                    onClick={handleBuyNow}
+                    disabled={isBuyingNow}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-input bg-background px-6 py-3 font-semibold text-foreground transition-colors hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    <Download className="h-5 w-5" />
+                    {isBuyingNow ? 'Processing...' : 'Buy Now'}
+                  </button>
+                </div>
               ) : (
                 <Link
                   href={`${route('login')}?redirect=${encodeURIComponent(loginRedirect)}`}
