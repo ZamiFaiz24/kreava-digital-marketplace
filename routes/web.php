@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('orders', [CustomerOrdersController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [CustomerOrdersController::class, 'show'])->name('orders.show');
     Route::get('downloads', [CustomerDownloadsController::class, 'index'])->name('downloads.index');
+    Route::get('downloads/{download}/file', [CustomerDownloadsController::class, 'download'])->name('downloads.download');
     Route::get('cart', [CustomerCartController::class, 'index'])->name('cart.index');
     Route::post('cart/add/{product}', [CustomerCartController::class, 'add'])->name('cart.add');
     Route::delete('cart/{item}', [CustomerCartController::class, 'remove'])->name('cart.remove');
