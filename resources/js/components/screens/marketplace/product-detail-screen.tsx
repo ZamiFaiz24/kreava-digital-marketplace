@@ -10,6 +10,7 @@ import ReviewsSection from '@/components/marketplace/reviews-section'
 import RelatedProducts from '@/components/marketplace/related-products'
 import { formatPrice, formatDate } from '@/lib/marketplace-utils'
 import type { SharedData } from '@/types'
+import { addProductToCart } from '@/lib/cart'
 
 export default function ProductDetailScreen({
   product,
@@ -58,6 +59,17 @@ export default function ProductDetailScreen({
       }
     } catch (err) {
       console.error('Wishlist toggle failed', err)
+    }
+  }
+
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) return
+
+    try {
+      await addProductToCart(product.id)
+      window.location.href = route('cart.index')
+    } catch (err) {
+      console.error('Add to cart failed', err)
     }
   }
 
@@ -172,9 +184,9 @@ export default function ProductDetailScreen({
             {/* Action Buttons */}
             <div className="space-y-3">
               {isAuthenticated ? (
-                <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
+                <button onClick={handleAddToCart} className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
                   <Download className="h-5 w-5" />
-                  Buy & Download
+                  Add to Cart
                 </button>
               ) : (
                 <Link
@@ -182,7 +194,7 @@ export default function ProductDetailScreen({
                   className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
                 >
                   <Download className="h-5 w-5" />
-                  Login to Buy & Download
+                  Login to Add to Cart
                 </Link>
               )}
 
