@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Customer routes
     Route::get('orders', [CustomerOrdersController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}', [CustomerOrdersController::class, 'show'])->name('orders.show');
     Route::get('downloads', [CustomerDownloadsController::class, 'index'])->name('downloads.index');
     Route::get('cart', [CustomerCartController::class, 'index'])->name('cart.index');
     Route::post('cart/add/{product}', [CustomerCartController::class, 'add'])->name('cart.add');

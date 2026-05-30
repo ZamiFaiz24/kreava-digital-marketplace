@@ -28,4 +28,17 @@ class OrdersController extends Controller
             ],
         ]);
     }
+
+    public function show(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $order->load(['items.product', 'items.product.seller']);
+
+        return Inertia::render('customer/order-show', [
+            'order' => $order,
+        ]);
+    }
 }
