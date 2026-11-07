@@ -1,5 +1,4 @@
 import PublicLayout from '@/layouts/public-layout';
-import { PageProps } from '@/types';
 import { Link } from '@inertiajs/react';
 import { ShoppingCart, Trash2 } from 'lucide-react';
 import { formatPriceSimple } from '@/lib/marketplace-utils';
@@ -26,7 +25,7 @@ interface CartItem {
   };
 }
 
-interface Props extends PageProps {
+interface Props {
   cart: {
     id: number;
     items: CartItem[];
@@ -174,12 +173,12 @@ export default function Cart({ cart }: Props) {
               >
                 Continue Shopping
               </Link>
-              <button
-                type="button"
-                className="mt-3 w-full rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+              <Link
+                href={route('checkout.index')}
+                className="mt-3 block w-full rounded-lg bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
               >
                 Checkout
-              </button>
+              </Link>
             </aside>
           </div>
         )}

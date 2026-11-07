@@ -12,6 +12,7 @@ use App\Http\Controllers\Seller\OrdersController as SellerOrdersController;
 use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController;
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
 use App\Http\Controllers\Customer\CartController as CustomerCartController;
+use App\Http\Controllers\Customer\CheckoutController as CustomerCheckoutController;
 use App\Http\Controllers\Customer\OrdersController as CustomerOrdersController;
 use App\Http\Controllers\Customer\DownloadsController as CustomerDownloadsController;
 use App\Http\Controllers\Customer\WishlistController as CustomerWishlistController;
@@ -37,6 +38,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('cart/add/{product}', [CustomerCartController::class, 'add'])->name('cart.add');
     Route::delete('cart/{item}', [CustomerCartController::class, 'remove'])->name('cart.remove');
     Route::delete('cart', [CustomerCartController::class, 'clear'])->name('cart.clear');
+    Route::get('checkout', [CustomerCheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('checkout', [CustomerCheckoutController::class, 'store'])->name('checkout.store');
     Route::get('wishlist', [CustomerWishlistController::class, 'index'])->name('wishlist.index');
     Route::post('wishlist/toggle/{product}', [CustomerWishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::get('wishlist/check/{product}', [CustomerWishlistController::class, 'check'])->name('wishlist.check');
