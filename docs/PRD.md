@@ -1,4 +1,4 @@
-# PRD: Kreava Digital Marketplace
+﻿# PRD: Kreava Digital Marketplace
 
 **Status dokumen:** Draft
 **Versi aktif:** v1 (lihat bagian Scope)
@@ -46,10 +46,10 @@ Kreava adalah marketplace produk digital tempat kreator menjual file digital dan
 ## 4. Alur Utama
 
 **Membeli produk:**
-lihat produk → tambah ke keranjang → checkout → bayar (mock) → order menjadi paid → file tersedia di library → unduh file
+lihat produk â†’ tambah ke keranjang â†’ checkout â†’ bayar (mock) â†’ order menjadi paid â†’ file tersedia di library â†’ unduh file
 
 **Menjual produk:**
-register sebagai seller → tambah produk (dan file) → produk langsung tayang
+register sebagai seller â†’ tambah produk (dan file) â†’ produk langsung tayang
 
 ## 5. Keputusan
 
@@ -58,7 +58,7 @@ register sebagai seller → tambah produk (dan file) → produk langsung tayang
 | Pembayaran memakai `MockPaymentGateway` yang mengikuti interface `PaymentGateway` | Portofolio. Menghindari setup tunnel untuk webhook dan verifikasi bisnis | v2 |
 | Produk seller langsung tayang tanpa moderasi | Fokus pada alur beli dan unduh | v2 |
 | Admin dashboard ditunda | Tidak wajib untuk alur utama v1 | v2 |
-| Seller dashboard tetap masuk v1 | Seller harus bisa menambah produk | — |
+| Seller dashboard tetap masuk v1 | Seller harus bisa menambah produk | â€” |
 
 ## 6. Kriteria Selesai
 
@@ -72,22 +72,22 @@ Sebuah fitur dianggap selesai jika kriteria di bawah ini terpenuhi dan ada tesny
 
 ## 7. Status
 
-Status di bawah adalah hasil pemeriksaan awal dan **belum diverifikasi**. Ubah menjadi ✅ hanya setelah dicek di kode dan dites.
+Status di bawah adalah hasil pemeriksaan awal dan **belum diverifikasi**. Ubah menjadi âœ… hanya setelah dicek di kode dan dites.
 
 | Fitur | Status | Catatan |
 |---|---|---|
-| Landing page | ✅ Selesai | LandingController + route `/` tersedia |
-| Marketplace explore | ✅ Selesai | MarketplaceController + route `/marketplace` tersedia |
-| Product detail | ✅ Selesai | ProductController + route `/products/{slug}` tersedia |
-| Creators | ✅ Selesai | CreatorsController + route `/creators` tersedia |
-| Auth lengkap | ✅ Selesai | Semua route auth ada di `routes/auth.php` |
-| Keranjang dan wishlist | ✅ Selesai | CartController + WishlistController tersedia |
-| Dashboard buyer | ✅ Selesai | Customer orders, downloads routes tersedia |
-| Seller dashboard dasar | ⚠️ Sebagian | `products`, `orders` tersedia; `products.new`, `payouts`, `settings` masih placeholder |
-| Checkout (mock) | ❌ Belum ada | Tidak ada route checkout di `routes/web.php` |
-| Download file | ⚠️ Sebagian | Route `/downloads/{download}/file` tersedia, alur verifikasi belum dicek |
+| Landing page | âœ… Selesai | LandingController + route `/` tersedia |
+| Marketplace explore | âœ… Selesai | MarketplaceController + route `/marketplace` tersedia |
+| Product detail | âœ… Selesai | ProductController + route `/products/{slug}` tersedia |
+| Creators | âœ… Selesai | CreatorsController + route `/creators` tersedia |
+| Auth lengkap | âœ… Selesai | Semua route auth ada di `routes/auth.php` |
+| Keranjang dan wishlist | âœ… Selesai | CartController + WishlistController tersedia |
+| Dashboard buyer | âœ… Selesai | Customer orders, downloads routes tersedia |
+| Seller dashboard dasar | âš ï¸ Sebagian | `products`, `orders` tersedia; `products.new`, `payouts`, `settings` masih placeholder |
+| Checkout (mock) | ✅ Selesai | Route checkout, CheckoutController, MockPaymentGateway, dan tes tersedia |
+| Download file | âš ï¸ Sebagian | Route `/downloads/{download}/file` tersedia, alur verifikasi belum dicek |
 
-Keterangan: ✅ selesai, ⚠️ sebagian, ❌ belum ada, ⬜ belum diverifikasi.
+Keterangan: âœ… selesai, âš ï¸ sebagian, âŒ belum ada, â¬œ belum diverifikasi.
 
 ---
 
@@ -95,7 +95,7 @@ Keterangan: ✅ selesai, ⚠️ sebagian, ❌ belum ada, ⬜ belum diverifikasi.
 
 | Masalah | Detail | Prioritas |
 |---------|--------|-----------|
-| Checkout belum diimplementasi | PRD mencantumkan checkout dalam scope v1, tetapi tidak ada route checkout sama sekali | Tinggi |
+
 | Seller placeholder routes | `products.new`, `payouts`, `settings` masih menggunakan `Inertia::render('seller/placeholder')` | Tinggi |
 | Analytics seller | Sudah ada controller dan route, tapi PRD menempatkannya di scope v2 | Sedang |
 | Download file flow | Route ada, tapi alur verifikasi (order paid, kepemilikan file) belum diverifikasi | Sedang |

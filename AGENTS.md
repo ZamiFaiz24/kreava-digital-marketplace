@@ -1,4 +1,4 @@
-# AGENTS.md
+﻿# AGENTS.md
 
 ## Proyek
 
@@ -36,28 +36,28 @@ Verifikasi perintah di atas dengan menjalankannya. Perbarui bagian ini jika ada 
 - **Jangan commit otomatis.** Agent hanya memberikan saran pesan commit.
 - User yang melakukan commit secara manual setelah review perubahan.
 - Gunakan Conventional Commits:
-  - `feat:` — Fitur baru
-  - `fix:` — Perbaikan bug
-  - `docs:` — Dokumentasi
-  - `style:` — Perbaikan formatting
-  - `refactor:` — Refactoring kode
-  - `test:` — Menambahkan atau mengubah tes
-  - `chore:` — Tugas pemeliharaan
+  - `feat:` â€” Fitur baru
+  - `fix:` â€” Perbaikan bug
+  - `docs:` â€” Dokumentasi
+  - `style:` â€” Perbaikan formatting
+  - `refactor:` â€” Refactoring kode
+  - `test:` â€” Menambahkan atau mengubah tes
+  - `chore:` â€” Tugas pemeliharaan
 
 ### Contoh pesan commit
 
 ```bash
-git commit -m "feat: tambahkan route checkout dan controller MockPaymentGateway"
-git commit -m "fix: perbaiki verifikasi download file untuk order paid"
-git commit -m "docs: perbarui AGENTS.md dengan aturan commit"
+git commit -m "feat: add checkout route and MockPaymentGateway controller"
+git commit -m "fix: verify download file for paid order"
+git commit -m "docs: update AGENTS.md with commit rules"
 ```
 
 ## Sebelum Commit
 
 Pastikan berikut ini telah dijalankan:
 
-- `php artisan test` — semua tes lulus
-- `npm run format:check` — formatting konsisten
+- `php artisan test` â€” semua tes lulus
+- `npm run format:check` â€” formatting konsisten
 
 Jika ada tes yang gagal atau formatting tidak konsisten, jangan commit. Perbaiki terlebih dahulu.
 
@@ -81,3 +81,4 @@ Jangan membuat tampilan yang terlalu generic/template shadcn/ui.
 | Download file flow | Route ada, tapi alur verifikasi (order paid, kepemilikan file) belum diverifikasi | Sedang |
 
 Sebelum menyatakan fitur v1 selesai, pastikan gaps di atas sudah terpenuhi dengan kode dan tes.
+
