@@ -97,5 +97,4 @@ Keterangan: âœ… selesai, âš ï¸ sebagian, âŒ belum ada, â¬œ bel
 |---------|--------|-----------|
 
 | Seller placeholder routes | `products.new`, `payouts`, `settings` masih menggunakan `Inertia::render('seller/placeholder')` | Tinggi |
-| Analytics seller | Sudah ada controller dan route, tapi PRD menempatkannya di scope v2 | Sedang |
 | Download file flow | Route ada, tapi alur verifikasi (order paid, kepemilikan file) belum diverifikasi | Sedang |

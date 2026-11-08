@@ -40,7 +40,7 @@ class AnalyticsController extends Controller
             : ($thisMonthRevenue > 0 ? 100.0 : 0.0);
 
         $totalRevenue = (float) (clone $paidItems)->sum('price');
-        $totalPaidOrders = (int) (clone $paidItems)->count();
+        $totalPaidOrders = (int) (clone $paidItems)->distinct()->count('order_id');
         $avgOrderValue = $totalPaidOrders > 0 ? round($totalRevenue / $totalPaidOrders, 2) : 0.0;
 
         $dailyMetrics = OrderItem::query()
