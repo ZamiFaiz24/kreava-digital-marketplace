@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Seller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -52,5 +55,68 @@ class ProductsController extends Controller
                 'draft_products' => Product::query()->where('seller_id', $seller->id)->where('status', 'draft')->count(),
             ],
         ]);
+    }
+
+    public function create(Request $request): Response
+    {
+        Seller::query()
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        $categories = Category::query()
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return Inertia::render('seller/products/create', [
+            'categories' => $categories,
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $seller = Seller::query()
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'unique:products,slug'],
+            'description' => ['nullable', 'string'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'price' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+            'thumbnail' => ['nullable', 'image', 'max:2048'],
+            'file' => ['required', 'file', 'max:51200'],
+            'preview_link' => ['nullable', 'url', 'max:255'],
+            'status' => ['required', 'in:published,draft'],
+        ]);
+
+        $file = $request->file('file');
+        $fileSize = $file->getSize();
+        $filePath = $file->store('products/files', 'local');
+
+        $thumbnailUrl = null;
+
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $request->file('thumbnail')->store('products/thumbnails', 'public');
+            $thumbnailUrl = Storage::disk('public')->url($thumbnailPath);
+        }
+
+        Product::create([
+            'seller_id' => $seller->id,
+            'category_id' => $validated['category_id'],
+            'title' => $validated['title'],
+            'slug' => $validated['slug'],
+            'description' => $validated['description'] ?? null,
+            'thumbnail' => $thumbnailUrl,
+            'preview_link' => $validated['preview_link'] ?? null,
+            'price' => $validated['price'],
+            'file_path' => $filePath,
+            'file_size' => $fileSize,
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()
+            ->route('seller.products')
+            ->with('success', 'Produk berhasil diunggah.');
     }
 }

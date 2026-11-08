@@ -9,6 +9,8 @@ use App\Http\Controllers\Pages\WelcomeController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Seller\ProductsController as SellerProductsController;
 use App\Http\Controllers\Seller\OrdersController as SellerOrdersController;
+use App\Http\Controllers\Seller\PayoutsController as SellerPayoutsController;
+use App\Http\Controllers\Seller\SettingsController as SellerSettingsController;
 use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController;
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
 use App\Http\Controllers\Customer\CartController as CustomerCartController;
@@ -49,13 +51,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('dashboard', SellerDashboardController::class)->name('dashboard');
 
         Route::get('products', SellerProductsController::class)->name('products');
-
-        Route::get('products/new', function () {
-            return Inertia::render('seller/placeholder', [
-                'title' => 'Upload Product',
-                'description' => 'Create a new listing with files, thumbnails, and pricing.',
-            ]);
-        })->name('products.new');
+        Route::get('products/new', [SellerProductsController::class, 'create'])->name('products.new');
+        Route::post('products', [SellerProductsController::class, 'store'])->name('products.store');
 
         Route::get('orders', SellerOrdersController::class)->name('orders');
 
@@ -63,19 +60,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('customers', SellerCustomersController::class)->name('customers');
 
-        Route::get('payouts', function () {
-            return Inertia::render('seller/placeholder', [
-                'title' => 'Payouts',
-                'description' => 'Check payout history and upcoming settlements.',
-            ]);
-        })->name('payouts');
+        Route::get('payouts', SellerPayoutsController::class)->name('payouts');
 
-        Route::get('settings', function () {
-            return Inertia::render('seller/placeholder', [
-                'title' => 'Seller Settings',
-                'description' => 'Configure store profile, branding, and seller preferences.',
-            ]);
-        })->name('settings');
+        Route::get('settings', [SellerSettingsController::class, 'edit'])->name('settings');
+        Route::patch('settings', [SellerSettingsController::class, 'update'])->name('settings.update');
     });
 });
 
