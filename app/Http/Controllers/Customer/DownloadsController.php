@@ -44,7 +44,7 @@ class DownloadsController extends Controller
 
         $product = $download->product ?? $download->orderItem->product;
 
-        if (!$product || empty($product->file_path)) {
+        if (!$product || empty($product->file_path) || !Storage::exists($product->file_path)) {
             abort(404);
         }
 
