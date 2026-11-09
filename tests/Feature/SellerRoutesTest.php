@@ -136,7 +136,7 @@ test('product upload validates required fields and unique slug', function () {
         ->assertSessionHasErrors(['title', 'slug', 'price', 'file', 'status']);
 });
 
-test('seller can see payout history and upcoming settlements', function () {
+test('seller can see payout history and available balance', function () {
     [$user, $seller] = createSellerAccountForTest();
     $category = createTestCategory();
 
@@ -164,9 +164,11 @@ test('seller can see payout history and upcoming settlements', function () {
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('seller/payouts')
-            ->has('payouts', 1)
-            ->has('upcomingSettlements', 1)
+            ->has('payouts', 0)
             ->where('summary.total_revenue', 25)
+            ->where('summary.available_balance', 25)
+            ->where('summary.pending_balance', 0)
+            ->where('summary.paid_out', 0)
         );
 });
 

@@ -9,12 +9,13 @@ use App\Http\Controllers\Pages\WelcomeController;
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Seller\ProductsController as SellerProductsController;
 use App\Http\Controllers\Seller\OrdersController as SellerOrdersController;
-use App\Http\Controllers\Seller\PayoutsController as SellerPayoutsController;
+use App\Http\Controllers\Seller\PayoutController as SellerPayoutController;
 use App\Http\Controllers\Seller\SettingsController as SellerSettingsController;
 use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController;
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ModerationController as AdminModerationController;
+use App\Http\Controllers\Admin\PayoutController as AdminPayoutController;
 use App\Http\Controllers\Customer\CartController as CustomerCartController;
 use App\Http\Controllers\Customer\CheckoutController as CustomerCheckoutController;
 use App\Http\Controllers\Customer\OrdersController as CustomerOrdersController;
@@ -46,6 +47,10 @@ Route::middleware(['auth'])->group(function () {
             Route::post('sellers/{seller}/approve', [AdminModerationController::class, 'approveSeller'])->name('sellers.approve');
             Route::post('sellers/{seller}/reject', [AdminModerationController::class, 'rejectSeller'])->name('sellers.reject');
         });
+
+        Route::get('payouts', [AdminPayoutController::class, 'index'])->name('payouts');
+        Route::post('payouts/{payout}/approve', [AdminPayoutController::class, 'approve'])->name('payouts.approve');
+        Route::post('payouts/{payout}/reject', [AdminPayoutController::class, 'reject'])->name('payouts.reject');
     });
 
     // Customer routes
@@ -77,7 +82,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('customers', SellerCustomersController::class)->name('customers');
 
-        Route::get('payouts', SellerPayoutsController::class)->name('payouts');
+        Route::get('payouts', [SellerPayoutController::class, 'index'])->name('payouts');
+        Route::post('payouts/request', [SellerPayoutController::class, 'store'])->name('payouts.request');
 
         Route::get('settings', [SellerSettingsController::class, 'edit'])->name('settings');
         Route::patch('settings', [SellerSettingsController::class, 'update'])->name('settings.update');
