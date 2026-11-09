@@ -37,9 +37,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $redirectRoute = $request->user()?->role === 'seller'
-            ? 'seller.dashboard'
-            : 'marketplace';
+        $redirectRoute = match ($request->user()?->role) {
+            'seller' => 'seller.dashboard',
+            default => 'dashboard',
+        };
 
         return redirect()->intended(route($redirectRoute, absolute: false));
     }
