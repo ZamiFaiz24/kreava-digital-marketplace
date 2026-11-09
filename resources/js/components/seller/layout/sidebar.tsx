@@ -74,10 +74,15 @@ export default function Sidebar({ navItems, sellerName, sellerAvatar, accountLab
 
             {/* Footer */}
             <div className="border-border absolute bottom-0 w-64 border-t bg-white p-4">
-                <button className="text-foreground hover:bg-muted flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-colors">
+                <Link
+                    href={route('logout')}
+                    method="post"
+                    as="button"
+                    className="text-foreground hover:bg-muted flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-colors"
+                >
                     <LogOut className="h-5 w-5" />
                     <span>Logout</span>
-                </button>
+                </Link>
             </div>
         </div>
     );
