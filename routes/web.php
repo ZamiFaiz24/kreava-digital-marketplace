@@ -13,6 +13,7 @@ use App\Http\Controllers\Seller\PayoutsController as SellerPayoutsController;
 use App\Http\Controllers\Seller\SettingsController as SellerSettingsController;
 use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController;
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Customer\CartController as CustomerCartController;
 use App\Http\Controllers\Customer\CheckoutController as CustomerCheckoutController;
 use App\Http\Controllers\Customer\OrdersController as CustomerOrdersController;
@@ -30,6 +31,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+
+    // Admin routes
+    Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
+        Route::get('dashboard', AdminDashboardController::class)->name('dashboard');
+    });
 
     // Customer routes
     Route::get('orders', [CustomerOrdersController::class, 'index'])->name('orders.index');
