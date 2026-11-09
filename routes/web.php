@@ -14,6 +14,7 @@ use App\Http\Controllers\Seller\SettingsController as SellerSettingsController;
 use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController;
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\ModerationController as AdminModerationController;
 use App\Http\Controllers\Customer\CartController as CustomerCartController;
 use App\Http\Controllers\Customer\CheckoutController as CustomerCheckoutController;
 use App\Http\Controllers\Customer\OrdersController as CustomerOrdersController;
@@ -35,6 +36,16 @@ Route::middleware(['auth'])->group(function () {
     // Admin routes
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
         Route::get('dashboard', AdminDashboardController::class)->name('dashboard');
+
+        Route::prefix('moderation')->name('moderation.')->group(function () {
+            Route::get('products', [AdminModerationController::class, 'products'])->name('products');
+            Route::post('products/{product}/approve', [AdminModerationController::class, 'approveProduct'])->name('products.approve');
+            Route::post('products/{product}/reject', [AdminModerationController::class, 'rejectProduct'])->name('products.reject');
+
+            Route::get('sellers', [AdminModerationController::class, 'sellers'])->name('sellers');
+            Route::post('sellers/{seller}/approve', [AdminModerationController::class, 'approveSeller'])->name('sellers.approve');
+            Route::post('sellers/{seller}/reject', [AdminModerationController::class, 'rejectSeller'])->name('sellers.reject');
+        });
     });
 
     // Customer routes

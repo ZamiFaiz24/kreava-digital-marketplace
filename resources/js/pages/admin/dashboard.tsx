@@ -1,6 +1,7 @@
 import { Head, router, usePage } from '@inertiajs/react';
 import { BadgeCheck, DollarSign, Package, RefreshCw, ShoppingCart, Store, UserCheck, Users } from 'lucide-react';
 import { useState } from 'react';
+import { adminNavItems } from '../../components/admin/nav-items';
 import DashboardLayout from '../../components/seller/layout/dashboard-layout';
 import StatCard from '../../components/seller/shared/stat-card';
 
@@ -39,8 +40,6 @@ interface AdminDashboardPageProps {
     recentOrders: AdminOrder[];
     recentSellers: AdminSeller[];
 }
-
-const adminNavItems = [{ label: 'Dashboard', icon: 'grid', href: '/admin/dashboard' }];
 
 const orderStatusStyles: Record<string, string> = {
     paid: 'bg-emerald-100 text-emerald-700',
