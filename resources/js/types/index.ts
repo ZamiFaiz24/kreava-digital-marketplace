@@ -2,6 +2,8 @@ import { LucideIcon } from 'lucide-react';
 
 export interface Auth {
     user: User;
+    wishlist_count?: number;
+    cart_count?: number;
 }
 
 export interface BreadcrumbItem {

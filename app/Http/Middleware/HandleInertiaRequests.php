@@ -45,24 +45,27 @@ class HandleInertiaRequests extends Middleware
         ]);
 
         $user = $request->user();
+        $wishlistCount = 0;
+        $cartCount = 0;
 
         if ($user) {
-            // attach lightweight counts to the user model so frontend badges can read them
             try {
-                $user->wishlist_count = $user->wishlist ? $user->wishlist->items()->count() : 0;
-            } catch (\Throwable $e) {
-                $user->wishlist_count = 0;
+                $wishlistCount = $user->wishlist ? $user->wishlist->items()->count() : 0;
+            } catch (\Throwable) {
+                $wishlistCount = 0;
             }
 
             try {
-                $user->cart_count = $user->cart ? $user->cart->items()->count() : 0;
-            } catch (\Throwable $e) {
-                $user->cart_count = 0;
+                $cartCount = $user->cart ? $user->cart->items()->count() : 0;
+            } catch (\Throwable) {
+                $cartCount = 0;
             }
         }
 
         $shared['auth'] = [
             'user' => $user,
+            'wishlist_count' => $wishlistCount,
+            'cart_count' => $cartCount,
         ];
 
         return $shared;

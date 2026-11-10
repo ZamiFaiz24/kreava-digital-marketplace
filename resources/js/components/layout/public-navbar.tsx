@@ -77,10 +77,9 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
 
   const triggerLabel = auth?.user?.name?.charAt(0)?.toUpperCase() || 'U'
 
-  // Badge counts (optional — backend may provide these on auth.user)
-  const userAny = auth?.user as any
-  const wishlistCount = Number(userAny?.wishlist_count ?? userAny?.wishlist?.items_count ?? 0)
-  const cartCount = Number(userAny?.cart_count ?? userAny?.cart?.items_count ?? 0)
+  // Badge counts shared at the auth level so the User model is never mutated
+  const wishlistCount = Number(auth?.wishlist_count ?? 0)
+  const cartCount = Number(auth?.cart_count ?? 0)
 
   const formatBadge = (n: number, cap = 99) => {
     if (n <= 0) return null
