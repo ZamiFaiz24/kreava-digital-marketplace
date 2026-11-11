@@ -19,7 +19,6 @@ class ModerationController extends Controller
                 'seller.user:id,name,email',
                 'category:id,name',
             ])
-            ->where('status', '!=', 'published')
             ->latest()
             ->get()
             ->map(function (Product $product) {
@@ -58,6 +57,21 @@ class ModerationController extends Controller
         return redirect()
             ->route('admin.moderation.products')
             ->with('success', 'Produk berhasil ditolak.');
+    }
+
+    public function takedownProduct(Product $product): RedirectResponse
+    {
+        if ($product->status !== 'published') {
+            return redirect()
+                ->route('admin.moderation.products')
+                ->with('error', 'Hanya produk yang sudah tayang yang dapat ditakedown.');
+        }
+
+        $product->update(['status' => 'rejected']);
+
+        return redirect()
+            ->route('admin.moderation.products')
+            ->with('success', 'Produk berhasil ditakedown.');
     }
 
     public function sellers(): Response

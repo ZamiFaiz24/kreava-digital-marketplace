@@ -81,9 +81,13 @@ test('non admin users cannot access admin moderation routes', function () {
     $this->actingAs($customer)
         ->post(route('admin.moderation.products.approve', $product))
         ->assertForbidden();
+
+    $this->actingAs($customer)
+        ->post(route('admin.moderation.products.takedown', $product))
+        ->assertForbidden();
 });
 
-test('admin can see only non published products in the moderation list', function () {
+test('admin can see all products in the moderation list', function () {
     $admin = createModerationAdmin();
     [$sellerUser, $seller] = createModerationSeller('Moderation Studio', 'approved');
     $category = createModerationCategory();
@@ -98,12 +102,14 @@ test('admin can see only non published products in the moderation list', functio
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('admin/moderation/products')
-            ->has('products', 3)
+            ->has('products', 4)
             ->where('products', function ($products) use ($sellerUser) {
                 $items = collect($products);
 
-                return $items->every(fn ($product) => $product['status'] !== 'published')
+                return $items->contains(fn ($product) => $product['title'] === 'Published Product'
+                        && $product['status'] === 'published')
                     && $items->contains(fn ($product) => $product['title'] === 'Pending Product'
+                        && $product['status'] === 'pending'
                         && $product['seller'] === 'Moderation Studio'
                         && $product['sellerEmail'] === $sellerUser->email
                         && $product['category'] === 'Templates'
@@ -158,6 +164,29 @@ test('admin can approve and reject products', function () {
 
     expect($approvedProduct->fresh()->status)->toBe('published')
         ->and($rejectedProduct->fresh()->status)->toBe('rejected');
+});
+
+test('admin can take down published products only', function () {
+    $admin = createModerationAdmin();
+    [, $seller] = createModerationSeller('Takedown Studio', 'approved');
+    $category = createModerationCategory();
+
+    $publishedProduct = createModerationProduct($seller, $category, 'Published Product', 'published');
+    $pendingProduct = createModerationProduct($seller, $category, 'Pending Product', 'pending');
+
+    $this->actingAs($admin)
+        ->post(route('admin.moderation.products.takedown', $publishedProduct))
+        ->assertRedirect(route('admin.moderation.products'))
+        ->assertSessionHas('success');
+
+    expect($publishedProduct->fresh()->status)->toBe('rejected');
+
+    $this->actingAs($admin)
+        ->post(route('admin.moderation.products.takedown', $pendingProduct))
+        ->assertRedirect(route('admin.moderation.products'))
+        ->assertSessionHas('error');
+
+    expect($pendingProduct->fresh()->status)->toBe('pending');
 });
 
 test('admin can approve and reject sellers', function () {

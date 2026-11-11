@@ -1,5 +1,5 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { CheckCircle2, Loader2, Package, XCircle } from 'lucide-react';
+import { CheckCircle2, Loader2, Package, ShieldOff, XCircle } from 'lucide-react';
 import { useState } from 'react';
 import { adminNavItems } from '../../../components/admin/nav-items';
 import DashboardLayout from '../../../components/seller/layout/dashboard-layout';
@@ -19,6 +19,13 @@ interface ModerationProduct {
 interface ProductModerationPageProps {
     products: ModerationProduct[];
 }
+
+interface ModerationFlash {
+    success?: string;
+    error?: string;
+}
+
+type ModerationAction = 'approve' | 'reject' | 'takedown';
 
 const statusStyles: Record<string, string> = {
     pending: 'bg-amber-100 text-amber-700',
@@ -40,23 +47,22 @@ function capitalize(value: string) {
 
 export default function ProductModerationPage({ products }: ProductModerationPageProps) {
     const [processing, setProcessing] = useState<string | null>(null);
-    const [feedback, setFeedback] = useState<string | null>(null);
-    const { errors } = usePage<{ errors: Record<string, string> }>().props;
-    const errorMessage = Object.values(errors)[0];
+    const { errors, flash } = usePage<{ errors: Record<string, string>; flash?: ModerationFlash }>().props;
+    const errorMessage = flash?.error ?? Object.values(errors)[0];
 
-    const act = (product: ModerationProduct, action: 'approve' | 'reject') => {
-        const endpoint =
-            action === 'approve' ? route('admin.moderation.products.approve', product.id) : route('admin.moderation.products.reject', product.id);
-
-        setFeedback(null);
+    const act = (product: ModerationProduct, action: ModerationAction) => {
+        const endpoints: Record<ModerationAction, string> = {
+            approve: route('admin.moderation.products.approve', product.id),
+            reject: route('admin.moderation.products.reject', product.id),
+            takedown: route('admin.moderation.products.takedown', product.id),
+        };
 
         router.post(
-            endpoint,
+            endpoints[action],
             {},
             {
                 preserveScroll: true,
                 onStart: () => setProcessing(`${product.id}:${action}`),
-                onSuccess: () => setFeedback(`Produk "${product.title}" ${action === 'approve' ? 'disetujui' : 'ditolak'}.`),
                 onFinish: () => setProcessing(null),
             },
         );
@@ -70,7 +76,7 @@ export default function ProductModerationPage({ products }: ProductModerationPag
                 <div>
                     <p className="text-primary text-sm font-medium">Admin Moderation</p>
                     <h1 className="text-foreground mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Product Moderation</h1>
-                    <p className="text-muted-foreground mt-2 text-sm">Tinjau produk yang belum tayang di marketplace.</p>
+                    <p className="text-muted-foreground mt-2 text-sm">Tinjau semua produk dan kelola status tayangnya.</p>
                 </div>
 
                 <Link
@@ -83,19 +89,21 @@ export default function ProductModerationPage({ products }: ProductModerationPag
 
             {errorMessage && <div className="mb-6 rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-500">{errorMessage}</div>}
 
-            {feedback && <div className="mb-6 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{feedback}</div>}
+            {flash?.success && (
+                <div className="mb-6 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{flash.success}</div>
+            )}
 
             <section className="border-border rounded-2xl border bg-white p-6">
                 <div className="mb-6">
-                    <h2 className="text-foreground text-xl font-semibold tracking-tight">Pending Products</h2>
-                    <p className="text-muted-foreground mt-1 text-sm">Produk dengan status non-published memerlukan keputusan admin.</p>
+                    <h2 className="text-foreground text-xl font-semibold tracking-tight">All Products</h2>
+                    <p className="text-muted-foreground mt-1 text-sm">Semua produk, termasuk yang sudah tayang, ditampilkan di sini.</p>
                 </div>
 
                 {products.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                         <Package className="text-muted-foreground/50 h-10 w-10" />
-                        <p className="text-foreground mt-3 text-sm font-medium">Tidak ada produk untuk dimoderasi</p>
-                        <p className="text-muted-foreground mt-1 text-xs">Produk baru akan muncul di sini setelah seller mengunggahnya.</p>
+                        <p className="text-foreground mt-3 text-sm font-medium">Belum ada produk</p>
+                        <p className="text-muted-foreground mt-1 text-xs">Produk akan muncul di sini setelah seller mengunggahnya.</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
@@ -114,7 +122,8 @@ export default function ProductModerationPage({ products }: ProductModerationPag
                                 {products.map((product) => {
                                     const isApproving = processing === `${product.id}:approve`;
                                     const isRejecting = processing === `${product.id}:reject`;
-                                    const isBusy = isApproving || isRejecting;
+                                    const isTakingDown = processing === `${product.id}:takedown`;
+                                    const isBusy = isApproving || isRejecting || isTakingDown;
 
                                     return (
                                         <tr key={product.id} className="border-border hover:bg-muted/50 border-b transition-colors">
@@ -144,28 +153,50 @@ export default function ProductModerationPage({ products }: ProductModerationPag
                                             <td className="text-muted-foreground px-4 py-4 text-sm">{product.createdAt}</td>
                                             <td className="px-4 py-4">
                                                 <div className="flex items-center justify-end gap-2">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => act(product, 'approve')}
-                                                        disabled={isBusy}
-                                                        className="bg-primary hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-3 py-2 text-xs font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-                                                    >
-                                                        {isApproving ? (
-                                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                                        ) : (
-                                                            <CheckCircle2 className="h-4 w-4" />
-                                                        )}
-                                                        Approve
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => act(product, 'reject')}
-                                                        disabled={isBusy}
-                                                        className="inline-flex items-center gap-2 rounded-md border border-rose-200 px-3 py-2 text-xs font-semibold text-rose-500 transition-colors hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
-                                                    >
-                                                        {isRejecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4" />}
-                                                        Reject
-                                                    </button>
+                                                    {product.status === 'published' ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => act(product, 'takedown')}
+                                                            disabled={isBusy}
+                                                            className="inline-flex items-center gap-2 rounded-md border border-rose-200 px-3 py-2 text-xs font-semibold text-rose-500 transition-colors hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
+                                                        >
+                                                            {isTakingDown ? (
+                                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                                            ) : (
+                                                                <ShieldOff className="h-4 w-4" />
+                                                            )}
+                                                            Takedown
+                                                        </button>
+                                                    ) : (
+                                                        <>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => act(product, 'approve')}
+                                                                disabled={isBusy}
+                                                                className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+                                                            >
+                                                                {isApproving ? (
+                                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                                ) : (
+                                                                    <CheckCircle2 className="h-4 w-4" />
+                                                                )}
+                                                                Approve
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => act(product, 'reject')}
+                                                                disabled={isBusy}
+                                                                className="inline-flex items-center gap-2 rounded-md border border-rose-200 px-3 py-2 text-xs font-semibold text-rose-500 transition-colors hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
+                                                            >
+                                                                {isRejecting ? (
+                                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                                ) : (
+                                                                    <XCircle className="h-4 w-4" />
+                                                                )}
+                                                                Reject
+                                                            </button>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </td>
                                         </tr>

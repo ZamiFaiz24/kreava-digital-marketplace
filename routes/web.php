@@ -42,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('products', [AdminModerationController::class, 'products'])->name('products');
             Route::post('products/{product}/approve', [AdminModerationController::class, 'approveProduct'])->name('products.approve');
             Route::post('products/{product}/reject', [AdminModerationController::class, 'rejectProduct'])->name('products.reject');
+            Route::post('products/{product}/takedown', [AdminModerationController::class, 'takedownProduct'])->name('products.takedown');
 
             Route::get('sellers', [AdminModerationController::class, 'sellers'])->name('sellers');
             Route::post('sellers/{seller}/approve', [AdminModerationController::class, 'approveSeller'])->name('sellers.approve');
