@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Seller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,26 +19,31 @@ class AnalyticsController extends Controller
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
+        [$period, $startDate, $endDate] = $this->resolvePeriod($request);
+
         $now = now();
         $startOfMonth = $now->copy()->startOfMonth();
         $startOfPreviousMonth = $now->copy()->subMonthNoOverflow()->startOfMonth();
         $endOfPreviousMonth = $now->copy()->subMonthNoOverflow()->endOfMonth();
 
-        $paidItems = OrderItem::query()
+        $sellerPaidItems = OrderItem::query()
             ->where('seller_id', $seller->id)
-            ->whereHas('order', fn($query) => $query->where('payment_status', 'paid'));
+            ->whereHas('order', fn ($query) => $query->where('payment_status', 'paid'));
 
-        $thisMonthRevenue = (float) (clone $paidItems)
-            ->whereHas('order', fn($query) => $query->whereBetween('created_at', [$startOfMonth, $now]))
+        $thisMonthRevenue = (float) (clone $sellerPaidItems)
+            ->whereHas('order', fn ($query) => $query->whereBetween('created_at', [$startOfMonth, $now]))
             ->sum('price');
 
-        $lastMonthRevenue = (float) (clone $paidItems)
-            ->whereHas('order', fn($query) => $query->whereBetween('created_at', [$startOfPreviousMonth, $endOfPreviousMonth]))
+        $lastMonthRevenue = (float) (clone $sellerPaidItems)
+            ->whereHas('order', fn ($query) => $query->whereBetween('created_at', [$startOfPreviousMonth, $endOfPreviousMonth]))
             ->sum('price');
 
         $monthlyGrowth = $lastMonthRevenue > 0
             ? round((($thisMonthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100, 1)
             : ($thisMonthRevenue > 0 ? 100.0 : 0.0);
+
+        $paidItems = (clone $sellerPaidItems)
+            ->whereHas('order', fn ($query) => $query->whereBetween('created_at', [$startDate, $endDate]));
 
         $totalRevenue = (float) (clone $paidItems)->sum('price');
         $totalPaidOrders = (int) (clone $paidItems)->distinct()->count('order_id');
@@ -48,18 +54,21 @@ class AnalyticsController extends Controller
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->where('order_items.seller_id', $seller->id)
             ->where('orders.payment_status', 'paid')
-            ->whereDate('orders.created_at', '>=', $now->copy()->subDays(13)->toDateString())
+            ->whereBetween('orders.created_at', [$startDate, $endDate])
             ->groupByRaw('DATE(orders.created_at)')
             ->get()
             ->keyBy('metric_date');
 
-        $revenueData = collect(range(13, 0))
-            ->map(function (int $daysAgo) use ($now, $dailyMetrics) {
-                $date = $now->copy()->subDays($daysAgo);
+        $dayCount = (int) $startDate->diffInDays($endDate) + 1;
+
+        $revenueData = collect(range(0, $dayCount - 1))
+            ->map(function (int $offset) use ($startDate, $dailyMetrics) {
+                $date = $startDate->copy()->addDays($offset);
                 $key = $date->toDateString();
                 $point = $dailyMetrics->get($key);
 
                 return [
+                    'date' => $key,
                     'label' => $date->format('d M'),
                     'revenue' => (float) ($point->revenue ?? 0),
                     'sales' => (int) ($point->sales ?? 0),
@@ -67,19 +76,23 @@ class AnalyticsController extends Controller
             })
             ->values();
 
+        $paidInPeriod = fn ($query) => $query->whereHas(
+            'order',
+            fn ($orderQuery) => $orderQuery
+                ->where('payment_status', 'paid')
+                ->whereBetween('created_at', [$startDate, $endDate])
+        );
+
         $topProducts = Product::query()
             ->with('category:id,name')
-            ->withCount([
-                'orderItems as sales_count' => fn($query) => $query->whereHas('order', fn($orderQuery) => $orderQuery->where('payment_status', 'paid')),
-            ])
-            ->withSum([
-                'orderItems as revenue_sum' => fn($query) => $query->whereHas('order', fn($orderQuery) => $orderQuery->where('payment_status', 'paid')),
-            ], 'price')
+            ->withCount(['orderItems as sales_count' => $paidInPeriod])
+            ->withSum(['orderItems as revenue_sum' => $paidInPeriod], 'price')
+            ->whereHas('orderItems', $paidInPeriod)
             ->where('seller_id', $seller->id)
             ->orderByDesc('revenue_sum')
             ->limit(5)
             ->get()
-            ->map(fn(Product $product) => [
+            ->map(fn (Product $product) => [
                 'id' => $product->id,
                 'title' => $product->title,
                 'category' => $product->category?->name ?? 'Digital Product',
@@ -95,18 +108,32 @@ class AnalyticsController extends Controller
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->where('products.seller_id', $seller->id)
             ->where('orders.payment_status', 'paid')
+            ->whereBetween('orders.created_at', [$startDate, $endDate])
             ->groupBy('categories.name')
             ->orderByDesc('revenue')
             ->limit(6)
             ->get()
-            ->map(fn($row) => [
+            ->map(fn ($row) => [
                 'category' => $row->category_name,
                 'revenue' => (float) $row->revenue,
                 'sales_count' => (int) $row->sales_count,
             ])
             ->values();
 
+        $periodLabel = match ($period) {
+            'today' => 'Today',
+            '7d' => 'Last 7 days',
+            '30d' => 'Last 30 days',
+            'custom' => $startDate->format('d M Y').' – '.$endDate->format('d M Y'),
+        };
+
         return Inertia::render('seller/analytics', [
+            'filters' => [
+                'period' => $period,
+                'start_date' => $startDate->toDateString(),
+                'end_date' => $endDate->toDateString(),
+                'label' => $periodLabel,
+            ],
             'summary' => [
                 'total_revenue' => $totalRevenue,
                 'total_paid_orders' => $totalPaidOrders,
@@ -118,5 +145,51 @@ class AnalyticsController extends Controller
             'top_products' => $topProducts,
             'category_breakdown' => $categoryBreakdown,
         ]);
+    }
+
+    /**
+     * @return array{0: string, 1: Carbon, 2: Carbon}
+     */
+    private function resolvePeriod(Request $request): array
+    {
+        $period = $request->query('period', '30d');
+        $period = is_string($period) ? $period : '30d';
+        $now = now();
+
+        if ($period === 'custom') {
+            $startDate = $this->parseDate($request->query('start_date'));
+            $endDate = $this->parseDate($request->query('end_date'));
+
+            if ($startDate && $endDate && $endDate->gte($startDate)) {
+                return ['custom', $startDate->startOfDay(), $endDate->endOfDay()];
+            }
+
+            $period = '30d';
+        }
+
+        if (! in_array($period, ['today', '7d', '30d'], true)) {
+            $period = '30d';
+        }
+
+        return match ($period) {
+            'today' => ['today', $now->copy()->startOfDay(), $now->copy()->endOfDay()],
+            '7d' => ['7d', $now->copy()->subDays(6)->startOfDay(), $now->copy()->endOfDay()],
+            default => ['30d', $now->copy()->subDays(29)->startOfDay(), $now->copy()->endOfDay()],
+        };
+    }
+
+    private function parseDate(mixed $value): ?Carbon
+    {
+        if (! is_string($value) || $value === '') {
+            return null;
+        }
+
+        try {
+            $date = Carbon::createFromFormat('Y-m-d', $value);
+
+            return $date instanceof Carbon ? $date : null;
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

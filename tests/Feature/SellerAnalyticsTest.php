@@ -94,25 +94,28 @@ test('non seller users cannot access seller analytics', function () {
 });
 
 test('seller without orders sees zero analytics without errors', function () {
-    [$user] = createAnalyticsSeller();
+    [$user, $seller] = createAnalyticsSeller();
+    $category = createAnalyticsCategory();
+    createAnalyticsProduct($seller, $category, 'Unsold Product', 50);
 
     $this->actingAs($user)
         ->get(route('seller.analytics'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('seller/analytics')
+            ->where('filters.period', '30d')
             ->where('summary.total_revenue', fn ($value) => (float) $value === 0.0)
             ->where('summary.total_paid_orders', 0)
             ->where('summary.avg_order_value', fn ($value) => (float) $value === 0.0)
             ->where('summary.monthly_growth', fn ($value) => (float) $value === 0.0)
             ->where('summary.this_month_revenue', fn ($value) => (float) $value === 0.0)
-            ->has('revenue_data', 14)
+            ->has('revenue_data', 30)
             ->has('top_products', 0)
             ->has('category_breakdown', 0)
         );
 });
 
-test('seller analytics only counts paid orders and calculates revenue correctly', function () {
+test('seller analytics only counts paid orders in the selected period and calculates revenue correctly', function () {
     $this->travelTo(Carbon::parse('2026-06-15 12:00:00'));
 
     [$user, $seller] = createAnalyticsSeller();
@@ -139,22 +142,111 @@ test('seller analytics only counts paid orders and calculates revenue correctly'
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('seller/analytics')
-            ->where('summary.total_revenue', fn ($value) => (float) $value === 250.0)
-            ->where('summary.total_paid_orders', 2)
-            ->where('summary.avg_order_value', fn ($value) => (float) $value === 125.0)
+            ->where('filters.period', '30d')
+            ->where('summary.total_revenue', fn ($value) => (float) $value === 150.0)
+            ->where('summary.total_paid_orders', 1)
+            ->where('summary.avg_order_value', fn ($value) => (float) $value === 150.0)
             ->where('summary.this_month_revenue', fn ($value) => (float) $value === 150.0)
             ->where('summary.monthly_growth', fn ($value) => (float) $value === 50.0)
-            ->has('revenue_data', 14)
+            ->has('revenue_data', 30)
             ->where('revenue_data', fn ($data) => (float) collect($data)->sum('revenue') === 150.0)
             ->has('top_products', 2)
             ->where('top_products.0.title', 'Product A')
-            ->where('top_products.0.revenue', fn ($value) => (float) $value === 200.0)
-            ->where('top_products.0.sales_count', 2)
+            ->where('top_products.0.revenue', fn ($value) => (float) $value === 100.0)
+            ->where('top_products.0.sales_count', 1)
             ->where('top_products.1.title', 'Product B')
             ->has('category_breakdown', 1)
             ->where('category_breakdown.0.category', 'Templates')
-            ->where('category_breakdown.0.revenue', fn ($value) => (float) $value === 250.0)
-            ->where('category_breakdown.0.sales_count', 3)
+            ->where('category_breakdown.0.revenue', fn ($value) => (float) $value === 150.0)
+            ->where('category_breakdown.0.sales_count', 2)
+        );
+});
+
+test('seller analytics filters metrics by selected period', function () {
+    $this->travelTo(Carbon::parse('2026-06-15 12:00:00'));
+
+    [$user, $seller] = createAnalyticsSeller();
+    $category = createAnalyticsCategory();
+    $product = createAnalyticsProduct($seller, $category, 'Filtered Product', 10);
+    $buyer = User::factory()->create(['role' => 'customer']);
+
+    createAnalyticsOrder($buyer, [
+        ['product' => $product, 'price' => 10],
+    ], 'paid', Carbon::parse('2026-06-15 09:00:00'));
+
+    createAnalyticsOrder($buyer, [
+        ['product' => $product, 'price' => 20],
+    ], 'paid', Carbon::parse('2026-06-10 09:00:00'));
+
+    createAnalyticsOrder($buyer, [
+        ['product' => $product, 'price' => 30],
+    ], 'paid', Carbon::parse('2026-05-20 09:00:00'));
+
+    createAnalyticsOrder($buyer, [
+        ['product' => $product, 'price' => 40],
+    ], 'paid', Carbon::parse('2026-05-01 09:00:00'));
+
+    $this->actingAs($user)
+        ->get(route('seller.analytics', ['period' => 'today']))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('seller/analytics')
+            ->where('filters.period', 'today')
+            ->where('filters.start_date', '2026-06-15')
+            ->where('filters.end_date', '2026-06-15')
+            ->where('summary.total_revenue', fn ($value) => (float) $value === 10.0)
+            ->where('summary.total_paid_orders', 1)
+            ->where('summary.avg_order_value', fn ($value) => (float) $value === 10.0)
+            ->has('revenue_data', 1)
+            ->where('top_products.0.revenue', fn ($value) => (float) $value === 10.0)
+            ->where('category_breakdown.0.revenue', fn ($value) => (float) $value === 10.0)
+        );
+
+    $this->actingAs($user)
+        ->get(route('seller.analytics', ['period' => '7d']))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('filters.period', '7d')
+            ->where('summary.total_revenue', fn ($value) => (float) $value === 30.0)
+            ->where('summary.total_paid_orders', 2)
+            ->where('summary.avg_order_value', fn ($value) => (float) $value === 15.0)
+            ->has('revenue_data', 7)
+            ->where('top_products.0.revenue', fn ($value) => (float) $value === 30.0)
+            ->where('category_breakdown.0.revenue', fn ($value) => (float) $value === 30.0)
+        );
+
+    $this->actingAs($user)
+        ->get(route('seller.analytics', ['period' => '30d']))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('filters.period', '30d')
+            ->where('summary.total_revenue', fn ($value) => (float) $value === 60.0)
+            ->where('summary.total_paid_orders', 3)
+            ->where('summary.avg_order_value', fn ($value) => (float) $value === 20.0)
+            ->has('revenue_data', 30)
+            ->where('top_products.0.revenue', fn ($value) => (float) $value === 60.0)
+            ->where('category_breakdown.0.revenue', fn ($value) => (float) $value === 60.0)
+        );
+
+    $this->actingAs($user)
+        ->get(route('seller.analytics', [
+            'period' => 'custom',
+            'start_date' => '2026-05-01',
+            'end_date' => '2026-05-31',
+        ]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('filters.period', 'custom')
+            ->where('filters.start_date', '2026-05-01')
+            ->where('filters.end_date', '2026-05-31')
+            ->where('summary.total_revenue', fn ($value) => (float) $value === 70.0)
+            ->where('summary.total_paid_orders', 2)
+            ->where('summary.avg_order_value', fn ($value) => (float) $value === 35.0)
+            ->has('revenue_data', 31)
+            ->where('top_products.0.revenue', fn ($value) => (float) $value === 70.0)
+            ->where('top_products.0.sales_count', 2)
+            ->where('category_breakdown.0.revenue', fn ($value) => (float) $value === 70.0)
+            ->where('category_breakdown.0.sales_count', 2)
         );
 });
 
