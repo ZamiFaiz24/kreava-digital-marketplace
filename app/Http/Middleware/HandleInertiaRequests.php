@@ -68,6 +68,11 @@ class HandleInertiaRequests extends Middleware
             'cart_count' => $cartCount,
         ];
 
+        $shared['flash'] = [
+            'success' => $request->session()->get('success'),
+            'error' => $request->session()->get('error'),
+        ];
+
         return $shared;
     }
 }

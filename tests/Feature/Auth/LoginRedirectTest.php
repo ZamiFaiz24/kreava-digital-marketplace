@@ -2,6 +2,10 @@
 
 use App\Models\User;
 
+beforeEach(function () {
+    $this->withoutVite();
+});
+
 test('sellers are redirected to the seller dashboard after login', function () {
     $seller = User::factory()->create(['role' => 'seller']);
 
