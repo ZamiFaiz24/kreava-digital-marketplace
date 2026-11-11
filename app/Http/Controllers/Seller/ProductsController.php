@@ -9,6 +9,7 @@ use App\Models\Seller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -118,5 +119,111 @@ class ProductsController extends Controller
         return redirect()
             ->route('seller.products')
             ->with('success', 'Produk berhasil diunggah.');
+    }
+
+    public function edit(Request $request, Product $product): Response
+    {
+        $seller = $this->sellerFor($request);
+        $this->ensureOwnedBySeller($product, $seller);
+
+        $categories = Category::query()
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        $hasPaidSales = $this->hasPaidSales($product);
+
+        return Inertia::render('seller/products/edit', [
+            'product' => [
+                'id' => $product->id,
+                'title' => $product->title,
+                'slug' => $product->slug,
+                'description' => $product->description ?? '',
+                'category_id' => $product->category_id,
+                'price' => (float) $product->price,
+                'thumbnail' => $product->thumbnail,
+                'preview_link' => $product->preview_link ?? '',
+                'status' => $product->status,
+            ],
+            'categories' => $categories,
+            'can_delete' => ! $hasPaidSales,
+        ]);
+    }
+
+    public function update(Request $request, Product $product): RedirectResponse
+    {
+        $seller = $this->sellerFor($request);
+        $this->ensureOwnedBySeller($product, $seller);
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', Rule::unique('products', 'slug')->ignore($product->id)],
+            'description' => ['nullable', 'string'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'price' => ['required', 'numeric', 'min:0', 'max:99999999.99'],
+            'thumbnail' => ['nullable', 'image', 'max:2048'],
+            'preview_link' => ['nullable', 'url', 'max:255'],
+            'status' => ['sometimes', 'in:published,draft'],
+        ]);
+
+        $data = [
+            'title' => $validated['title'],
+            'slug' => $validated['slug'],
+            'description' => $validated['description'] ?? null,
+            'category_id' => $validated['category_id'],
+            'price' => $validated['price'],
+            'preview_link' => $validated['preview_link'] ?? null,
+        ];
+
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $request->file('thumbnail')->store('products/thumbnails', 'public');
+            $data['thumbnail'] = Storage::disk('public')->url($thumbnailPath);
+        }
+
+        if (array_key_exists('status', $validated)) {
+            $data['status'] = $validated['status'];
+        }
+
+        $product->update($data);
+
+        return redirect()
+            ->route('seller.products')
+            ->with('success', 'Produk berhasil diperbarui.');
+    }
+
+    public function destroy(Request $request, Product $product): RedirectResponse
+    {
+        $seller = $this->sellerFor($request);
+        $this->ensureOwnedBySeller($product, $seller);
+
+        if ($this->hasPaidSales($product)) {
+            return redirect()
+                ->route('seller.products')
+                ->with('error', 'Produk yang sudah pernah dibeli tidak dapat dihapus. Gunakan Unpublish untuk menyembunyikannya.');
+        }
+
+        $product->delete();
+
+        return redirect()
+            ->route('seller.products')
+            ->with('success', 'Produk berhasil dihapus.');
+    }
+
+    private function sellerFor(Request $request): Seller
+    {
+        return Seller::query()
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+    }
+
+    private function ensureOwnedBySeller(Product $product, Seller $seller): void
+    {
+        abort_unless((int) $product->seller_id === (int) $seller->id, 403);
+    }
+
+    private function hasPaidSales(Product $product): bool
+    {
+        return $product->orderItems()
+            ->whereHas('order', fn ($query) => $query->where('payment_status', 'paid'))
+            ->exists();
     }
 }

@@ -75,6 +75,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('products', SellerProductsController::class)->name('products');
         Route::get('products/new', [SellerProductsController::class, 'create'])->name('products.new');
         Route::post('products', [SellerProductsController::class, 'store'])->name('products.store');
+        Route::get('products/{product}/edit', [SellerProductsController::class, 'edit'])->name('products.edit');
+        Route::match(['put', 'patch'], 'products/{product}', [SellerProductsController::class, 'update'])->name('products.update');
+        Route::delete('products/{product}', [SellerProductsController::class, 'destroy'])->name('products.destroy');
 
         Route::get('orders', SellerOrdersController::class)->name('orders');
 

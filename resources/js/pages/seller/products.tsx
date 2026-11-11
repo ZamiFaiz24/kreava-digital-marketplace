@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import DashboardLayout from '../../components/seller/layout/dashboard-layout';
 
 interface ProductRow {
@@ -31,11 +31,18 @@ interface ProductsPageProps {
   };
 }
 
+interface ProductsPageFlash {
+  success?: string;
+  error?: string;
+}
+
 function formatCurrency(value: number) {
   return `$${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
 }
 
 export default function SellerProductsPage({ products, summary }: ProductsPageProps) {
+  const { flash } = usePage<{ flash?: ProductsPageFlash }>().props;
+
   return (
     <>
       <Head title="Seller Products" />
@@ -53,6 +60,14 @@ export default function SellerProductsPage({ products, summary }: ProductsPagePr
               Upload Product
             </Link>
           </div>
+
+          {flash?.success && (
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{flash.success}</div>
+          )}
+
+          {flash?.error && (
+            <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-500">{flash.error}</div>
+          )}
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="rounded-xl border border-border bg-white p-4">
@@ -80,12 +95,13 @@ export default function SellerProductsPage({ products, summary }: ProductsPagePr
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-muted-foreground">Revenue</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-muted-foreground">Status</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase text-muted-foreground">Rating</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase text-muted-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {products.data.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                    <td colSpan={8} className="px-4 py-10 text-center text-sm text-muted-foreground">
                       No products found for this seller.
                     </td>
                   </tr>
@@ -111,6 +127,14 @@ export default function SellerProductsPage({ products, summary }: ProductsPagePr
                         </span>
                       </td>
                       <td className="px-4 py-3 text-sm text-foreground">{product.rating.toFixed(1)}</td>
+                      <td className="px-4 py-3 text-right">
+                        <Link
+                          href={route('seller.products.edit', product.id)}
+                          className="text-primary hover:text-primary/80 text-sm font-semibold"
+                        >
+                          Edit
+                        </Link>
+                      </td>
                     </tr>
                   ))
                 )}
