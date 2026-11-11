@@ -6,6 +6,8 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Seller;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -187,6 +189,54 @@ test('seller can update, unpublish, and publish a product', function () {
         ->assertRedirect(route('seller.products'));
 
     expect($product->fresh()->status)->toBe('published');
+});
+
+test('seller can update a product using only the prefilled form fields', function () {
+    [$user, $seller] = createProductEditSeller();
+    $category = createProductEditCategory();
+    $product = createProductEditProduct($seller, $category, [
+        'description' => null,
+        'preview_link' => null,
+        'thumbnail' => null,
+    ]);
+
+    $this->actingAs($user)
+        ->post(route('seller.products.update', $product), [
+            '_method' => 'patch',
+            'title' => $product->title,
+            'slug' => $product->slug,
+            'description' => '',
+            'category_id' => $category->id,
+            'price' => '55.00',
+            'preview_link' => '',
+            'thumbnail' => '',
+        ])
+        ->assertRedirect(route('seller.products'))
+        ->assertSessionHasNoErrors();
+
+    expect((float) $product->fresh()->price)->toBe(55.0);
+});
+
+test('seller can update a product with a new thumbnail using method spoofing', function () {
+    Storage::fake('public');
+
+    [$user, $seller] = createProductEditSeller();
+    $category = createProductEditCategory();
+    $product = createProductEditProduct($seller, $category);
+    $thumbnail = UploadedFile::fake()->createWithContent(
+        'thumbnail.png',
+        base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=')
+    );
+
+    $this->actingAs($user)
+        ->call('POST', route('seller.products.update', $product), [
+            '_method' => 'put',
+            ...productEditPayload($product),
+        ], [], ['thumbnail' => $thumbnail])
+        ->assertRedirect(route('seller.products'))
+        ->assertSessionHasNoErrors();
+
+    expect($product->fresh()->thumbnail)->not->toBeNull();
 });
 
 test('seller cannot delete a product that has been purchased', function () {

@@ -42,6 +42,7 @@ interface ProductEditForm {
     thumbnail: File | null;
     preview_link: string;
     status?: 'published' | 'draft';
+    _method?: 'put';
 }
 
 const statusStyles: Record<string, string> = {
@@ -56,7 +57,7 @@ export default function EditProductPage({ product, categories, can_delete }: Edi
     const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(product.thumbnail);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const { data, setData, put, processing, errors, transform } = useForm<ProductEditForm>({
+    const { data, setData, post, processing, errors, transform } = useForm<ProductEditForm>({
         title: product.title,
         slug: product.slug,
         description: product.description,
@@ -66,13 +67,17 @@ export default function EditProductPage({ product, categories, can_delete }: Edi
         preview_link: product.preview_link,
     });
 
-    transform((formData) => (statusRef.current ? { ...formData, status: statusRef.current } : formData));
+    transform((formData) => ({
+        ...formData,
+        _method: 'put',
+        ...(statusRef.current ? { status: statusRef.current } : {}),
+    }));
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
         statusRef.current = null;
 
-        put(route('seller.products.update', product.id), {
+        post(route('seller.products.update', product.id), {
             forceFormData: true,
             preserveScroll: true,
         });
@@ -81,7 +86,7 @@ export default function EditProductPage({ product, categories, can_delete }: Edi
     const changeStatus = (status: 'published' | 'draft') => {
         statusRef.current = status;
 
-        put(route('seller.products.update', product.id), {
+        post(route('seller.products.update', product.id), {
             forceFormData: true,
             preserveScroll: true,
             onFinish: () => {
@@ -138,7 +143,14 @@ export default function EditProductPage({ product, categories, can_delete }: Edi
                     {Object.keys(errors).length > 0 && (
                         <div className="flex items-start gap-3 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-500">
                             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                            <span>Gagal menyimpan produk. Periksa kembali isian formulir.</span>
+                            <div>
+                                <p className="font-medium">Gagal menyimpan produk.</p>
+                                <ul className="mt-1 list-inside list-disc space-y-0.5 text-xs">
+                                    {Object.entries(errors).map(([field, message]) => (
+                                        <li key={field}>{message}</li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                     )}
 
