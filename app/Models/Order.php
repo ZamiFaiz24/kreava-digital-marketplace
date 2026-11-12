@@ -14,7 +14,15 @@ class Order extends Model
         'total_price',
         'payment_status',
         'payment_method',
+        'refunded_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'refunded_at' => 'datetime',
+        ];
+    }
 
     public function user()
     {

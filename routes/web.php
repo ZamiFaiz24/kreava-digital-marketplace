@@ -15,6 +15,7 @@ use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ModerationController as AdminModerationController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PayoutController as AdminPayoutController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Customer\CartController as CustomerCartController;
@@ -52,6 +53,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('users', [AdminUserController::class, 'index'])->name('users.index');
         Route::post('users/{user}/status', [AdminUserController::class, 'toggleStatus'])->name('users.status');
+
+        Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::post('orders/{order}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
 
         Route::get('payouts', [AdminPayoutController::class, 'index'])->name('payouts');
         Route::post('payouts/{payout}/approve', [AdminPayoutController::class, 'approve'])->name('payouts.approve');
