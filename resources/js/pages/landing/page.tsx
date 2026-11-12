@@ -1,53 +1,45 @@
-import LandingLayout from '@/layouts/landing-layout'
-import PublicNavbar from '@/components/layout/public-navbar'
-import { HeroSection } from '@/components/landing/hero-section'
-import { CategoriesSection } from '@/components/landing/categories-section'
-import { TrendingProducts } from '@/components/landing/trending-products'
-import { DashboardPreview } from '@/components/landing/dashboard-preview'
-import { WhyKreava } from '@/components/landing/why-kreava'
-import { Testimonials } from '@/components/landing/testimonials'
-import { CTASection } from '@/components/landing/cta-section'
-import { Footer } from '@/components/landing/footer'
-import type { LandingCategory } from '@/types/landing'
-
-type LandingProduct = {
-  title: string
-  creator: string
-  rating: number
-  reviews: number
-  price: string
-  category: string
-  gradient?: string
-}
-
-type LandingTestimonial = {
-  name: string
-  role: string
-  content: string
-  avatar: string
-  rating: number
-}
+import { CategoriesSection } from '@/components/landing/categories-section';
+import { CTASection } from '@/components/landing/cta-section';
+import { DashboardPreview } from '@/components/landing/dashboard-preview';
+import { Footer } from '@/components/landing/footer';
+import { HeroSection } from '@/components/landing/hero-section';
+import { PlatformStatsSection } from '@/components/landing/platform-stats';
+import { Testimonials } from '@/components/landing/testimonials';
+import { TrendingProducts } from '@/components/landing/trending-products';
+import { WhyKreava } from '@/components/landing/why-kreava';
+import PublicNavbar from '@/components/layout/public-navbar';
+import LandingLayout from '@/layouts/landing-layout';
+import type { LandingCategory, LandingProduct, LandingTestimonial, PlatformStats } from '@/types/landing';
 
 interface LandingPageProps {
-  categories?: LandingCategory[]
-  trendingProducts?: LandingProduct[]
-  testimonials?: LandingTestimonial[]
+    categories?: LandingCategory[];
+    stats?: PlatformStats;
+    trendingProducts?: LandingProduct[];
+    testimonials?: LandingTestimonial[];
 }
 
-export default function LandingPage({ categories, trendingProducts, testimonials }: LandingPageProps) {
-  return (
-    <LandingLayout title="KREAVA - Create. Sell. Inspire.">
-      <main className="min-h-screen bg-background">
-        <PublicNavbar variant="landing" categories={categories} />
-        <HeroSection />
-        <CategoriesSection categories={categories} />
-        <TrendingProducts products={trendingProducts} />
-        <DashboardPreview />
-        <WhyKreava />
-        <Testimonials testimonials={testimonials} />
-        <CTASection />
-        <Footer />
-      </main>
-    </LandingLayout>
-  )
+const emptyStats: PlatformStats = {
+    products: 0,
+    creators: 0,
+    transactions: 0,
+    average_rating: 0,
+};
+
+export default function LandingPage({ categories, stats = emptyStats, trendingProducts, testimonials }: LandingPageProps) {
+    return (
+        <LandingLayout title="KREAVA - Tempat Terbaik untuk Kreator Digital">
+            <main className="bg-background min-h-screen">
+                <PublicNavbar variant="landing" categories={categories} />
+                <HeroSection />
+                <PlatformStatsSection stats={stats} />
+                <CategoriesSection categories={categories} />
+                <TrendingProducts products={trendingProducts} />
+                <DashboardPreview />
+                <WhyKreava />
+                <Testimonials testimonials={testimonials} />
+                <CTASection />
+                <Footer />
+            </main>
+        </LandingLayout>
+    );
 }
