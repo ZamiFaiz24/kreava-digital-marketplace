@@ -1,18 +1,5 @@
 <?php
 
-use Inertia\Inertia;
-use App\Http\Controllers\Pages\CreatorsController;
-use App\Http\Controllers\Pages\LandingController;
-use App\Http\Controllers\Pages\MarketplaceController;
-use App\Http\Controllers\Pages\ProductController;
-use App\Http\Controllers\Pages\WelcomeController;
-use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
-use App\Http\Controllers\Seller\ProductsController as SellerProductsController;
-use App\Http\Controllers\Seller\OrdersController as SellerOrdersController;
-use App\Http\Controllers\Seller\PayoutController as SellerPayoutController;
-use App\Http\Controllers\Seller\SettingsController as SellerSettingsController;
-use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController;
-use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
 use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ModerationController as AdminModerationController;
@@ -21,10 +8,24 @@ use App\Http\Controllers\Admin\PayoutController as AdminPayoutController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Customer\CartController as CustomerCartController;
 use App\Http\Controllers\Customer\CheckoutController as CustomerCheckoutController;
-use App\Http\Controllers\Customer\OrdersController as CustomerOrdersController;
 use App\Http\Controllers\Customer\DownloadsController as CustomerDownloadsController;
+use App\Http\Controllers\Customer\OrdersController as CustomerOrdersController;
 use App\Http\Controllers\Customer\WishlistController as CustomerWishlistController;
+use App\Http\Controllers\Pages\CreatorsController;
+use App\Http\Controllers\Pages\LandingController;
+use App\Http\Controllers\Pages\MarketplaceController;
+use App\Http\Controllers\Pages\ProductController;
+use App\Http\Controllers\Pages\WelcomeController;
+use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController;
+use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
+use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
+use App\Http\Controllers\Seller\OrdersController as SellerOrdersController;
+use App\Http\Controllers\Seller\PayoutController as SellerPayoutController;
+use App\Http\Controllers\Seller\ProductsController as SellerProductsController;
+use App\Http\Controllers\Seller\ReportController as SellerReportController;
+use App\Http\Controllers\Seller\SettingsController as SellerSettingsController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', LandingController::class)->name('landing');
 Route::get('/marketplace', MarketplaceController::class)->name('marketplace');
@@ -57,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('users/{user}/status', [AdminUserController::class, 'toggleStatus'])->name('users.status');
 
         Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/export', [AdminOrderController::class, 'export'])->name('orders.export');
         Route::post('orders/{order}/refund', [AdminOrderController::class, 'refund'])->name('orders.refund');
 
         Route::get('payouts', [AdminPayoutController::class, 'index'])->name('payouts');
@@ -93,6 +95,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('orders', SellerOrdersController::class)->name('orders');
 
         Route::get('analytics', SellerAnalyticsController::class)->name('analytics');
+        Route::get('reports/export', [SellerReportController::class, 'export'])->name('reports.export');
 
         Route::get('customers', SellerCustomersController::class)->name('customers');
 
@@ -104,5 +107,5 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-require __DIR__ . '/settings.php';
-require __DIR__ . '/auth.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';

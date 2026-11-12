@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Http\Controllers\Concerns\ResolvesDateRange;
 use App\Http\Controllers\Controller;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -13,6 +14,8 @@ use Inertia\Response;
 
 class AnalyticsController extends Controller
 {
+    use ResolvesDateRange;
+
     public function __invoke(Request $request): Response
     {
         $seller = Seller::query()
@@ -176,20 +179,5 @@ class AnalyticsController extends Controller
             '7d' => ['7d', $now->copy()->subDays(6)->startOfDay(), $now->copy()->endOfDay()],
             default => ['30d', $now->copy()->subDays(29)->startOfDay(), $now->copy()->endOfDay()],
         };
-    }
-
-    private function parseDate(mixed $value): ?Carbon
-    {
-        if (! is_string($value) || $value === '') {
-            return null;
-        }
-
-        try {
-            $date = Carbon::createFromFormat('Y-m-d', $value);
-
-            return $date instanceof Carbon ? $date : null;
-        } catch (\Throwable) {
-            return null;
-        }
     }
 }

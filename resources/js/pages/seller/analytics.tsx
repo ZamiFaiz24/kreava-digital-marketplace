@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Head, router } from '@inertiajs/react';
-import { AlertCircle, CalendarDays, Loader2 } from 'lucide-react';
+import { AlertCircle, CalendarDays, Download, Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import DashboardLayout from '../../components/seller/layout/dashboard-layout';
 
@@ -191,6 +191,12 @@ export default function SellerAnalyticsPage({ filters, summary, revenue_data, to
                                         Updating...
                                     </span>
                                 )}
+                                <Button asChild variant="outline" size="sm" className="border-indigo-200 text-indigo-700 hover:bg-indigo-50">
+                                    <a href={route('seller.reports.export', { start_date: filters.start_date, end_date: filters.end_date })}>
+                                        <Download className="h-4 w-4" />
+                                        Export CSV
+                                    </a>
+                                </Button>
                             </div>
                         </div>
 

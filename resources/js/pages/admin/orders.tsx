@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Head, router, usePage } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, Loader2, RotateCcw, Search, ShoppingBag } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download, Loader2, RotateCcw, Search, ShoppingBag } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { adminNavItems } from '../../components/admin/nav-items';
 import DashboardLayout from '../../components/seller/layout/dashboard-layout';
@@ -137,6 +137,15 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
 
     const startItem = orders.total === 0 ? 0 : (orders.current_page - 1) * orders.per_page + 1;
     const endItem = Math.min(orders.current_page * orders.per_page, orders.total);
+    const exportParams: Record<string, string> = {};
+
+    if (filters.search) {
+        exportParams.search = filters.search;
+    }
+
+    if (filters.status) {
+        exportParams.status = filters.status;
+    }
 
     return (
         <DashboardLayout navItems={adminNavItems} accountLabel="Administrator" showUploadAction={false}>
@@ -205,7 +214,15 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                         </Button>
                     </form>
 
-                    <p className="text-muted-foreground text-sm">{orders.total} orders</p>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <p className="text-muted-foreground text-sm">{orders.total} orders</p>
+                        <Button asChild variant="outline" size="sm" className="border-indigo-200 text-indigo-700 hover:bg-indigo-50">
+                            <a href={route('admin.orders.export', exportParams)}>
+                                <Download className="h-4 w-4" />
+                                Export CSV
+                            </a>
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="overflow-x-auto">
