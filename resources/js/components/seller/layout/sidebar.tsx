@@ -1,13 +1,14 @@
 'use client';
 
 import { Link, usePage } from '@inertiajs/react';
-import { BarChart3, LayoutGrid, LogOut, Package, Settings, ShoppingCart, Users, Wallet } from 'lucide-react';
+import { BarChart3, LayoutGrid, LogOut, Package, ScrollText, Settings, ShoppingCart, Users, Wallet } from 'lucide-react';
 import React from 'react';
 
 const iconMap: Record<string, React.ReactNode> = {
     grid: <LayoutGrid className="h-5 w-5" />,
     package: <Package className="h-5 w-5" />,
     'shopping-cart': <ShoppingCart className="h-5 w-5" />,
+    'scroll-text': <ScrollText className="h-5 w-5" />,
     'bar-chart-2': <BarChart3 className="h-5 w-5" />,
     users: <Users className="h-5 w-5" />,
     wallet: <Wallet className="h-5 w-5" />,

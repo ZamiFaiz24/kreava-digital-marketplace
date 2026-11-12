@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,7 +60,21 @@ class UserController extends Controller
                 ->with('error', 'Tidak dapat mengubah status akun sendiri.');
         }
 
-        $user->update(['is_active' => ! $user->is_active]);
+        $wasActive = (bool) $user->is_active;
+        $user->update(['is_active' => ! $wasActive]);
+
+        AuditLog::create([
+            'user_id' => $request->user()->id,
+            'action' => $user->is_active ? 'user.activate' : 'user.deactivate',
+            'target_type' => 'user',
+            'target_id' => $user->id,
+            'details' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'previous_status' => $wasActive ? 'active' : 'inactive',
+                'new_status' => $user->is_active ? 'active' : 'inactive',
+            ],
+        ]);
 
         return redirect()
             ->route('admin.users.index')

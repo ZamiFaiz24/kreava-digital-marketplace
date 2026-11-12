@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\Product;
 use App\Models\Seller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -41,25 +43,31 @@ class ModerationController extends Controller
         ]);
     }
 
-    public function approveProduct(Product $product): RedirectResponse
+    public function approveProduct(Request $request, Product $product): RedirectResponse
     {
+        $previousStatus = $product->status;
         $product->update(['status' => 'published']);
+
+        $this->recordProductAudit($request, $product, 'product.approve', $previousStatus, 'published');
 
         return redirect()
             ->route('admin.moderation.products')
             ->with('success', 'Produk berhasil disetujui.');
     }
 
-    public function rejectProduct(Product $product): RedirectResponse
+    public function rejectProduct(Request $request, Product $product): RedirectResponse
     {
+        $previousStatus = $product->status;
         $product->update(['status' => 'rejected']);
+
+        $this->recordProductAudit($request, $product, 'product.reject', $previousStatus, 'rejected');
 
         return redirect()
             ->route('admin.moderation.products')
             ->with('success', 'Produk berhasil ditolak.');
     }
 
-    public function takedownProduct(Product $product): RedirectResponse
+    public function takedownProduct(Request $request, Product $product): RedirectResponse
     {
         if ($product->status !== 'published') {
             return redirect()
@@ -67,7 +75,10 @@ class ModerationController extends Controller
                 ->with('error', 'Hanya produk yang sudah tayang yang dapat ditakedown.');
         }
 
+        $previousStatus = $product->status;
         $product->update(['status' => 'rejected']);
+
+        $this->recordProductAudit($request, $product, 'product.takedown', $previousStatus, 'rejected');
 
         return redirect()
             ->route('admin.moderation.products')
@@ -100,21 +111,57 @@ class ModerationController extends Controller
         ]);
     }
 
-    public function approveSeller(Seller $seller): RedirectResponse
+    public function approveSeller(Request $request, Seller $seller): RedirectResponse
     {
+        $previousStatus = $seller->status;
         $seller->update(['status' => 'approved']);
+
+        $this->recordSellerAudit($request, $seller, 'seller.approve', $previousStatus, 'approved');
 
         return redirect()
             ->route('admin.moderation.sellers')
             ->with('success', 'Seller berhasil disetujui.');
     }
 
-    public function rejectSeller(Seller $seller): RedirectResponse
+    public function rejectSeller(Request $request, Seller $seller): RedirectResponse
     {
+        $previousStatus = $seller->status;
         $seller->update(['status' => 'rejected']);
+
+        $this->recordSellerAudit($request, $seller, 'seller.reject', $previousStatus, 'rejected');
 
         return redirect()
             ->route('admin.moderation.sellers')
             ->with('success', 'Seller berhasil ditolak.');
+    }
+
+    private function recordProductAudit(Request $request, Product $product, string $action, string $previousStatus, string $newStatus): void
+    {
+        AuditLog::create([
+            'user_id' => $request->user()->id,
+            'action' => $action,
+            'target_type' => 'product',
+            'target_id' => $product->id,
+            'details' => [
+                'title' => $product->title,
+                'previous_status' => $previousStatus,
+                'new_status' => $newStatus,
+            ],
+        ]);
+    }
+
+    private function recordSellerAudit(Request $request, Seller $seller, string $action, string $previousStatus, string $newStatus): void
+    {
+        AuditLog::create([
+            'user_id' => $request->user()->id,
+            'action' => $action,
+            'target_type' => 'seller',
+            'target_id' => $seller->id,
+            'details' => [
+                'store_name' => $seller->store_name,
+                'previous_status' => $previousStatus,
+                'new_status' => $newStatus,
+            ],
+        ]);
     }
 }

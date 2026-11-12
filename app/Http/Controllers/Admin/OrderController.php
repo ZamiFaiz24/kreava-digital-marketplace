@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -52,7 +53,7 @@ class OrderController extends Controller
             ->withQueryString()
             ->through(fn (Order $order) => [
                 'id' => $order->id,
-                'order_number' => 'ORD-'.str_pad((string) $order->id, 4, '0', STR_PAD_LEFT),
+                'order_number' => $this->orderNumber($order),
                 'customer' => $order->user?->name ?? 'Unknown Customer',
                 'email' => $order->user?->email ?? '',
                 'created_at' => $order->created_at?->format('Y-m-d H:i') ?? '',
@@ -87,8 +88,26 @@ class OrderController extends Controller
 
         $order->update(['refunded_at' => now()]);
 
+        AuditLog::create([
+            'user_id' => $request->user()->id,
+            'action' => 'order.refund',
+            'target_type' => 'order',
+            'target_id' => $order->id,
+            'details' => [
+                'order_number' => $this->orderNumber($order),
+                'total_price' => (float) $order->total_price,
+                'payment_status' => $order->payment_status,
+                'refunded_at' => $order->refunded_at?->toDateTimeString(),
+            ],
+        ]);
+
         return redirect()
             ->route('admin.orders.index')
             ->with('success', 'Order berhasil ditandai refund.');
+    }
+
+    private function orderNumber(Order $order): string
+    {
+        return 'ORD-'.str_pad((string) $order->id, 4, '0', STR_PAD_LEFT);
     }
 }

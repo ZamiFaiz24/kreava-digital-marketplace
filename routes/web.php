@@ -13,6 +13,7 @@ use App\Http\Controllers\Seller\PayoutController as SellerPayoutController;
 use App\Http\Controllers\Seller\SettingsController as SellerSettingsController;
 use App\Http\Controllers\Seller\AnalyticsController as SellerAnalyticsController;
 use App\Http\Controllers\Seller\CustomersController as SellerCustomersController;
+use App\Http\Controllers\Admin\AuditLogController as AdminAuditLogController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ModerationController as AdminModerationController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -39,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     // Admin routes
     Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
         Route::get('dashboard', AdminDashboardController::class)->name('dashboard');
+        Route::get('audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
 
         Route::prefix('moderation')->name('moderation.')->group(function () {
             Route::get('products', [AdminModerationController::class, 'products'])->name('products');
