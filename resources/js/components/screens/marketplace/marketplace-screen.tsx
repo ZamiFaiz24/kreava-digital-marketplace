@@ -3,6 +3,7 @@
 import { router } from '@inertiajs/react';
 import { LayoutGrid, List, Loader2, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import EmptyState from '@/components/shared/empty-state';
 import FilterSidebar from '@/components/shared/filter-sidebar';
@@ -30,6 +31,7 @@ export default function MarketplaceScreen({
     pagination = { total: 0, per_page: 12, current_page: 1, last_page: 1, from: 0, to: 0 },
     filters = {},
 }: MarketplacePageProps) {
+    const { t } = useTranslation();
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [showFilters, setShowFilters] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -106,17 +108,14 @@ export default function MarketplaceScreen({
 
     return (
         <div className="min-h-screen bg-slate-50/60">
-            <PageHeader
-                title="Jelajahi Marketplace"
-                description="Temukan UI kits, template, ikon, ebook, dan aset digital premium dari kreator terbaik."
-            />
+            <PageHeader title={t('marketplace.page.title')} description={t('marketplace.page.description')} />
 
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <div className="mb-6 flex flex-col gap-3 sm:flex-row">
                     <SearchInput
                         value={searchQuery}
                         onChange={setSearchQuery}
-                        placeholder="Cari produk, UI kit, template..."
+                        placeholder={t('marketplace.search.placeholder')}
                         onSubmit={(value) => {
                             setSearchQuery(value);
                             navigate({ query: value });
@@ -130,14 +129,14 @@ export default function MarketplaceScreen({
                         className="h-12 bg-indigo-600 px-6 text-base font-semibold hover:bg-indigo-700 sm:w-auto"
                     >
                         {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                        Cari produk
+                        {t('marketplace.search.button')}
                     </Button>
                 </div>
 
                 <div className="mb-4 lg:hidden">
                     <Button type="button" variant="outline" onClick={() => setShowFilters((previous) => !previous)} className="w-full justify-center">
                         <SlidersHorizontal className="h-4 w-4" />
-                        {showFilters ? 'Sembunyikan filter' : 'Tampilkan filter'}
+                        {showFilters ? t('marketplace.results.hide_filters') : t('marketplace.results.show_filters')}
                     </Button>
                 </div>
 
@@ -172,11 +171,15 @@ export default function MarketplaceScreen({
                     <main aria-busy={isLoading}>
                         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                                <p className="text-sm font-semibold text-slate-900">{pagination.total.toLocaleString('id-ID')} produk ditemukan</p>
+                                <p className="text-sm font-semibold text-slate-900">{t('marketplace.results.found', { count: pagination.total })}</p>
                                 <p className="text-xs text-slate-500">
                                     {pagination.total > 0
-                                        ? `Menampilkan ${pagination.from}-${pagination.to} dari ${pagination.total} produk`
-                                        : 'Tidak ada produk yang cocok'}
+                                        ? t('marketplace.results.showing', {
+                                              from: pagination.from,
+                                              to: pagination.to,
+                                              total: pagination.total,
+                                          })
+                                        : t('marketplace.results.no_matches')}
                                 </p>
                             </div>
 
@@ -184,7 +187,7 @@ export default function MarketplaceScreen({
                                 {isLoading && (
                                     <span className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600">
                                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                        Memuat
+                                        {t('marketplace.results.loading')}
                                     </span>
                                 )}
 
@@ -196,7 +199,7 @@ export default function MarketplaceScreen({
                                             'rounded-md p-1.5 transition',
                                             viewMode === 'grid' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:text-slate-700',
                                         )}
-                                        title="Tampilan grid"
+                                        title={t('marketplace.results.grid_view')}
                                     >
                                         <LayoutGrid className="h-4 w-4" />
                                     </button>
@@ -207,7 +210,7 @@ export default function MarketplaceScreen({
                                             'rounded-md p-1.5 transition',
                                             viewMode === 'list' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:text-slate-700',
                                         )}
-                                        title="Tampilan list"
+                                        title={t('marketplace.results.list_view')}
                                     >
                                         <List className="h-4 w-4" />
                                     </button>
@@ -241,11 +244,11 @@ export default function MarketplaceScreen({
                             </>
                         ) : (
                             <EmptyState
-                                title="Produk tidak ditemukan"
-                                description="Coba ubah kata kunci, rentang harga, kategori, atau rating minimum."
+                                title={t('marketplace.empty.title')}
+                                description={t('marketplace.empty.description')}
                                 action={
                                     <Button type="button" onClick={resetFilters} className="bg-indigo-600 hover:bg-indigo-700">
-                                        Reset filter
+                                        {t('marketplace.empty.reset')}
                                     </Button>
                                 }
                             />

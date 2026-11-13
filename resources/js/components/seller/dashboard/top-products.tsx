@@ -1,85 +1,78 @@
-import React from 'react';
+import { ChevronRight, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
 import { Product } from '../../../types/seller';
-import { Star, ChevronRight } from 'lucide-react';
 
 interface TopProductsProps {
-  products: Product[];
+    products: Product[];
 }
 
 export default function TopProducts({ products }: TopProductsProps) {
-  return (
-    <div className="bg-white rounded-2xl border border-border p-6 mb-8">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-bold text-foreground">Top Products</h2>
-          <p className="text-sm text-muted-foreground">Your best selling products</p>
-        </div>
-        <a
-          href="#"
-          className="text-primary hover:text-primary/80 text-sm font-semibold flex items-center gap-1"
-        >
-          View All <ChevronRight className="w-4 h-4" />
-        </a>
-      </div>
+    const { t } = useTranslation();
 
-      {/* Products Grid */}
-      <div className="space-y-4">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="flex items-center gap-4 p-4 hover:bg-muted/50 rounded-lg transition-colors cursor-pointer group"
-          >
-            {/* Thumbnail */}
-            <div className="w-16 h-16 rounded-lg bg-muted flex-shrink-0 overflow-hidden">
-              <img
-                src={product.thumbnail}
-                alt={product.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform"
-              />
-            </div>
-
-            {/* Product Info */}
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-foreground line-clamp-1">{product.name}</p>
-              <p className="text-xs text-muted-foreground">{product.category}</p>
-
-              {/* Rating */}
-              <div className="flex items-center gap-1 mt-2">
-                <div className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-3 h-3 ${
-                        i < Math.floor(product.rating)
-                          ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-muted-foreground'
-                      }`}
-                    />
-                  ))}
+    return (
+        <div className="border-border mb-8 rounded-2xl border bg-white p-6">
+            {/* Header */}
+            <div className="mb-6 flex items-center justify-between">
+                <div>
+                    <h2 className="text-foreground text-xl font-bold">{t('dashboard.top_products.title')}</h2>
+                    <p className="text-muted-foreground text-sm">{t('dashboard.top_products.description')}</p>
                 </div>
-                <span className="text-xs font-semibold text-foreground">{product.rating}</span>
-              </div>
+                <a href="#" className="text-primary hover:text-primary/80 flex items-center gap-1 text-sm font-semibold">
+                    {t('dashboard.top_products.view_all')} <ChevronRight className="h-4 w-4" />
+                </a>
             </div>
 
-            {/* Stats */}
-            <div className="text-right flex-shrink-0">
-              <p className="text-sm font-bold text-foreground">
-                {product.salesCount.toLocaleString()}
-              </p>
-              <p className="text-xs text-muted-foreground">sales</p>
+            {/* Products Grid */}
+            <div className="space-y-4">
+                {products.map((product) => (
+                    <div key={product.id} className="hover:bg-muted/50 group flex cursor-pointer items-center gap-4 rounded-lg p-4 transition-colors">
+                        {/* Thumbnail */}
+                        <div className="bg-muted h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg">
+                            <img
+                                src={product.thumbnail}
+                                alt={product.name}
+                                className="h-full w-full object-cover transition-transform group-hover:scale-110"
+                            />
+                        </div>
 
-              <p className="text-sm font-bold text-primary mt-2">
-                ${product.revenue.toLocaleString('en-US', { maximumFractionDigits: 2 })}
-              </p>
-              <p className="text-xs text-muted-foreground">revenue</p>
+                        {/* Product Info */}
+                        <div className="min-w-0 flex-1">
+                            <p className="text-foreground line-clamp-1 font-semibold">{product.name}</p>
+                            <p className="text-muted-foreground text-xs">{product.category}</p>
+
+                            {/* Rating */}
+                            <div className="mt-2 flex items-center gap-1">
+                                <div className="flex items-center gap-0.5">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className={`h-3 w-3 ${
+                                                i < Math.floor(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'
+                                            }`}
+                                        />
+                                    ))}
+                                </div>
+                                <span className="text-foreground text-xs font-semibold">{product.rating}</span>
+                            </div>
+                        </div>
+
+                        {/* Stats */}
+                        <div className="flex-shrink-0 text-right">
+                            <p className="text-foreground text-sm font-bold">{product.salesCount.toLocaleString()}</p>
+                            <p className="text-muted-foreground text-xs">{t('dashboard.top_products.sales')}</p>
+
+                            <p className="text-primary mt-2 text-sm font-bold">
+                                ${product.revenue.toLocaleString('en-US', { maximumFractionDigits: 2 })}
+                            </p>
+                            <p className="text-muted-foreground text-xs">{t('dashboard.top_products.revenue')}</p>
+                        </div>
+
+                        {/* Chevron */}
+                        <ChevronRight className="text-muted-foreground group-hover:text-foreground h-5 w-5 transition-colors" />
+                    </div>
+                ))}
             </div>
-
-            {/* Chevron */}
-            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+        </div>
+    );
 }

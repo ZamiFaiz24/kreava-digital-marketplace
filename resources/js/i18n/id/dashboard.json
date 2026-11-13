@@ -1,0 +1,69 @@
+{
+    "dashboard": {
+        "title": "Dashboard",
+        "welcome": "Selamat datang kembali!",
+        "greeting": "Halo, {{name}}! 👋",
+        "overview": "Kamu sudah melakukan yang terbaik! Lihat statistik terbaru dan kelola tokomu di bawah ini.",
+        "revenue_this_month": "Pendapatan Bulan Ini",
+        "quick_insights": "Insight Singkat",
+        "insight_orders": "✓ 12 pesanan baru minggu ini",
+        "insight_reviews": "✓ 2 ulasan menunggu balasan",
+        "insight_payout": "✓ Pencairan siap pada 30 Mei",
+        "upload_product": "Unggah Produk Baru",
+        "view_analytics": "Lihat Analitik",
+        "stats": {
+            "total_revenue": "Total Pendapatan",
+            "this_month": "Bulan ini",
+            "total_sales": "Total Penjualan",
+            "number_of_sales": "Jumlah penjualan",
+            "products_sold": "Produk Terjual",
+            "all_time": "Sepanjang waktu",
+            "conversion_rate": "Tingkat Konversi",
+            "from_visitors": "Dari pengunjung"
+        },
+        "quick_actions": {
+            "title": "Aksi Cepat",
+            "upload_product": "Unggah Produk",
+            "upload_product_description": "Tambahkan produk digital baru ke tokomu",
+            "view_marketplace": "Lihat Marketplace",
+            "view_marketplace_description": "Lihat tampilan tokomu bagi pelanggan",
+            "edit_store": "Edit Toko",
+            "edit_store_description": "Sesuaikan pengaturan dan branding tokomu",
+            "view_analytics": "Lihat Analitik",
+            "view_analytics_description": "Telusuri analitik penjualanmu lebih dalam",
+            "go": "Buka"
+        },
+        "recent_orders": {
+            "title": "Pesanan Terbaru",
+            "description": "5 pesanan terakhir dari pelanggan",
+            "view_all": "Lihat Semua",
+            "product": "Produk",
+            "buyer": "Pembeli",
+            "amount": "Jumlah",
+            "status": "Status",
+            "date": "Tanggal",
+            "statuses": {
+                "completed": "Selesai",
+                "pending": "Menunggu",
+                "processing": "Diproses",
+                "failed": "Gagal"
+            }
+        },
+        "top_products": {
+            "title": "Produk Teratas",
+            "description": "Produk paling laris milikmu",
+            "view_all": "Lihat Semua",
+            "sales": "penjualan",
+            "revenue": "pendapatan"
+        },
+        "analytics": {
+            "title": "Analitik Pendapatan",
+            "description": "Pantau performa penjualanmu",
+            "weekly": "Mingguan",
+            "monthly": "Bulanan",
+            "total_revenue": "Total Pendapatan",
+            "avg_per_day": "Rata-rata per Hari",
+            "total_sales": "Total Penjualan"
+        }
+    }
+}

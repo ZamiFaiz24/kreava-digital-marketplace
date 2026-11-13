@@ -1,11 +1,14 @@
 import { Link } from '@inertiajs/react';
 import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/ui/button';
 
-const highlights = ['Gratis untuk mulai', 'Pencairan cepat', 'Dukungan kreator 24/7'];
+const highlightKeys = ['landing.cta.highlights.free_to_start', 'landing.cta.highlights.fast_payout', 'landing.cta.highlights.support'];
 
 export function CTASection() {
+    const { t } = useTranslation();
+
     return (
         <section className="relative overflow-hidden bg-slate-950 py-16 md:py-24">
             <div className="pointer-events-none absolute inset-0">
@@ -20,16 +23,14 @@ export function CTASection() {
                         <Sparkles className="h-8 w-8 text-white" />
                     </div>
 
-                    <h2 className="text-3xl font-bold tracking-tight text-white md:text-5xl">Siap menjadi kreator?</h2>
-                    <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg">
-                        Bergabung dengan ribuan kreator yang sudah menjual karya digital mereka di Kreava. Mulai tanpa biaya, tanpa ribet.
-                    </p>
+                    <h2 className="text-3xl font-bold tracking-tight text-white md:text-5xl">{t('landing.cta.title')}</h2>
+                    <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg">{t('landing.cta.subtitle')}</p>
 
                     <div className="mt-7 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-slate-300">
-                        {highlights.map((highlight) => (
-                            <span key={highlight} className="inline-flex items-center gap-2">
+                        {highlightKeys.map((highlightKey) => (
+                            <span key={highlightKey} className="inline-flex items-center gap-2">
                                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                                {highlight}
+                                {t(highlightKey)}
                             </span>
                         ))}
                     </div>
@@ -41,7 +42,7 @@ export function CTASection() {
                             className="h-12 rounded-xl bg-emerald-500 px-7 text-base font-semibold text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600"
                         >
                             <Link href={route('register', { role: 'seller' })}>
-                                Daftar sebagai Seller
+                                {t('landing.cta.register_seller')}
                                 <ArrowRight className="h-4 w-4" />
                             </Link>
                         </Button>
@@ -51,11 +52,11 @@ export function CTASection() {
                             variant="outline"
                             className="h-12 rounded-xl border-white/20 bg-white/5 px-7 text-base font-semibold text-white hover:bg-white/10 hover:text-white"
                         >
-                            <Link href={route('marketplace')}>Telusuri Produk</Link>
+                            <Link href={route('marketplace')}>{t('landing.cta.browse_products')}</Link>
                         </Button>
                     </div>
 
-                    <p className="mt-7 text-xs text-slate-400">Tanpa kartu kredit • Setup 5 menit • Mulai hasilkan pendapatan</p>
+                    <p className="mt-7 text-xs text-slate-400">{t('landing.cta.footnote')}</p>
                 </div>
             </div>
         </section>

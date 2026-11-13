@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface PaginationControlsProps {
     current_page: number;
@@ -17,6 +18,7 @@ export default function PaginationControls({
     onPageChange,
     href = (page) => `?page=${page}`,
 }: PaginationControlsProps) {
+    const { t } = useTranslation();
     const startItem = (current_page - 1) * per_page + 1;
     const endItem = Math.min(current_page * per_page, total);
 
@@ -60,11 +62,7 @@ export default function PaginationControls({
 
     return (
         <div className="border-border flex flex-col items-center justify-between gap-4 border-t px-4 py-6 sm:flex-row">
-            <p className="text-muted-foreground text-sm">
-                Menampilkan <span className="text-foreground font-medium">{startItem}</span>-
-                <span className="text-foreground font-medium">{endItem}</span> dari <span className="text-foreground font-medium">{total}</span>{' '}
-                produk
-            </p>
+            <p className="text-muted-foreground text-sm">{t('marketplace.pagination.showing', { from: startItem, to: endItem, total })}</p>
 
             <div className="flex items-center gap-1">
                 <a

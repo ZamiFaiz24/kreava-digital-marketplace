@@ -3,6 +3,7 @@
 import { Link } from '@inertiajs/react';
 import { ShoppingCart, Star, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onClick, href = '#' }: ProductCardProps) {
+    const { t } = useTranslation();
     const [isAdding, setIsAdding] = useState(false);
     const { toast } = useToast();
     const stars = generateStars(product.rating);
@@ -30,8 +32,8 @@ export default function ProductCard({ product, onClick, href = '#' }: ProductCar
             setIsAdding(true);
             await addProductToCart(product.id);
             toast({
-                title: 'Ditambahkan ke keranjang',
-                description: `${product.title} berhasil ditambahkan.`,
+                title: t('marketplace.product.added_title'),
+                description: t('marketplace.product.added_description', { title: product.title }),
             });
         } catch (error) {
             console.error('Failed to add product to cart', error);
@@ -64,7 +66,7 @@ export default function ProductCard({ product, onClick, href = '#' }: ProductCar
                     {product.trending && (
                         <Badge className="absolute top-3 left-3 gap-1 border-0 bg-amber-500 text-white shadow-sm">
                             <TrendingUp className="h-3.5 w-3.5" />
-                            Trending
+                            {t('marketplace.product.trending')}
                         </Badge>
                     )}
 
@@ -102,7 +104,7 @@ export default function ProductCard({ product, onClick, href = '#' }: ProductCar
                             ))}
                         </div>
                         <span className="text-xs font-medium text-slate-600">{product.rating.toFixed(1)}</span>
-                        <span className="text-xs text-slate-400">({product.reviews_count} ulasan)</span>
+                        <span className="text-xs text-slate-400">({t('marketplace.product.reviews', { count: product.reviews_count })})</span>
                     </div>
 
                     <div className="mt-auto flex items-end justify-between gap-3 border-t border-slate-100 pt-4">
@@ -123,7 +125,7 @@ export default function ProductCard({ product, onClick, href = '#' }: ProductCar
                     className="w-full rounded-xl border-indigo-200 text-indigo-600 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700"
                 >
                     <ShoppingCart className="h-4 w-4" />
-                    {isAdding ? 'Menambahkan...' : 'Tambah ke keranjang'}
+                    {isAdding ? t('marketplace.product.adding') : t('marketplace.product.add_to_cart')}
                 </Button>
             </div>
         </Card>

@@ -1,15 +1,16 @@
 import { Link } from '@inertiajs/react';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Card } from '@/components/ui/card';
 import { getCategoryIcon } from '@/lib/category-icons';
 import type { LandingCategory } from '@/types/landing';
 
-const fallbackCategories: LandingCategory[] = [
+const fallbackCategoryDefinitions = [
     {
         slug: 'ui-kits',
         title: 'UI Kits',
-        description: 'Design system dan komponen siap pakai',
+        descriptionKey: 'landing.categories.fallback.ui_kits',
         icon: 'layout-grid',
         href: '/marketplace?category=ui-kits',
         count: 0,
@@ -17,7 +18,7 @@ const fallbackCategories: LandingCategory[] = [
     {
         slug: 'templates',
         title: 'Templates',
-        description: 'Template Figma, WordPress, dan web app',
+        descriptionKey: 'landing.categories.fallback.templates',
         icon: 'layout-template',
         href: '/marketplace?category=templates',
         count: 0,
@@ -25,7 +26,7 @@ const fallbackCategories: LandingCategory[] = [
     {
         slug: 'source-code',
         title: 'Source Code',
-        description: 'Kode siap pakai untuk mempercepat build',
+        descriptionKey: 'landing.categories.fallback.source_code',
         icon: 'code-2',
         href: '/marketplace?category=source-code',
         count: 0,
@@ -33,7 +34,7 @@ const fallbackCategories: LandingCategory[] = [
     {
         slug: 'ebooks',
         title: 'Ebooks',
-        description: 'Panduan dan buku digital untuk kreator',
+        descriptionKey: 'landing.categories.fallback.ebooks',
         icon: 'book-open',
         href: '/marketplace?category=ebooks',
         count: 0,
@@ -41,7 +42,7 @@ const fallbackCategories: LandingCategory[] = [
     {
         slug: 'icons',
         title: 'Icons',
-        description: 'Koleksi ikon dan aset vektor',
+        descriptionKey: 'landing.categories.fallback.icons',
         icon: 'shapes',
         href: '/marketplace?category=icons',
         count: 0,
@@ -49,7 +50,7 @@ const fallbackCategories: LandingCategory[] = [
     {
         slug: 'mockups',
         title: 'Mockups',
-        description: 'Mockup realistis untuk presentasi produk',
+        descriptionKey: 'landing.categories.fallback.mockups',
         icon: 'monitor-smartphone',
         href: '/marketplace?category=mockups',
         count: 0,
@@ -57,7 +58,7 @@ const fallbackCategories: LandingCategory[] = [
     {
         slug: 'fonts',
         title: 'Fonts',
-        description: 'Tipografi untuk kebutuhan branding',
+        descriptionKey: 'landing.categories.fallback.fonts',
         icon: 'type',
         href: '/marketplace?category=fonts',
         count: 0,
@@ -65,7 +66,7 @@ const fallbackCategories: LandingCategory[] = [
     {
         slug: 'music-audio',
         title: 'Music & Audio',
-        description: 'Musik, SFX, dan aset audio lainnya',
+        descriptionKey: 'landing.categories.fallback.music_audio',
         icon: 'music-4',
         href: '/marketplace?category=music-audio',
         count: 0,
@@ -123,33 +124,36 @@ const categoryThemes = [
     },
 ];
 
-export function CategoriesSection({ categories = fallbackCategories }: { categories?: LandingCategory[] }) {
+export function CategoriesSection({ categories }: { categories?: LandingCategory[] }) {
+    const { t } = useTranslation();
+    const fallbackCategories: LandingCategory[] = fallbackCategoryDefinitions.map(({ descriptionKey, ...category }) => ({
+        ...category,
+        description: t(descriptionKey),
+    }));
+    const visibleCategories = categories ?? fallbackCategories;
+
     return (
         <section id="categories" className="relative bg-white py-16 md:py-24">
             <div className="container mx-auto px-4">
                 <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
                     <div className="max-w-2xl">
-                        <p className="mb-3 text-sm font-semibold tracking-[0.24em] text-indigo-600 uppercase">Jelajahi kategori</p>
-                        <h2 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">
-                            Temukan aset digital yang tepat, lebih cepat.
-                        </h2>
-                        <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
-                            Dari UI kit sampai aset audio, semua kebutuhan kreatifmu ada dalam satu marketplace.
-                        </p>
+                        <p className="mb-3 text-sm font-semibold tracking-[0.24em] text-indigo-600 uppercase">{t('landing.categories.eyebrow')}</p>
+                        <h2 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">{t('landing.categories.title')}</h2>
+                        <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">{t('landing.categories.subtitle')}</p>
                     </div>
 
                     <Link
                         href={route('marketplace')}
                         className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 transition hover:gap-3 hover:text-indigo-700"
                     >
-                        Lihat semua produk
+                        {t('landing.categories.view_all')}
                         <ArrowUpRight className="h-4 w-4" />
                     </Link>
                 </div>
 
-                {categories.length > 0 ? (
+                {visibleCategories.length > 0 ? (
                     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                        {categories.map((category, index) => {
+                        {visibleCategories.map((category, index) => {
                             const Icon = getCategoryIcon(category.icon);
                             const theme = categoryThemes[index % categoryThemes.length];
 
@@ -168,7 +172,7 @@ export function CategoriesSection({ categories = fallbackCategories }: { categor
                                                     <Icon className="h-6 w-6" />
                                                 </div>
                                                 <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-500">
-                                                    {category.count ?? 0} produk
+                                                    {t('landing.categories.products_count', { count: category.count ?? 0 })}
                                                 </span>
                                             </div>
 
@@ -180,7 +184,7 @@ export function CategoriesSection({ categories = fallbackCategories }: { categor
                                                 <span
                                                     className={`mt-4 inline-flex items-center gap-1.5 text-xs font-semibold md:text-sm ${theme.arrow}`}
                                                 >
-                                                    Lihat kategori
+                                                    {t('landing.categories.view_category')}
                                                     <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                                                 </span>
                                             </div>
@@ -195,8 +199,8 @@ export function CategoriesSection({ categories = fallbackCategories }: { categor
                         <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
                             <Sparkles className="h-7 w-7" />
                         </div>
-                        <h3 className="text-lg font-semibold text-slate-900">Belum ada kategori</h3>
-                        <p className="mt-2 max-w-md text-sm text-slate-500">Kategori produk akan muncul di sini setelah ditambahkan oleh admin.</p>
+                        <h3 className="text-lg font-semibold text-slate-900">{t('landing.categories.empty_title')}</h3>
+                        <p className="mt-2 max-w-md text-sm text-slate-500">{t('landing.categories.empty_description')}</p>
                     </Card>
                 )}
             </div>

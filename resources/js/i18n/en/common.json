@@ -1,0 +1,36 @@
+{
+    "common": {
+        "nav": {
+            "home": "Home",
+            "marketplace": "Marketplace",
+            "categories": "Categories",
+            "creators": "Creators",
+            "sell": "Sell",
+            "sell_on_kreava": "Sell on KREAVA",
+            "login": "Log in",
+            "register": "Register",
+            "account": "Account",
+            "wishlist": "Wishlist",
+            "cart": "Cart",
+            "toggle_menu": "Toggle menu",
+            "browse_categories": "Browse categories",
+            "explore_by_category": "Explore by category",
+            "view_all": "View all",
+            "browse_category_description": "Browse products in this category",
+            "featured_path": "Featured path",
+            "need_inspiration": "Need inspiration?",
+            "inspiration_description": "Start with UI Kits, Templates, or Source Code to find products that fit your workflow.",
+            "browse_marketplace": "Browse marketplace",
+            "meet_creators": "Meet creators"
+        },
+        "banner": {
+            "new_templates": "New: Free templates this month —",
+            "explore_now": "Explore now"
+        },
+        "language": {
+            "label": "Language",
+            "en": "English",
+            "id": "Indonesian"
+        }
+    }
+}

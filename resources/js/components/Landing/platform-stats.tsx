@@ -1,42 +1,50 @@
 import { BadgeCheck, Package, ShoppingBag, Star, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Card } from '@/components/ui/card';
 import type { PlatformStats } from '@/types/landing';
 
-const numberFormatter = new Intl.NumberFormat('id-ID');
-
 const statItems = [
     {
         key: 'products' as const,
-        label: 'Total Produk',
-        description: 'Produk digital siap dibeli',
         icon: Package,
         iconClass: 'bg-indigo-50 text-indigo-600 ring-indigo-100',
     },
     {
         key: 'creators' as const,
-        label: 'Total Kreator',
-        description: 'Kreator terverifikasi',
         icon: Users,
         iconClass: 'bg-emerald-50 text-emerald-600 ring-emerald-100',
     },
     {
         key: 'transactions' as const,
-        label: 'Total Transaksi',
-        description: 'Transaksi berhasil',
         icon: ShoppingBag,
         iconClass: 'bg-amber-50 text-amber-600 ring-amber-100',
     },
     {
         key: 'average_rating' as const,
-        label: 'Rating Rata-rata',
-        description: 'Dari ulasan pembeli',
         icon: Star,
         iconClass: 'bg-rose-50 text-rose-600 ring-rose-100',
     },
 ];
 
+const labelKeys = {
+    products: 'landing.stats.products.label',
+    creators: 'landing.stats.creators.label',
+    transactions: 'landing.stats.transactions.label',
+    average_rating: 'landing.stats.rating.label',
+} as const;
+
+const descriptionKeys = {
+    products: 'landing.stats.products.description',
+    creators: 'landing.stats.creators.description',
+    transactions: 'landing.stats.transactions.description',
+    average_rating: 'landing.stats.rating.description',
+} as const;
+
 export function PlatformStatsSection({ stats }: { stats: PlatformStats }) {
+    const { t, i18n } = useTranslation();
+    const numberFormatter = new Intl.NumberFormat(i18n.resolvedLanguage === 'id' ? 'id-ID' : 'en-US');
+
     return (
         <section className="relative z-20 pb-10">
             <div className="container mx-auto px-4">
@@ -57,12 +65,12 @@ export function PlatformStatsSection({ stats }: { stats: PlatformStats }) {
                                 </div>
 
                                 <div className="min-w-0">
-                                    <p className="text-xs font-medium text-slate-500 md:text-sm">{item.label}</p>
+                                    <p className="text-xs font-medium text-slate-500 md:text-sm">{t(labelKeys[item.key])}</p>
                                     <p className="mt-0.5 flex items-baseline gap-1 text-xl font-bold tracking-tight text-slate-900 tabular-nums md:text-2xl">
                                         {value}
                                         {item.key === 'average_rating' && <span className="text-xs font-medium text-slate-400">/ 5</span>}
                                     </p>
-                                    <p className="mt-0.5 hidden truncate text-xs text-slate-400 sm:block">{item.description}</p>
+                                    <p className="mt-0.5 hidden truncate text-xs text-slate-400 sm:block">{t(descriptionKeys[item.key])}</p>
                                 </div>
                             </Card>
                         );
@@ -71,7 +79,7 @@ export function PlatformStatsSection({ stats }: { stats: PlatformStats }) {
 
                 <p className="mt-4 flex items-center justify-center gap-1.5 text-xs text-slate-500">
                     <BadgeCheck className="h-3.5 w-3.5 text-emerald-500" />
-                    Data platform diperbarui secara otomatis
+                    {t('landing.stats.updated')}
                 </p>
             </div>
         </section>

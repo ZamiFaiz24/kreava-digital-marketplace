@@ -1,0 +1,66 @@
+{
+    "marketplace": {
+        "page": {
+            "title": "Explore the Marketplace",
+            "description": "Discover UI kits, templates, icons, ebooks, and premium digital assets from the best creators."
+        },
+        "search": {
+            "placeholder": "Search products, UI kits, templates...",
+            "button": "Search products"
+        },
+        "filter": {
+            "title": "Filter products",
+            "description": "Narrow down your search results",
+            "reset": "Reset",
+            "category": "Category",
+            "all_categories": "All categories",
+            "price_range": "Price range",
+            "min": "Min ($)",
+            "max": "Max ($)",
+            "apply_price": "Apply price",
+            "min_rating": "Minimum rating",
+            "all_ratings": "All ratings",
+            "sort": "Sort by",
+            "sort_placeholder": "Choose an order"
+        },
+        "sort": {
+            "latest": "Newest",
+            "price_asc": "Lowest price",
+            "price_desc": "Highest price",
+            "rating_desc": "Best rating"
+        },
+        "rating": {
+            "five": "5 stars",
+            "four_half": "4.5+ stars",
+            "four": "4+ stars",
+            "three": "3+ stars"
+        },
+        "results": {
+            "found": "{{count, number}} products found",
+            "showing": "Showing {{from}}-{{to}} of {{total}} products",
+            "no_matches": "No matching products",
+            "loading": "Loading",
+            "grid_view": "Grid view",
+            "list_view": "List view",
+            "show_filters": "Show filters",
+            "hide_filters": "Hide filters"
+        },
+        "empty": {
+            "title": "No products found",
+            "description": "Try changing your keywords, price range, category, or minimum rating.",
+            "reset": "Reset filters"
+        },
+        "product": {
+            "reviews_one": "{{count}} review",
+            "reviews_other": "{{count}} reviews",
+            "trending": "Trending",
+            "add_to_cart": "Add to cart",
+            "adding": "Adding...",
+            "added_title": "Added to cart",
+            "added_description": "{{title}} was added successfully."
+        },
+        "pagination": {
+            "showing": "Showing {{from}}-{{to}} of {{total}} products"
+        }
+    }
+}

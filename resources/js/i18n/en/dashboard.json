@@ -1,0 +1,69 @@
+{
+    "dashboard": {
+        "title": "Dashboard",
+        "welcome": "Welcome back!",
+        "greeting": "Hey, {{name}}! 👋",
+        "overview": "You're doing great! Check your latest stats and manage your store below.",
+        "revenue_this_month": "This Month Revenue",
+        "quick_insights": "Quick Insights",
+        "insight_orders": "✓ 12 new orders this week",
+        "insight_reviews": "✓ 2 pending reviews to respond",
+        "insight_payout": "✓ Payout ready on May 30th",
+        "upload_product": "Upload New Product",
+        "view_analytics": "View Analytics",
+        "stats": {
+            "total_revenue": "Total Revenue",
+            "this_month": "This month",
+            "total_sales": "Total Sales",
+            "number_of_sales": "Number of sales",
+            "products_sold": "Products Sold",
+            "all_time": "All time",
+            "conversion_rate": "Conversion Rate",
+            "from_visitors": "From visitors"
+        },
+        "quick_actions": {
+            "title": "Quick Actions",
+            "upload_product": "Upload Product",
+            "upload_product_description": "Add a new digital product to your store",
+            "view_marketplace": "View Marketplace",
+            "view_marketplace_description": "See how your store looks to customers",
+            "edit_store": "Edit Store",
+            "edit_store_description": "Customize your store settings and branding",
+            "view_analytics": "View Analytics",
+            "view_analytics_description": "Deep dive into your sales analytics",
+            "go": "Go"
+        },
+        "recent_orders": {
+            "title": "Recent Orders",
+            "description": "Latest 5 orders from customers",
+            "view_all": "View All",
+            "product": "Product",
+            "buyer": "Buyer",
+            "amount": "Amount",
+            "status": "Status",
+            "date": "Date",
+            "statuses": {
+                "completed": "Completed",
+                "pending": "Pending",
+                "processing": "Processing",
+                "failed": "Failed"
+            }
+        },
+        "top_products": {
+            "title": "Top Products",
+            "description": "Your best selling products",
+            "view_all": "View All",
+            "sales": "sales",
+            "revenue": "revenue"
+        },
+        "analytics": {
+            "title": "Revenue Analytics",
+            "description": "Track your sales performance",
+            "weekly": "Weekly",
+            "monthly": "Monthly",
+            "total_revenue": "Total Revenue",
+            "avg_per_day": "Avg per Day",
+            "total_sales": "Total Sales"
+        }
+    }
+}

@@ -4,6 +4,8 @@ import { Link } from '@inertiajs/react';
 import { Bell, Menu, Search, Upload } from 'lucide-react';
 import { useState } from 'react';
 
+import { LanguageSwitcher } from '@/components/shared/language-switcher';
+
 interface NavbarProps {
     sellerName: string;
     sellerAvatar: string;
@@ -38,6 +40,7 @@ export default function Navbar({ sellerName, sellerAvatar, profileEmail = 'selle
 
                 {/* Right: Actions */}
                 <div className="ml-4 flex items-center gap-4">
+                    <LanguageSwitcher />
                     {/* Upload Product Button */}
                     {showUploadAction && (
                         <button className="bg-primary hover:bg-primary/90 hidden items-center gap-2 rounded-lg px-4 py-2 text-white transition-colors sm:flex">

@@ -1,0 +1,36 @@
+{
+    "common": {
+        "nav": {
+            "home": "Beranda",
+            "marketplace": "Marketplace",
+            "categories": "Kategori",
+            "creators": "Kreator",
+            "sell": "Jual",
+            "sell_on_kreava": "Jual di KREAVA",
+            "login": "Masuk",
+            "register": "Daftar",
+            "account": "Akun",
+            "wishlist": "Daftar keinginan",
+            "cart": "Keranjang",
+            "toggle_menu": "Buka menu",
+            "browse_categories": "Jelajahi kategori",
+            "explore_by_category": "Jelajahi berdasarkan kategori",
+            "view_all": "Lihat semua",
+            "browse_category_description": "Lihat produk di kategori ini",
+            "featured_path": "Rekomendasi",
+            "need_inspiration": "Butuh inspirasi?",
+            "inspiration_description": "Mulai dari UI Kit, Template, atau Source Code untuk menemukan produk yang sesuai dengan alur kerjamu.",
+            "browse_marketplace": "Jelajahi marketplace",
+            "meet_creators": "Kenali kreator"
+        },
+        "banner": {
+            "new_templates": "Baru: Template gratis bulan ini —",
+            "explore_now": "Jelajahi sekarang"
+        },
+        "language": {
+            "label": "Bahasa",
+            "en": "Inggris",
+            "id": "Indonesia"
+        }
+    }
+}

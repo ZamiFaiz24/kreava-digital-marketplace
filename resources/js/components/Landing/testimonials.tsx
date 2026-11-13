@@ -1,49 +1,50 @@
 import { Quote, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import type { LandingTestimonial } from '@/types/landing';
 
-const fallbackTestimonials: LandingTestimonial[] = [
+const fallbackTestimonialDefinitions = [
     {
         name: 'Sarah Chen',
         role: 'UI/UX Designer',
-        content: 'Kreava mengubah cara saya menjual karya. Dari freelancer biasa, sekarang saya punya penghasilan tetap dari UI kit.',
+        contentKey: 'landing.testimonials.items.sarah',
         avatar: '👩‍💼',
         rating: 5,
     },
     {
         name: 'Marcus Johnson',
         role: 'Full Stack Developer',
-        content: 'Marketplace-nya intuitif dan proses upload-nya cepat. Produk pertama saya terjual dalam hitungan hari.',
+        contentKey: 'landing.testimonials.items.marcus',
         avatar: '👨‍💻',
         rating: 5,
     },
     {
         name: 'Elena Rodriguez',
         role: 'Illustration Artist',
-        content: 'Saya tidak menyangka aset digital bisa jadi sumber penghasilan utama. Kreava membuat semuanya terasa mudah.',
+        contentKey: 'landing.testimonials.items.elena',
         avatar: '👩‍🎨',
         rating: 5,
     },
     {
         name: 'James Wilson',
         role: 'Content Creator',
-        content: 'Dashboard analitiknya sangat membantu. Saya bisa melihat produk mana yang performa terbaik dan fokus ke sana.',
+        contentKey: 'landing.testimonials.items.james',
         avatar: '👨‍🏫',
         rating: 5,
     },
     {
         name: 'Lisa Park',
         role: 'Design System Lead',
-        content: 'Tim kami memakai Kreava untuk menjual lisensi design system. Pembayaran dan pengiriman file berjalan mulus.',
+        contentKey: 'landing.testimonials.items.lisa',
         avatar: '👩‍💼',
         rating: 5,
     },
     {
         name: 'Tom Bradley',
         role: 'SaaS Founder',
-        content: 'Kami memakai Kreava untuk marketplace template. Proses otomatis dan integrasi analitiknya menghemat banyak waktu.',
+        contentKey: 'landing.testimonials.items.tom',
         avatar: '👨‍💼',
         rating: 5,
     },
@@ -66,21 +67,26 @@ function getInitials(name: string): string {
         .join('');
 }
 
-export function Testimonials({ testimonials = fallbackTestimonials }: { testimonials?: LandingTestimonial[] }) {
+export function Testimonials({ testimonials }: { testimonials?: LandingTestimonial[] }) {
+    const { t } = useTranslation();
+    const fallbackTestimonials: LandingTestimonial[] = fallbackTestimonialDefinitions.map(({ contentKey, ...testimonial }) => ({
+        ...testimonial,
+        content: t(contentKey),
+    }));
+    const visibleTestimonials = testimonials ?? fallbackTestimonials;
+
     return (
         <section className="relative bg-white py-16 md:py-24">
             <div className="container mx-auto px-4">
                 <div className="mx-auto mb-10 max-w-2xl text-center md:mb-12">
-                    <p className="mb-3 text-sm font-semibold tracking-[0.24em] text-rose-500 uppercase">Testimoni</p>
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">Dipercaya Para Kreator</h2>
-                    <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
-                        Cerita nyata dari kreator yang membangun penghasilan dari produk digital mereka.
-                    </p>
+                    <p className="mb-3 text-sm font-semibold tracking-[0.24em] text-rose-500 uppercase">{t('landing.testimonials.eyebrow')}</p>
+                    <h2 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">{t('landing.testimonials.title')}</h2>
+                    <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">{t('landing.testimonials.subtitle')}</p>
                 </div>
 
-                {testimonials.length > 0 ? (
+                {visibleTestimonials.length > 0 ? (
                     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                        {testimonials.map((testimonial, index) => {
+                        {visibleTestimonials.map((testimonial, index) => {
                             const imageAvatar = isImageAvatar(testimonial.avatar);
                             const fallback =
                                 testimonial.avatar && testimonial.avatar.length <= 4 ? testimonial.avatar : getInitials(testimonial.name);
@@ -125,8 +131,8 @@ export function Testimonials({ testimonials = fallbackTestimonials }: { testimon
                         <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-50 text-rose-500">
                             <Quote className="h-7 w-7" />
                         </div>
-                        <h3 className="text-lg font-semibold text-slate-900">Belum ada testimoni</h3>
-                        <p className="mt-2 max-w-md text-sm text-slate-500">Ulasan pembeli akan tampil di sini setelah transaksi pertama selesai.</p>
+                        <h3 className="text-lg font-semibold text-slate-900">{t('landing.testimonials.empty_title')}</h3>
+                        <p className="mt-2 max-w-md text-sm text-slate-500">{t('landing.testimonials.empty_description')}</p>
                     </Card>
                 )}
             </div>

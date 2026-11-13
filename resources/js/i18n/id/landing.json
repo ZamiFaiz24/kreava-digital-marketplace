@@ -1,0 +1,205 @@
+{
+    "landing": {
+        "meta": {
+            "title": "KREAVA - Tempat Terbaik untuk Kreator Digital"
+        },
+        "hero": {
+            "badge": "Marketplace untuk kreator digital",
+            "title_prefix": "Tempat Terbaik untuk ",
+            "title_highlight": "Kreator Digital",
+            "subtitle": "Jual UI kits, template, ebook, ikon, dan produk digital lainnya.",
+            "start_selling": "Mulai Jual",
+            "browse_products": "Telusuri Produk",
+            "perks": {
+                "no_fees": "Tanpa biaya pendaftaran",
+                "secure_payment": "Pembayaran aman",
+                "instant_download": "Download instan"
+            },
+            "showcase": {
+                "ui_kits": "UI Kit",
+                "templates": "Template",
+                "ebooks": "Ebook",
+                "icons": "Ikon",
+                "products_count": "{{count, number}} produk"
+            },
+            "preview": {
+                "featured_products": "Produk unggulan",
+                "weekly_picks": "Pilihan terbaik minggu ini",
+                "active_creators": "Kreator aktif",
+                "joined_this_month": "Bergabung bulan ini",
+                "buyer_rating": "Rating pembeli",
+                "creators_joined": "Kreator bergabung"
+            }
+        },
+        "stats": {
+            "products": {
+                "label": "Total Produk",
+                "description": "Produk digital siap dibeli"
+            },
+            "creators": {
+                "label": "Total Kreator",
+                "description": "Kreator terverifikasi"
+            },
+            "transactions": {
+                "label": "Total Transaksi",
+                "description": "Transaksi berhasil"
+            },
+            "rating": {
+                "label": "Rating Rata-rata",
+                "description": "Dari ulasan pembeli"
+            },
+            "updated": "Data platform diperbarui secara otomatis"
+        },
+        "categories": {
+            "eyebrow": "Jelajahi kategori",
+            "title": "Temukan aset digital yang tepat, lebih cepat.",
+            "subtitle": "Dari UI kit sampai aset audio, semua kebutuhan kreatifmu ada dalam satu marketplace.",
+            "view_all": "Lihat semua produk",
+            "products_count": "{{count, number}} produk",
+            "view_category": "Lihat kategori",
+            "empty_title": "Belum ada kategori",
+            "empty_description": "Kategori produk akan muncul di sini setelah ditambahkan oleh admin.",
+            "fallback": {
+                "ui_kits": "Design system dan komponen siap pakai",
+                "templates": "Template Figma, WordPress, dan web app",
+                "source_code": "Kode siap pakai untuk mempercepat build",
+                "ebooks": "Panduan dan buku digital untuk kreator",
+                "icons": "Koleksi ikon dan aset vektor",
+                "mockups": "Mockup realistis untuk presentasi produk",
+                "fonts": "Tipografi untuk kebutuhan branding",
+                "music_audio": "Musik, SFX, dan aset audio lainnya"
+            }
+        },
+        "trending": {
+            "eyebrow": "Paling dicari",
+            "title": "Produk Trending",
+            "subtitle": "Produk digital paling populer dari kreator pilihan di Kreava.",
+            "view_all": "Lihat semua produk",
+            "reviews_one": "{{count}} ulasan",
+            "reviews_other": "{{count}} ulasan",
+            "empty_title": "Belum ada produk trending",
+            "empty_description": "Produk populer akan tampil di sini setelah kreator mulai berjualan."
+        },
+        "testimonials": {
+            "eyebrow": "Testimoni",
+            "title": "Dipercaya Para Kreator",
+            "subtitle": "Cerita nyata dari kreator yang membangun penghasilan dari produk digital mereka.",
+            "empty_title": "Belum ada testimoni",
+            "empty_description": "Ulasan pembeli akan tampil di sini setelah transaksi pertama selesai.",
+            "items": {
+                "sarah": "Kreava mengubah cara saya menjual karya. Dari freelancer biasa, sekarang saya punya penghasilan tetap dari UI kit.",
+                "marcus": "Marketplace-nya intuitif dan proses upload-nya cepat. Produk pertama saya terjual dalam hitungan hari.",
+                "elena": "Saya tidak menyangka aset digital bisa jadi sumber penghasilan utama. Kreava membuat semuanya terasa mudah.",
+                "james": "Dashboard analitiknya sangat membantu. Saya bisa melihat produk mana yang performa terbaik dan fokus ke sana.",
+                "lisa": "Tim kami memakai Kreava untuk menjual lisensi design system. Pembayaran dan pengiriman file berjalan mulus.",
+                "tom": "Kami memakai Kreava untuk marketplace template. Proses otomatis dan integrasi analitiknya menghemat banyak waktu."
+            }
+        },
+        "cta": {
+            "title": "Siap menjadi kreator?",
+            "subtitle": "Bergabung dengan ribuan kreator yang sudah menjual karya digital mereka di Kreava. Mulai tanpa biaya, tanpa ribet.",
+            "highlights": {
+                "free_to_start": "Gratis untuk mulai",
+                "fast_payout": "Pencairan cepat",
+                "support": "Dukungan kreator 24/7"
+            },
+            "register_seller": "Daftar sebagai Seller",
+            "browse_products": "Telusuri Produk",
+            "footnote": "Tanpa kartu kredit • Setup 5 menit • Mulai hasilkan pendapatan"
+        },
+        "footer": {
+            "description": "Memberdayakan kreator digital untuk menghasilkan uang dari karyanya dan membangun bisnis yang berkelanjutan.",
+            "sections": {
+                "marketplace": "Marketplace",
+                "for_creators": "Untuk Kreator",
+                "company": "Perusahaan",
+                "legal": "Legal"
+            },
+            "links": {
+                "all_products": "Semua Produk",
+                "ui_kits": "UI Kits",
+                "templates": "Template",
+                "source_code": "Source Code",
+                "ebooks": "Ebook",
+                "icons": "Ikon",
+                "start_selling": "Mulai Berjualan",
+                "creator_dashboard": "Dashboard Kreator",
+                "analytics": "Analitik",
+                "pricing": "Harga",
+                "resources": "Sumber Daya",
+                "api_docs": "Dokumentasi API",
+                "about_us": "Tentang Kami",
+                "blog": "Blog",
+                "careers": "Karier",
+                "press": "Pers",
+                "contact": "Kontak",
+                "brand_kit": "Brand Kit",
+                "privacy_policy": "Kebijakan Privasi",
+                "terms_of_service": "Syarat Layanan",
+                "cookie_policy": "Kebijakan Cookie",
+                "security": "Keamanan",
+                "compliance": "Kepatuhan",
+                "privacy": "Privasi",
+                "terms": "Syarat",
+                "status": "Status"
+            },
+            "copyright": "© 2024 KREAVA. Semua hak dilindungi. Dibuat untuk kreator, oleh kreator."
+        },
+        "why": {
+            "title": "Mengapa Memilih KREAVA?",
+            "subtitle": "Kami dibangun khusus untuk kreator digital yang ingin menghasilkan uang dari karyanya dan membangun bisnis yang berkelanjutan.",
+            "features": {
+                "easy_selling": {
+                    "title": "Jual Produk Digital dengan Mudah",
+                    "description": "Proses setup sederhana tanpa perlu coding. Mulai berjualan dalam hitungan menit dengan platform kami yang intuitif."
+                },
+                "multi_vendor": {
+                    "title": "Platform Multi-Vendor",
+                    "description": "Bergabung dengan ribuan kreator yang berjualan di marketplace yang sama dengan audiens dan penemuan bawaan."
+                },
+                "instant_downloads": {
+                    "title": "Download Instan",
+                    "description": "Pengiriman produk digital otomatis secara instan kepada pelanggan tanpa hambatan."
+                },
+                "analytics": {
+                    "title": "Dashboard Analitik",
+                    "description": "Insight real-time tentang penjualan, pendapatan, perilaku pelanggan, dan performa produkmu."
+                },
+                "secure": {
+                    "title": "Aman & Andal",
+                    "description": "Keamanan kelas enterprise dengan enkripsi SSL, pembayaran aman, dan perlindungan fraud."
+                },
+                "global": {
+                    "title": "Jangkauan Global",
+                    "description": "Jual ke pelanggan di seluruh dunia dengan dukungan multi-mata uang dan metode pembayaran internasional."
+                }
+            },
+            "stats": {
+                "active_creators": "Kreator Aktif",
+                "total_earnings": "Total Pendapatan",
+                "products_sold": "Produk Terjual"
+            }
+        },
+        "preview": {
+            "title": "Dashboard Kreator",
+            "subtitle": "Pantau penjualan, pendapatan, dan performa produk secara real-time dengan dashboard analitik kami yang powerful.",
+            "overview": "Ringkasan Dashboard",
+            "month": "Mei 2024",
+            "change": "{{change}} dari bulan lalu",
+            "stats": {
+                "total_revenue": "Total Pendapatan",
+                "total_sales": "Total Penjualan",
+                "downloads": "Download",
+                "avg_response": "Rata-rata Respons"
+            },
+            "revenue_trend": "Tren Pendapatan",
+            "sales_by_category": "Penjualan per Kategori",
+            "recent_orders": "Pesanan Terbaru",
+            "dates": {
+                "two_hours": "2 jam lalu",
+                "five_hours": "5 jam lalu",
+                "one_day": "1 hari lalu"
+            }
+        }
+    }
+}

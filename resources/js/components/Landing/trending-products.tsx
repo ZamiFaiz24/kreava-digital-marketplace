@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { ArrowRight, ShoppingBag, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -90,23 +91,23 @@ const gradientOptions = [
 ];
 
 export function TrendingProducts({ products = fallbackProducts }: { products?: LandingProduct[] }) {
+    const { t } = useTranslation();
+
     return (
         <section className="relative bg-slate-50/70 py-16 md:py-24">
             <div className="container mx-auto px-4">
                 <div className="mb-10 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between">
                     <div className="max-w-2xl">
-                        <p className="mb-3 text-sm font-semibold tracking-[0.24em] text-emerald-600 uppercase">Paling dicari</p>
-                        <h2 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">Produk Trending</h2>
-                        <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
-                            Produk digital paling populer dari kreator pilihan di Kreava.
-                        </p>
+                        <p className="mb-3 text-sm font-semibold tracking-[0.24em] text-emerald-600 uppercase">{t('landing.trending.eyebrow')}</p>
+                        <h2 className="text-3xl font-bold tracking-tight text-slate-950 md:text-4xl">{t('landing.trending.title')}</h2>
+                        <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">{t('landing.trending.subtitle')}</p>
                     </div>
 
                     <Link
                         href={route('marketplace')}
                         className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 transition hover:gap-3 hover:text-indigo-700"
                     >
-                        Lihat semua produk
+                        {t('landing.trending.view_all')}
                         <ArrowRight className="h-4 w-4" />
                     </Link>
                 </div>
@@ -171,7 +172,7 @@ export function TrendingProducts({ products = fallbackProducts }: { products?: L
                                                         ))}
                                                     </div>
                                                     <p className="mt-1 text-xs text-slate-500">
-                                                        {product.rating.toFixed(1)} ({product.reviews} ulasan)
+                                                        {product.rating.toFixed(1)} ({t('landing.trending.reviews', { count: product.reviews })})
                                                     </p>
                                                 </div>
 
@@ -188,8 +189,8 @@ export function TrendingProducts({ products = fallbackProducts }: { products?: L
                         <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
                             <ShoppingBag className="h-7 w-7" />
                         </div>
-                        <h3 className="text-lg font-semibold text-slate-900">Belum ada produk trending</h3>
-                        <p className="mt-2 max-w-md text-sm text-slate-500">Produk populer akan tampil di sini setelah kreator mulai berjualan.</p>
+                        <h3 className="text-lg font-semibold text-slate-900">{t('landing.trending.empty_title')}</h3>
+                        <p className="mt-2 max-w-md text-sm text-slate-500">{t('landing.trending.empty_description')}</p>
                     </Card>
                 )}
             </div>

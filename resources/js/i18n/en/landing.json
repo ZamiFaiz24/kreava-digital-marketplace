@@ -1,0 +1,205 @@
+{
+    "landing": {
+        "meta": {
+            "title": "KREAVA - The Best Place for Digital Creators"
+        },
+        "hero": {
+            "badge": "Marketplace for digital creators",
+            "title_prefix": "The Best Place for ",
+            "title_highlight": "Digital Creators",
+            "subtitle": "Sell UI kits, templates, ebooks, icons, and other digital products.",
+            "start_selling": "Start Selling",
+            "browse_products": "Browse Products",
+            "perks": {
+                "no_fees": "No registration fees",
+                "secure_payment": "Secure payments",
+                "instant_download": "Instant downloads"
+            },
+            "showcase": {
+                "ui_kits": "UI Kit",
+                "templates": "Template",
+                "ebooks": "Ebook",
+                "icons": "Icons",
+                "products_count": "{{count, number}} products"
+            },
+            "preview": {
+                "featured_products": "Featured products",
+                "weekly_picks": "Best picks this week",
+                "active_creators": "Active creators",
+                "joined_this_month": "Joined this month",
+                "buyer_rating": "Buyer rating",
+                "creators_joined": "Creators joined"
+            }
+        },
+        "stats": {
+            "products": {
+                "label": "Total Products",
+                "description": "Digital products ready to buy"
+            },
+            "creators": {
+                "label": "Total Creators",
+                "description": "Verified creators"
+            },
+            "transactions": {
+                "label": "Total Transactions",
+                "description": "Successful transactions"
+            },
+            "rating": {
+                "label": "Average Rating",
+                "description": "From buyer reviews"
+            },
+            "updated": "Platform data is updated automatically"
+        },
+        "categories": {
+            "eyebrow": "Explore categories",
+            "title": "Find the right digital assets, faster.",
+            "subtitle": "From UI kits to audio assets, everything you need is in one marketplace.",
+            "view_all": "View all products",
+            "products_count": "{{count, number}} products",
+            "view_category": "View category",
+            "empty_title": "No categories yet",
+            "empty_description": "Product categories will appear here once added by an admin.",
+            "fallback": {
+                "ui_kits": "Design systems and ready-to-use components",
+                "templates": "Figma, WordPress, and web app templates",
+                "source_code": "Ready-to-use code to speed up your build",
+                "ebooks": "Guides and digital books for creators",
+                "icons": "Icon collections and vector assets",
+                "mockups": "Realistic mockups for product presentations",
+                "fonts": "Typography for your branding needs",
+                "music_audio": "Music, SFX, and other audio assets"
+            }
+        },
+        "trending": {
+            "eyebrow": "Most wanted",
+            "title": "Trending Products",
+            "subtitle": "The most popular digital products from featured creators on Kreava.",
+            "view_all": "View all products",
+            "reviews_one": "{{count}} review",
+            "reviews_other": "{{count}} reviews",
+            "empty_title": "No trending products yet",
+            "empty_description": "Popular products will appear here once creators start selling."
+        },
+        "testimonials": {
+            "eyebrow": "Testimonials",
+            "title": "Trusted by Creators",
+            "subtitle": "Real stories from creators building income from their digital products.",
+            "empty_title": "No testimonials yet",
+            "empty_description": "Buyer reviews will appear here after the first transaction is completed.",
+            "items": {
+                "sarah": "Kreava changed the way I sell my work. From a regular freelancer, I now have a steady income from UI kits.",
+                "marcus": "The marketplace is intuitive and the upload process is fast. My first product sold within days.",
+                "elena": "I never imagined digital assets could become my main source of income. Kreava makes everything feel easy.",
+                "james": "The analytics dashboard is very helpful. I can see which products perform best and focus on them.",
+                "lisa": "Our team uses Kreava to sell design system licenses. Payments and file delivery run smoothly.",
+                "tom": "We use Kreava for our template marketplace. The automated process and analytics integration save us a lot of time."
+            }
+        },
+        "cta": {
+            "title": "Ready to become a creator?",
+            "subtitle": "Join thousands of creators already selling their digital work on Kreava. Start for free, without the hassle.",
+            "highlights": {
+                "free_to_start": "Free to start",
+                "fast_payout": "Fast payouts",
+                "support": "24/7 creator support"
+            },
+            "register_seller": "Register as a Seller",
+            "browse_products": "Browse Products",
+            "footnote": "No credit card • 5-minute setup • Start earning"
+        },
+        "footer": {
+            "description": "Empowering digital creators to monetize their work and build sustainable businesses.",
+            "sections": {
+                "marketplace": "Marketplace",
+                "for_creators": "For Creators",
+                "company": "Company",
+                "legal": "Legal"
+            },
+            "links": {
+                "all_products": "All Products",
+                "ui_kits": "UI Kits",
+                "templates": "Templates",
+                "source_code": "Source Code",
+                "ebooks": "Ebooks",
+                "icons": "Icons",
+                "start_selling": "Start Selling",
+                "creator_dashboard": "Creator Dashboard",
+                "analytics": "Analytics",
+                "pricing": "Pricing",
+                "resources": "Resources",
+                "api_docs": "API Docs",
+                "about_us": "About Us",
+                "blog": "Blog",
+                "careers": "Careers",
+                "press": "Press",
+                "contact": "Contact",
+                "brand_kit": "Brand Kit",
+                "privacy_policy": "Privacy Policy",
+                "terms_of_service": "Terms of Service",
+                "cookie_policy": "Cookie Policy",
+                "security": "Security",
+                "compliance": "Compliance",
+                "privacy": "Privacy",
+                "terms": "Terms",
+                "status": "Status"
+            },
+            "copyright": "© 2024 KREAVA. All rights reserved. Made for creators, by creators."
+        },
+        "why": {
+            "title": "Why Choose KREAVA?",
+            "subtitle": "We're built specifically for digital creators who want to monetize their work and build a sustainable business.",
+            "features": {
+                "easy_selling": {
+                    "title": "Sell Digital Products Easily",
+                    "description": "Simple setup process with no coding required. Start selling in minutes with our intuitive platform."
+                },
+                "multi_vendor": {
+                    "title": "Multi-Vendor Platform",
+                    "description": "Join thousands of creators selling on the same marketplace with built-in audience and discovery."
+                },
+                "instant_downloads": {
+                    "title": "Instant Downloads",
+                    "description": "Automatic instant delivery of digital products to customers with zero friction."
+                },
+                "analytics": {
+                    "title": "Analytics Dashboard",
+                    "description": "Real-time insights into your sales, revenue, customer behavior, and product performance."
+                },
+                "secure": {
+                    "title": "Secure & Reliable",
+                    "description": "Enterprise-grade security with SSL encryption, secure payments, and fraud protection."
+                },
+                "global": {
+                    "title": "Global Reach",
+                    "description": "Sell to customers worldwide with multi-currency support and international payment methods."
+                }
+            },
+            "stats": {
+                "active_creators": "Active Creators",
+                "total_earnings": "Total Earnings",
+                "products_sold": "Products Sold"
+            }
+        },
+        "preview": {
+            "title": "Creator Dashboard",
+            "subtitle": "Track your sales, revenue, and product performance in real-time with our powerful analytics dashboard.",
+            "overview": "Dashboard Overview",
+            "month": "May 2024",
+            "change": "{{change}} from last month",
+            "stats": {
+                "total_revenue": "Total Revenue",
+                "total_sales": "Total Sales",
+                "downloads": "Downloads",
+                "avg_response": "Avg. Response"
+            },
+            "revenue_trend": "Revenue Trend",
+            "sales_by_category": "Sales by Category",
+            "recent_orders": "Recent Orders",
+            "dates": {
+                "two_hours": "2 hours ago",
+                "five_hours": "5 hours ago",
+                "one_day": "1 day ago"
+            }
+        }
+    }
+}

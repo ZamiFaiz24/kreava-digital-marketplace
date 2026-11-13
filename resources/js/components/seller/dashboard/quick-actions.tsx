@@ -1,71 +1,72 @@
+import { ArrowRight, BarChart3, Globe, Package, Settings } from 'lucide-react';
 import React from 'react';
-import { Package, Globe, Settings, BarChart3, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ActionItem {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  href: string;
-  color: string;
+    icon: React.ReactNode;
+    title: string;
+    description: string;
+    href: string;
+    color: string;
 }
 
 export default function QuickActions() {
-  const actions: ActionItem[] = [
-    {
-      icon: <Package className="w-6 h-6" />,
-      title: 'Upload Product',
-      description: 'Add a new digital product to your store',
-      href: '/seller/products/new',
-      color: 'from-blue-500 to-cyan-500',
-    },
-    {
-      icon: <Globe className="w-6 h-6" />,
-      title: 'View Marketplace',
-      description: 'See how your store looks to customers',
-      href: '/marketplace',
-      color: 'from-emerald-500 to-teal-500',
-    },
-    {
-      icon: <Settings className="w-6 h-6" />,
-      title: 'Edit Store',
-      description: 'Customize your store settings and branding',
-      href: '/seller/settings',
-      color: 'from-purple-500 to-pink-500',
-    },
-    {
-      icon: <BarChart3 className="w-6 h-6" />,
-      title: 'View Analytics',
-      description: 'Deep dive into your sales analytics',
-      href: '/seller/analytics',
-      color: 'from-orange-500 to-red-500',
-    },
-  ];
+    const { t } = useTranslation();
 
-  return (
-    <div className="mb-8">
-      <h2 className="text-xl font-bold text-foreground mb-6">Quick Actions</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {actions.map((action, index) => (
-          <a
-            key={index}
-            href={action.href}
-            className="bg-white rounded-2xl border border-border p-6 hover:border-primary hover:shadow-lg transition-all group cursor-pointer"
-          >
-            <div
-              className={`w-12 h-12 rounded-lg bg-gradient-to-br ${action.color} text-white flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-            >
-              {action.icon}
+    const actions: ActionItem[] = [
+        {
+            icon: <Package className="h-6 w-6" />,
+            title: t('dashboard.quick_actions.upload_product'),
+            description: t('dashboard.quick_actions.upload_product_description'),
+            href: '/seller/products/new',
+            color: 'from-blue-500 to-cyan-500',
+        },
+        {
+            icon: <Globe className="h-6 w-6" />,
+            title: t('dashboard.quick_actions.view_marketplace'),
+            description: t('dashboard.quick_actions.view_marketplace_description'),
+            href: '/marketplace',
+            color: 'from-emerald-500 to-teal-500',
+        },
+        {
+            icon: <Settings className="h-6 w-6" />,
+            title: t('dashboard.quick_actions.edit_store'),
+            description: t('dashboard.quick_actions.edit_store_description'),
+            href: '/seller/settings',
+            color: 'from-purple-500 to-pink-500',
+        },
+        {
+            icon: <BarChart3 className="h-6 w-6" />,
+            title: t('dashboard.quick_actions.view_analytics'),
+            description: t('dashboard.quick_actions.view_analytics_description'),
+            href: '/seller/analytics',
+            color: 'from-orange-500 to-red-500',
+        },
+    ];
+
+    return (
+        <div className="mb-8">
+            <h2 className="text-foreground mb-6 text-xl font-bold">{t('dashboard.quick_actions.title')}</h2>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {actions.map((action, index) => (
+                    <a
+                        key={index}
+                        href={action.href}
+                        className="border-border hover:border-primary group cursor-pointer rounded-2xl border bg-white p-6 transition-all hover:shadow-lg"
+                    >
+                        <div
+                            className={`mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${action.color} text-white transition-transform group-hover:scale-110`}
+                        >
+                            {action.icon}
+                        </div>
+                        <h3 className="text-foreground group-hover:text-primary mb-1 font-bold transition-colors">{action.title}</h3>
+                        <p className="text-muted-foreground mb-4 text-xs">{action.description}</p>
+                        <div className="text-primary flex items-center gap-2 text-sm font-semibold opacity-0 transition-opacity group-hover:opacity-100">
+                            {t('dashboard.quick_actions.go')} <ArrowRight className="h-4 w-4" />
+                        </div>
+                    </a>
+                ))}
             </div>
-            <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-              {action.title}
-            </h3>
-            <p className="text-xs text-muted-foreground mb-4">{action.description}</p>
-            <div className="flex items-center gap-2 text-primary text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-              Go <ArrowRight className="w-4 h-4" />
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  );
+        </div>
+    );
 }

@@ -1,6 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
@@ -17,6 +18,7 @@ interface RegisterForm {
 }
 
 export default function Register() {
+    const { t } = useTranslation();
     const { data, setData, post, processing, errors, reset } = useForm<RegisterForm>({
         name: '',
         email: '',
@@ -32,13 +34,13 @@ export default function Register() {
     };
 
     return (
-        <AuthLayout title="Create your account" description="Fill in your details to get started">
-            <Head title="Register" />
+        <AuthLayout title={t('auth.register_title')} description={t('auth.register_description')}>
+            <Head title={t('auth.register')} />
             <form className="flex flex-col gap-5" onSubmit={submit}>
                 <div className="grid gap-6">
                     <div className="grid gap-2">
-                        <Label htmlFor="name" className="text-sm font-medium text-foreground/90">
-                            Name
+                        <Label htmlFor="name" className="text-foreground/90 text-sm font-medium">
+                            {t('auth.name')}
                         </Label>
                         <Input
                             id="name"
@@ -50,15 +52,15 @@ export default function Register() {
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                             disabled={processing}
-                            placeholder="Full name"
-                            className="h-11 rounded-xl bg-background/80"
+                            placeholder={t('auth.full_name')}
+                            className="bg-background/80 h-11 rounded-xl"
                         />
                         <InputError message={errors.name} className="mt-2" />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="email" className="text-sm font-medium text-foreground/90">
-                            Email address
+                        <Label htmlFor="email" className="text-foreground/90 text-sm font-medium">
+                            {t('auth.email')}
                         </Label>
                         <Input
                             id="email"
@@ -70,14 +72,14 @@ export default function Register() {
                             onChange={(e) => setData('email', e.target.value)}
                             disabled={processing}
                             placeholder="email@example.com"
-                            className="h-11 rounded-xl bg-background/80"
+                            className="bg-background/80 h-11 rounded-xl"
                         />
                         <InputError message={errors.email} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password" className="text-sm font-medium text-foreground/90">
-                            Password
+                        <Label htmlFor="password" className="text-foreground/90 text-sm font-medium">
+                            {t('auth.password')}
                         </Label>
                         <Input
                             id="password"
@@ -88,15 +90,15 @@ export default function Register() {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             disabled={processing}
-                            placeholder="Password"
-                            className="h-11 rounded-xl bg-background/80"
+                            placeholder={t('auth.password')}
+                            className="bg-background/80 h-11 rounded-xl"
                         />
                         <InputError message={errors.password} />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation" className="text-sm font-medium text-foreground/90">
-                            Confirm password
+                        <Label htmlFor="password_confirmation" className="text-foreground/90 text-sm font-medium">
+                            {t('auth.confirm_password')}
                         </Label>
                         <Input
                             id="password_confirmation"
@@ -107,22 +109,27 @@ export default function Register() {
                             value={data.password_confirmation}
                             onChange={(e) => setData('password_confirmation', e.target.value)}
                             disabled={processing}
-                            placeholder="Confirm password"
-                            className="h-11 rounded-xl bg-background/80"
+                            placeholder={t('auth.confirm_password')}
+                            className="bg-background/80 h-11 rounded-xl"
                         />
                         <InputError message={errors.password_confirmation} />
                     </div>
 
-                    <Button type="submit" className="mt-2 h-11 w-full rounded-xl shadow-sm transition-transform duration-200 hover:-translate-y-0.5" tabIndex={5} disabled={processing}>
+                    <Button
+                        type="submit"
+                        className="mt-2 h-11 w-full rounded-xl shadow-sm transition-transform duration-200 hover:-translate-y-0.5"
+                        tabIndex={5}
+                        disabled={processing}
+                    >
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Create account
+                        {t('auth.create_account')}
                     </Button>
                 </div>
 
                 <div className="text-muted-foreground text-center text-sm">
-                    Already have an account?{' '}
-                    <TextLink href={route('login')} className="font-medium text-foreground" tabIndex={6}>
-                        Log in
+                    {t('auth.have_account')}{' '}
+                    <TextLink href={route('login')} className="text-foreground font-medium" tabIndex={6}>
+                        {t('auth.login')}
                     </TextLink>
                 </div>
             </form>

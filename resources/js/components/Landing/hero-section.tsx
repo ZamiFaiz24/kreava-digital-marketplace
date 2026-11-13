@@ -1,39 +1,44 @@
 import { Link } from '@inertiajs/react';
 import { ArrowRight, BookOpen, CheckCircle2, Code2, Layers, Palette, Sparkles, Star, TrendingUp, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 const showcaseItems = [
     {
-        title: 'UI Kit',
-        subtitle: '1.240 produk',
+        titleKey: 'landing.hero.showcase.ui_kits',
+        count: 1240,
         icon: Palette,
         className: 'from-indigo-500 to-violet-500',
     },
     {
-        title: 'Template',
-        subtitle: '980 produk',
+        titleKey: 'landing.hero.showcase.templates',
+        count: 980,
         icon: Code2,
         className: 'from-emerald-500 to-teal-500',
     },
     {
-        title: 'Ebook',
-        subtitle: '640 produk',
+        titleKey: 'landing.hero.showcase.ebooks',
+        count: 640,
         icon: BookOpen,
         className: 'from-amber-400 to-orange-500',
     },
     {
-        title: 'Icons',
-        subtitle: '2.100 produk',
+        titleKey: 'landing.hero.showcase.icons',
+        count: 2100,
         icon: Layers,
         className: 'from-rose-500 to-pink-500',
     },
 ];
 
+const perkKeys = ['landing.hero.perks.no_fees', 'landing.hero.perks.secure_payment', 'landing.hero.perks.instant_download'];
+
 const chartBars = [38, 58, 46, 72, 62, 88, 76];
 
 export function HeroSection() {
+    const { t } = useTranslation();
+
     return (
         <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50/80 via-white to-emerald-50/60 py-16 md:py-24">
             <div className="pointer-events-none absolute inset-0">
@@ -47,19 +52,17 @@ export function HeroSection() {
                     <div className="max-w-2xl">
                         <Badge className="mb-6 gap-2 rounded-full border border-indigo-100 bg-white/80 px-4 py-2 text-sm font-medium text-indigo-700 shadow-sm backdrop-blur">
                             <Sparkles className="h-4 w-4 text-emerald-500" />
-                            Marketplace untuk kreator digital
+                            {t('landing.hero.badge')}
                         </Badge>
 
                         <h1 className="text-4xl leading-[1.08] font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
-                            Tempat Terbaik untuk{' '}
+                            {t('landing.hero.title_prefix')}
                             <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 bg-clip-text text-transparent">
-                                Kreator Digital
+                                {t('landing.hero.title_highlight')}
                             </span>
                         </h1>
 
-                        <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600 md:text-xl">
-                            Jual UI kits, templates, ebook, ikon, dan produk digital lainnya.
-                        </p>
+                        <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600 md:text-xl">{t('landing.hero.subtitle')}</p>
 
                         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                             <Button
@@ -68,7 +71,7 @@ export function HeroSection() {
                                 className="h-12 rounded-xl bg-emerald-500 px-7 text-base font-semibold text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600"
                             >
                                 <Link href={route('register', { role: 'seller' })}>
-                                    Mulai Jual
+                                    {t('landing.hero.start_selling')}
                                     <ArrowRight className="h-4 w-4" />
                                 </Link>
                             </Button>
@@ -77,15 +80,15 @@ export function HeroSection() {
                                 size="lg"
                                 className="h-12 rounded-xl bg-indigo-600 px-7 text-base font-semibold text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-700"
                             >
-                                <Link href={route('marketplace')}>Telusuri Produk</Link>
+                                <Link href={route('marketplace')}>{t('landing.hero.browse_products')}</Link>
                             </Button>
                         </div>
 
                         <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-600">
-                            {['Tanpa biaya pendaftaran', 'Pembayaran aman', 'Download instan'].map((item) => (
-                                <span key={item} className="inline-flex items-center gap-2">
+                            {perkKeys.map((perkKey) => (
+                                <span key={perkKey} className="inline-flex items-center gap-2">
                                     <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                                    {item}
+                                    {t(perkKey)}
                                 </span>
                             ))}
                         </div>
@@ -108,8 +111,8 @@ export function HeroSection() {
                                 <div className="p-4">
                                     <div className="mb-4 flex items-start justify-between">
                                         <div>
-                                            <p className="text-sm font-semibold text-white">Produk unggulan</p>
-                                            <p className="mt-1 text-xs text-slate-400">Pilihan terbaik minggu ini</p>
+                                            <p className="text-sm font-semibold text-white">{t('landing.hero.preview.featured_products')}</p>
+                                            <p className="mt-1 text-xs text-slate-400">{t('landing.hero.preview.weekly_picks')}</p>
                                         </div>
                                         <span className="inline-flex items-center gap-1 rounded-full bg-emerald-400/10 px-2 py-1 text-[11px] font-medium text-emerald-400">
                                             <TrendingUp className="h-3 w-3" />
@@ -122,14 +125,16 @@ export function HeroSection() {
                                             const Icon = item.icon;
 
                                             return (
-                                                <div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-3">
+                                                <div key={item.titleKey} className="rounded-2xl border border-white/10 bg-white/5 p-3">
                                                     <div
                                                         className={`mb-4 flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br ${item.className}`}
                                                     >
                                                         <Icon className="h-4 w-4 text-white" />
                                                     </div>
-                                                    <p className="text-xs font-semibold text-white">{item.title}</p>
-                                                    <p className="mt-0.5 text-[11px] text-slate-400">{item.subtitle}</p>
+                                                    <p className="text-xs font-semibold text-white">{t(item.titleKey)}</p>
+                                                    <p className="mt-0.5 text-[11px] text-slate-400">
+                                                        {t('landing.hero.showcase.products_count', { count: item.count })}
+                                                    </p>
                                                 </div>
                                             );
                                         })}
@@ -153,8 +158,10 @@ export function HeroSection() {
                                                     ))}
                                                 </div>
                                                 <div>
-                                                    <p className="text-xs font-semibold text-slate-900">Kreator aktif</p>
-                                                    <p className="text-[11px] text-slate-500">Bergabung bulan ini</p>
+                                                    <p className="text-xs font-semibold text-slate-900">
+                                                        {t('landing.hero.preview.active_creators')}
+                                                    </p>
+                                                    <p className="text-[11px] text-slate-500">{t('landing.hero.preview.joined_this_month')}</p>
                                                 </div>
                                             </div>
                                             <span className="rounded-full bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-600">
@@ -180,7 +187,7 @@ export function HeroSection() {
                             <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                             <div>
                                 <p className="text-sm leading-none font-bold text-slate-900">4.9</p>
-                                <p className="mt-1 text-[10px] text-slate-500">Rating pembeli</p>
+                                <p className="mt-1 text-[10px] text-slate-500">{t('landing.hero.preview.buyer_rating')}</p>
                             </div>
                         </div>
 
@@ -190,7 +197,7 @@ export function HeroSection() {
                             </div>
                             <div>
                                 <p className="text-sm leading-none font-bold text-slate-900">1.2k+</p>
-                                <p className="mt-1 text-[10px] text-slate-500">Kreator bergabung</p>
+                                <p className="mt-1 text-[10px] text-slate-500">{t('landing.hero.preview.creators_joined')}</p>
                             </div>
                         </div>
                     </div>

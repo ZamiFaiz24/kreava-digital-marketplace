@@ -19,6 +19,7 @@
 /storage/pail
 /vendor
 auth.json
+!resources/js/i18n/*/auth.json
 Homestead.json
 Homestead.yaml
 npm-debug.log

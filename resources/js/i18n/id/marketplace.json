@@ -1,0 +1,66 @@
+{
+    "marketplace": {
+        "page": {
+            "title": "Jelajahi Marketplace",
+            "description": "Temukan UI kits, template, ikon, ebook, dan aset digital premium dari kreator terbaik."
+        },
+        "search": {
+            "placeholder": "Cari produk, UI kit, template...",
+            "button": "Cari produk"
+        },
+        "filter": {
+            "title": "Filter produk",
+            "description": "Persempit hasil pencarianmu",
+            "reset": "Reset",
+            "category": "Kategori",
+            "all_categories": "Semua kategori",
+            "price_range": "Rentang harga",
+            "min": "Min ($)",
+            "max": "Max ($)",
+            "apply_price": "Terapkan harga",
+            "min_rating": "Rating minimum",
+            "all_ratings": "Semua rating",
+            "sort": "Urutkan",
+            "sort_placeholder": "Pilih urutan"
+        },
+        "sort": {
+            "latest": "Terbaru",
+            "price_asc": "Harga terendah",
+            "price_desc": "Harga tertinggi",
+            "rating_desc": "Rating terbaik"
+        },
+        "rating": {
+            "five": "5 bintang",
+            "four_half": "4.5+ bintang",
+            "four": "4+ bintang",
+            "three": "3+ bintang"
+        },
+        "results": {
+            "found": "{{count, number}} produk ditemukan",
+            "showing": "Menampilkan {{from}}-{{to}} dari {{total}} produk",
+            "no_matches": "Tidak ada produk yang cocok",
+            "loading": "Memuat",
+            "grid_view": "Tampilan grid",
+            "list_view": "Tampilan list",
+            "show_filters": "Tampilkan filter",
+            "hide_filters": "Sembunyikan filter"
+        },
+        "empty": {
+            "title": "Produk tidak ditemukan",
+            "description": "Coba ubah kata kunci, rentang harga, kategori, atau rating minimum.",
+            "reset": "Reset filter"
+        },
+        "product": {
+            "reviews_one": "{{count}} ulasan",
+            "reviews_other": "{{count}} ulasan",
+            "trending": "Trending",
+            "add_to_cart": "Tambah ke keranjang",
+            "adding": "Menambahkan...",
+            "added_title": "Ditambahkan ke keranjang",
+            "added_description": "{{title}} berhasil ditambahkan."
+        },
+        "pagination": {
+            "showing": "Menampilkan {{from}}-{{to}} dari {{total}} produk"
+        }
+    }
+}

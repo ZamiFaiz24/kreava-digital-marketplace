@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { CategoriesSection } from '@/components/landing/categories-section';
 import { CTASection } from '@/components/landing/cta-section';
 import { DashboardPreview } from '@/components/landing/dashboard-preview';
@@ -26,8 +28,10 @@ const emptyStats: PlatformStats = {
 };
 
 export default function LandingPage({ categories, stats = emptyStats, trendingProducts, testimonials }: LandingPageProps) {
+    const { t } = useTranslation();
+
     return (
-        <LandingLayout title="KREAVA - Tempat Terbaik untuk Kreator Digital">
+        <LandingLayout title={t('landing.meta.title')}>
             <main className="bg-background min-h-screen">
                 <PublicNavbar variant="landing" categories={categories} />
                 <HeroSection />

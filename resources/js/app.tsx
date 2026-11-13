@@ -1,11 +1,12 @@
 import '../css/app.css';
+import './i18n';
 
+import { Toaster } from '@/components/ui/toaster';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { route as routeFn } from 'ziggy-js';
 import { initializeTheme } from './hooks/use-appearance';
-import { Toaster } from '@/components/ui/toaster';
 
 declare global {
     const route: typeof routeFn;
