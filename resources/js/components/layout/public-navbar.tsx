@@ -9,7 +9,7 @@ import type { SharedData } from '@/types';
 import type { LandingCategory } from '@/types/landing';
 import type { Category as MarketplaceCategory } from '@/types/marketplace';
 import { Link, usePage } from '@inertiajs/react';
-import { ArrowRight, ChevronDown, Heart, Menu, Search, ShoppingCart, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, Heart, Menu, ShoppingCart, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -125,179 +125,183 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                 }`}
             >
                 <nav className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                    <Link href={route('landing')} className="mr-4 flex items-center">
-                        {isMarketplace ? (
-                            <div className="relative h-11 w-11 overflow-hidden rounded-xl">
-                                <img
-                                    src="/images/Logo/LogoMark.png"
-                                    alt="KREAVA"
-                                    className="absolute top-1/2 left-1/2 h-[115px] w-[115px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
-                                />
-                            </div>
-                        ) : (
-                            <div className="relative h-14 w-40 overflow-hidden sm:h-16 sm:w-48">
-                                <img
-                                    src="/images/Logo/LogoFull.png"
-                                    alt="KREAVA"
-                                    className="absolute top-1/2 left-1/2 h-[180px] w-[180px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
-                                />
-                            </div>
-                        )}
-                    </Link>
-
-                    <div className="hidden items-center gap-3 md:flex">
-                        <Link
-                            href={primaryNavHref}
-                            className="text-foreground/70 hover:bg-muted hover:text-foreground rounded-lg px-3 py-2 text-sm font-medium transition"
-                        >
-                            {primaryNavLabel}
-                        </Link>
-                        {isMarketplace ? (
-                            <div className="group relative">
-                                <button className="text-foreground/70 hover:bg-muted hover:text-foreground flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition">
-                                    {t('common.nav.categories')}
-                                    <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
-                                </button>
-
-                                <div className="border-border bg-background invisible absolute top-full left-0 z-50 mt-2 w-64 translate-y-1 rounded-2xl border p-2 opacity-0 shadow-lg transition-all duration-150 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                                    {(normalizedCategories.length > 0
-                                        ? normalizedCategories
-                                        : categoryLinks.map((category) => ({
-                                              slug: category.href,
-                                              title: category.label,
-                                              href: category.href,
-                                              count: undefined,
-                                          }))
-                                    ).map((category) => (
-                                        <a
-                                            key={category.href}
-                                            href={category.href}
-                                            className="text-foreground/80 hover:bg-muted hover:text-foreground flex items-center justify-between rounded-xl px-3 py-2 text-sm transition"
-                                        >
-                                            <span>{category.title}</span>
-                                            {category.count !== undefined && <span className="text-foreground/40 text-xs">{category.count}</span>}
-                                        </a>
-                                    ))}
+                    <div className="flex items-center gap-2 md:gap-3">
+                        <Link href={route('landing')} className="flex items-center">
+                            {isMarketplace ? (
+                                <div className="relative h-11 w-11 overflow-hidden rounded-xl">
+                                    <img
+                                        src="/images/Logo/LogoMark.png"
+                                        alt="KREAVA"
+                                        className="absolute top-1/2 left-1/2 h-[115px] w-[115px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
+                                    />
                                 </div>
-                            </div>
-                        ) : (
-                            <div className="group relative">
-                                <button className="text-foreground/70 hover:bg-muted hover:text-foreground flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition">
-                                    {t('common.nav.categories')}
-                                    <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
-                                </button>
+                            ) : (
+                                <div className="relative h-14 w-40 overflow-hidden sm:h-16 sm:w-48">
+                                    <img
+                                        src="/images/Logo/LogoFull.png"
+                                        alt="KREAVA"
+                                        className="absolute top-1/2 left-1/2 h-[180px] w-[180px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
+                                    />
+                                </div>
+                            )}
+                        </Link>
 
-                                <div className="border-border bg-background invisible absolute top-full left-1/2 z-50 mt-3 w-[min(92vw,960px)] -translate-x-1/2 translate-y-2 rounded-[28px] border p-4 opacity-0 shadow-2xl transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
-                                    <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-                                        <div>
-                                            <div className="mb-4 flex items-center justify-between">
-                                                <div>
-                                                    <p className="text-primary text-xs font-semibold tracking-[0.24em] uppercase">
-                                                        {t('common.nav.browse_categories')}
-                                                    </p>
-                                                    <h3 className="text-foreground mt-1 text-xl font-bold">{t('common.nav.explore_by_category')}</h3>
+                        <div className="hidden items-center gap-3 md:flex">
+                            <Link
+                                href={primaryNavHref}
+                                className="text-foreground/70 hover:bg-muted hover:text-foreground rounded-lg px-3 py-2 text-sm font-medium transition"
+                            >
+                                {primaryNavLabel}
+                            </Link>
+                            {isMarketplace ? (
+                                <div className="group relative">
+                                    <button className="text-foreground/70 hover:bg-muted hover:text-foreground flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition">
+                                        {t('common.nav.categories')}
+                                        <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+                                    </button>
+
+                                    <div className="border-border bg-background invisible absolute top-full left-0 z-50 mt-2 w-64 translate-y-1 rounded-2xl border p-2 opacity-0 shadow-lg transition-all duration-150 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                                        {(normalizedCategories.length > 0
+                                            ? normalizedCategories
+                                            : categoryLinks.map((category) => ({
+                                                  slug: category.href,
+                                                  title: category.label,
+                                                  href: category.href,
+                                                  count: undefined,
+                                              }))
+                                        ).map((category) => (
+                                            <a
+                                                key={category.href}
+                                                href={category.href}
+                                                className="text-foreground/80 hover:bg-muted hover:text-foreground flex items-center justify-between rounded-xl px-3 py-2 text-sm transition"
+                                            >
+                                                <span>{category.title}</span>
+                                                {category.count !== undefined && <span className="text-foreground/40 text-xs">{category.count}</span>}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="group relative">
+                                    <button className="text-foreground/70 hover:bg-muted hover:text-foreground flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition">
+                                        {t('common.nav.categories')}
+                                        <ChevronDown className="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" />
+                                    </button>
+
+                                    <div className="border-border bg-background invisible absolute top-full left-1/2 z-50 mt-3 w-[min(92vw,960px)] -translate-x-1/2 translate-y-2 rounded-[28px] border p-4 opacity-0 shadow-2xl transition-all duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                                        <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+                                            <div>
+                                                <div className="mb-4 flex items-center justify-between">
+                                                    <div>
+                                                        <p className="text-primary text-xs font-semibold tracking-[0.24em] uppercase">
+                                                            {t('common.nav.browse_categories')}
+                                                        </p>
+                                                        <h3 className="text-foreground mt-1 text-xl font-bold">
+                                                            {t('common.nav.explore_by_category')}
+                                                        </h3>
+                                                    </div>
+                                                    <Link
+                                                        href={route('marketplace')}
+                                                        className="text-primary inline-flex items-center gap-2 text-sm font-medium"
+                                                    >
+                                                        {t('common.nav.view_all')}
+                                                        <ArrowRight className="h-4 w-4" />
+                                                    </Link>
                                                 </div>
-                                                <Link
-                                                    href={route('marketplace')}
-                                                    className="text-primary inline-flex items-center gap-2 text-sm font-medium"
-                                                >
-                                                    {t('common.nav.view_all')}
-                                                    <ArrowRight className="h-4 w-4" />
-                                                </Link>
-                                            </div>
 
-                                            <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
-                                                {(normalizedCategories.length > 0
-                                                    ? normalizedCategories
-                                                    : categoryLinks.map(
-                                                          (item) =>
-                                                              ({
-                                                                  slug: item.href,
-                                                                  title: item.label,
-                                                                  description: t('common.nav.browse_category_description'),
-                                                                  icon: 'sparkles',
-                                                                  href: item.href,
-                                                                  count: undefined,
-                                                              }) as NavbarCategoryItem,
-                                                      )
-                                                ).map((category) => {
-                                                    const Icon = getCategoryIcon(category.icon);
+                                                <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
+                                                    {(normalizedCategories.length > 0
+                                                        ? normalizedCategories
+                                                        : categoryLinks.map(
+                                                              (item) =>
+                                                                  ({
+                                                                      slug: item.href,
+                                                                      title: item.label,
+                                                                      description: t('common.nav.browse_category_description'),
+                                                                      icon: 'sparkles',
+                                                                      href: item.href,
+                                                                      count: undefined,
+                                                                  }) as NavbarCategoryItem,
+                                                          )
+                                                    ).map((category) => {
+                                                        const Icon = getCategoryIcon(category.icon);
 
-                                                    return (
-                                                        <Link
-                                                            key={category.slug}
-                                                            href={category.href}
-                                                            className="group/item border-border bg-muted/30 hover:border-primary/30 hover:bg-muted/60 rounded-2xl border p-4 transition hover:-translate-y-0.5"
-                                                        >
-                                                            <div className="flex items-start gap-3">
-                                                                <div className="bg-primary/10 text-primary flex h-11 w-11 items-center justify-center rounded-2xl">
-                                                                    <Icon className="h-5 w-5" />
-                                                                </div>
-                                                                <div className="min-w-0 flex-1">
-                                                                    <div className="flex items-center justify-between gap-2">
-                                                                        <span className="text-foreground font-medium">{category.title}</span>
-                                                                        {category.count !== undefined && (
-                                                                            <span className="bg-background text-foreground/50 rounded-full px-2 py-0.5 text-[11px]">
-                                                                                {category.count}
-                                                                            </span>
-                                                                        )}
+                                                        return (
+                                                            <Link
+                                                                key={category.slug}
+                                                                href={category.href}
+                                                                className="group/item border-border bg-muted/30 hover:border-primary/30 hover:bg-muted/60 rounded-2xl border p-4 transition hover:-translate-y-0.5"
+                                                            >
+                                                                <div className="flex items-start gap-3">
+                                                                    <div className="bg-primary/10 text-primary flex h-11 w-11 items-center justify-center rounded-2xl">
+                                                                        <Icon className="h-5 w-5" />
                                                                     </div>
-                                                                    <p className="text-foreground/60 mt-1 line-clamp-2 text-xs leading-5">
-                                                                        {category.description}
-                                                                    </p>
+                                                                    <div className="min-w-0 flex-1">
+                                                                        <div className="flex items-center justify-between gap-2">
+                                                                            <span className="text-foreground font-medium">{category.title}</span>
+                                                                            {category.count !== undefined && (
+                                                                                <span className="bg-background text-foreground/50 rounded-full px-2 py-0.5 text-[11px]">
+                                                                                    {category.count}
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                        <p className="text-foreground/60 mt-1 line-clamp-2 text-xs leading-5">
+                                                                            {category.description}
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </Link>
-                                                    );
-                                                })}
+                                                            </Link>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div className="border-border bg-background rounded-[24px] border p-5">
-                                            <p className="text-primary text-xs font-semibold tracking-[0.2em] uppercase">
-                                                {t('common.nav.featured_path')}
-                                            </p>
-                                            <h4 className="text-foreground mt-2 text-xl font-bold">{t('common.nav.need_inspiration')}</h4>
-                                            <p className="text-foreground/60 mt-3 text-sm leading-6">{t('common.nav.inspiration_description')}</p>
+                                            <div className="border-border bg-background rounded-[24px] border p-5">
+                                                <p className="text-primary text-xs font-semibold tracking-[0.2em] uppercase">
+                                                    {t('common.nav.featured_path')}
+                                                </p>
+                                                <h4 className="text-foreground mt-2 text-xl font-bold">{t('common.nav.need_inspiration')}</h4>
+                                                <p className="text-foreground/60 mt-3 text-sm leading-6">{t('common.nav.inspiration_description')}</p>
 
-                                            <div className="mt-5 space-y-2">
-                                                <Link
-                                                    href={route('marketplace')}
-                                                    className="bg-primary text-primary-foreground hover:bg-primary/90 block rounded-xl px-4 py-3 text-sm font-semibold transition"
-                                                >
-                                                    {t('common.nav.browse_marketplace')}
-                                                </Link>
-                                                <Link
-                                                    href={route('creators')}
-                                                    className="border-input text-foreground hover:bg-muted block rounded-xl border px-4 py-3 text-sm font-semibold transition"
-                                                >
-                                                    {t('common.nav.meet_creators')}
-                                                </Link>
+                                                <div className="mt-5 space-y-2">
+                                                    <Link
+                                                        href={route('marketplace')}
+                                                        className="bg-primary text-primary-foreground hover:bg-primary/90 block rounded-xl px-4 py-3 text-sm font-semibold transition"
+                                                    >
+                                                        {t('common.nav.browse_marketplace')}
+                                                    </Link>
+                                                    <Link
+                                                        href={route('creators')}
+                                                        className="border-input text-foreground hover:bg-muted block rounded-xl border px-4 py-3 text-sm font-semibold transition"
+                                                    >
+                                                        {t('common.nav.meet_creators')}
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                        {isMarketplace && (
-                            <Link
-                                href={route('creators')}
-                                className="text-foreground/70 hover:bg-muted hover:text-foreground rounded-lg px-3 py-2 text-sm font-medium transition"
-                            >
-                                {t('common.nav.creators')}
-                            </Link>
-                        )}
+                            )}
+                            {isMarketplace && (
+                                <Link
+                                    href={route('creators')}
+                                    className="text-foreground/70 hover:bg-muted hover:text-foreground rounded-lg px-3 py-2 text-sm font-medium transition"
+                                >
+                                    {t('common.nav.creators')}
+                                </Link>
+                            )}
+                        </div>
                     </div>
 
                     {variant === 'landing' && (
                         <div className="hidden items-center gap-2 md:flex">
-                            <LanguageSwitcher />
                             <Link
                                 href={sellerCtaHref}
                                 className="border-input text-foreground hover:bg-muted rounded-xl border px-4 py-2 text-sm font-semibold transition"
                             >
                                 {t('common.nav.sell_on_kreava')}
                             </Link>
+                            <LanguageSwitcher />
                             {isAuthenticated ? (
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -328,21 +332,7 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                     )}
 
                     {isMarketplace && (
-                        <div className="hidden flex-1 px-6 lg:block">
-                            <div className="relative mx-auto max-w-xl">
-                                <Search className="text-muted-foreground absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
-                                <input
-                                    type="text"
-                                    placeholder={t('marketplace.search.placeholder')}
-                                    className="border-border bg-background placeholder:text-muted-foreground focus:border-primary focus:ring-primary/20 h-11 w-full rounded-2xl border pr-4 pl-12 text-sm transition outline-none focus:ring-2"
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    {isMarketplace && (
                         <div className="hidden items-center gap-2 md:flex">
-                            <LanguageSwitcher />
                             <Link
                                 href={sellerCtaHref}
                                 className="border-input text-foreground/70 hover:bg-muted hover:text-foreground hidden rounded-xl border px-3 py-2 text-sm font-medium transition lg:block"
@@ -377,6 +367,8 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                                     </Link>
                                 </>
                             )}
+
+                            <LanguageSwitcher />
 
                             {isAuthenticated ? (
                                 <DropdownMenu>
