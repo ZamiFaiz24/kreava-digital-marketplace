@@ -1,166 +1,268 @@
-'use client'
+'use client';
 
-import { ChevronDown } from 'lucide-react'
-import { useState } from 'react'
-import type { Category } from '@/types/marketplace'
+import { Check, ChevronDown, RotateCcw } from 'lucide-react';
+import { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
+import type { Category } from '@/types/marketplace';
 
 interface FilterSidebarProps {
-  categories: Category[]
-  onCategoryChange?: (category: string | null) => void
-  onPriceChange?: (min: number, max: number) => void
-  onRatingChange?: (rating: number | null) => void
-  selectedCategory?: string
-  selectedRating?: number
+    categories: Category[];
+    selectedCategory?: string;
+    selectedRating?: number | null;
+    minPrice?: string;
+    maxPrice?: string;
+    sort?: string;
+    onCategoryChange?: (category: string | null) => void;
+    onRatingChange?: (rating: number | null) => void;
+    onMinPriceChange?: (value: string) => void;
+    onMaxPriceChange?: (value: string) => void;
+    onApplyPrice?: () => void;
+    onSortChange?: (value: string) => void;
+    onReset?: () => void;
 }
 
-const PRICE_RANGES = [
-  { label: '$0 - $100', min: 0, max: 100 },
-  { label: '$100 - $500', min: 100, max: 500 },
-  { label: '$500 - $1,000', min: 500, max: 1000 },
-  { label: 'Above $1,000', min: 1000, max: Infinity },
-]
+const ratingOptions = [
+    { label: '5 bintang', value: 5 },
+    { label: '4.5+ bintang', value: 4.5 },
+    { label: '4+ bintang', value: 4 },
+    { label: '3+ bintang', value: 3 },
+];
 
-const RATINGS = [
-  { label: '5 Stars', value: 5 },
-  { label: '4+ Stars', value: 4 },
-  { label: '3+ Stars', value: 3 },
-  { label: '2+ Stars', value: 2 },
-]
+const sortOptions = [
+    { label: 'Terbaru', value: 'latest' },
+    { label: 'Harga terendah', value: 'price_asc' },
+    { label: 'Harga tertinggi', value: 'price_desc' },
+    { label: 'Rating terbaik', value: 'rating_desc' },
+];
 
 export default function FilterSidebar({
-  categories,
-  onCategoryChange,
-  onPriceChange,
-  onRatingChange,
-  selectedCategory,
-  selectedRating,
+    categories,
+    selectedCategory,
+    selectedRating,
+    minPrice = '',
+    maxPrice = '',
+    sort = 'latest',
+    onCategoryChange,
+    onRatingChange,
+    onMinPriceChange,
+    onMaxPriceChange,
+    onApplyPrice,
+    onSortChange,
+    onReset,
 }: FilterSidebarProps) {
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    category: true,
-    price: true,
-    rating: true,
-  })
+    const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+        category: true,
+        price: true,
+        rating: true,
+        sort: true,
+    });
 
-  const toggleSection = (section: string) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }))
-  }
+    const toggleSection = (section: string) => {
+        setOpenSections((previous) => ({
+            ...previous,
+            [section]: !previous[section],
+        }));
+    };
 
-  return (
-    <div className="space-y-6">
-      {/* Categories */}
-      <div className="rounded-lg border border-border bg-card p-4">
-        <button
-          onClick={() => toggleSection('category')}
-          className="flex w-full items-center justify-between font-semibold text-foreground hover:text-primary"
-        >
-          Categories
-          <ChevronDown
-            className={`h-4 w-4 transition-transform ${openSections.category ? 'rotate-180' : ''}`}
-          />
-        </button>
+    return (
+        <div className="space-y-4 lg:sticky lg:top-24">
+            <div className="flex items-center justify-between gap-3">
+                <div>
+                    <p className="text-sm font-semibold text-slate-900">Filter produk</p>
+                    <p className="text-xs text-slate-500">Persempit hasil pencarianmu</p>
+                </div>
+                <Button type="button" variant="ghost" size="sm" onClick={onReset} className="text-slate-500 hover:text-indigo-600">
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    Reset
+                </Button>
+            </div>
 
-        {openSections.category && (
-          <div className="mt-4 space-y-3">
-            <button
-              onClick={() => onCategoryChange?.(null)}
-              className={`block w-full text-left text-sm transition-colors ${
-                !selectedCategory
-                  ? 'font-medium text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              All Categories
-            </button>
+            <Card className="gap-0 border border-slate-200/80 bg-white p-4 shadow-sm">
+                <button
+                    type="button"
+                    onClick={() => toggleSection('category')}
+                    className="flex w-full items-center justify-between text-sm font-semibold text-slate-900 transition hover:text-indigo-600"
+                >
+                    Kategori
+                    <ChevronDown className={cn('h-4 w-4 text-slate-400 transition-transform', openSections.category && 'rotate-180')} />
+                </button>
 
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => onCategoryChange?.(category.slug)}
-                className={`block w-full text-left text-sm transition-colors ${
-                  selectedCategory === category.slug
-                    ? 'font-medium text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <span>{category.name}</span>
-                <span className="ml-2 text-xs text-muted-foreground">({category.count || 0})</span>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+                {openSections.category && (
+                    <div className="mt-4 space-y-1">
+                        <button
+                            type="button"
+                            onClick={() => onCategoryChange?.(null)}
+                            className={cn(
+                                'flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition',
+                                !selectedCategory
+                                    ? 'bg-indigo-50 font-semibold text-indigo-700'
+                                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
+                            )}
+                        >
+                            Semua kategori
+                            {!selectedCategory && <Check className="h-4 w-4" />}
+                        </button>
 
-      {/* Price Range */}
-      <div className="rounded-lg border border-border bg-card p-4">
-        <button
-          onClick={() => toggleSection('price')}
-          className="flex w-full items-center justify-between font-semibold text-foreground hover:text-primary"
-        >
-          Price
-          <ChevronDown
-            className={`h-4 w-4 transition-transform ${openSections.price ? 'rotate-180' : ''}`}
-          />
-        </button>
+                        {categories.map((category) => {
+                            const active = selectedCategory === category.slug;
 
-        {openSections.price && (
-          <div className="mt-4 space-y-3">
-            {PRICE_RANGES.map((range) => (
-              <button
-                key={range.label}
-                onClick={() => onPriceChange?.(range.min, range.max)}
-                className="block w-full text-left text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {range.label}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+                            return (
+                                <button
+                                    key={category.id}
+                                    type="button"
+                                    onClick={() => onCategoryChange?.(category.slug)}
+                                    className={cn(
+                                        'flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition',
+                                        active
+                                            ? 'bg-indigo-50 font-semibold text-indigo-700'
+                                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
+                                    )}
+                                >
+                                    <span className="truncate">{category.name}</span>
+                                    <span className={cn('ml-2 shrink-0 text-xs', active ? 'text-indigo-500' : 'text-slate-400')}>
+                                        {category.count ?? 0}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                )}
+            </Card>
 
-      {/* Rating */}
-      <div className="rounded-lg border border-border bg-card p-4">
-        <button
-          onClick={() => toggleSection('rating')}
-          className="flex w-full items-center justify-between font-semibold text-foreground hover:text-primary"
-        >
-          Rating
-          <ChevronDown
-            className={`h-4 w-4 transition-transform ${openSections.rating ? 'rotate-180' : ''}`}
-          />
-        </button>
+            <Card className="gap-0 border border-slate-200/80 bg-white p-4 shadow-sm">
+                <button
+                    type="button"
+                    onClick={() => toggleSection('price')}
+                    className="flex w-full items-center justify-between text-sm font-semibold text-slate-900 transition hover:text-indigo-600"
+                >
+                    Rentang harga
+                    <ChevronDown className={cn('h-4 w-4 text-slate-400 transition-transform', openSections.price && 'rotate-180')} />
+                </button>
 
-        {openSections.rating && (
-          <div className="mt-4 space-y-3">
-            <button
-              onClick={() => onRatingChange?.(null)}
-              className={`block w-full text-left text-sm transition-colors ${
-                !selectedRating
-                  ? 'font-medium text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              All Ratings
-            </button>
+                {openSections.price && (
+                    <div className="mt-4 space-y-3">
+                        <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <label htmlFor="min-price" className="mb-1.5 block text-xs font-medium text-slate-500">
+                                    Min ($)
+                                </label>
+                                <Input
+                                    id="min-price"
+                                    type="number"
+                                    min="0"
+                                    inputMode="numeric"
+                                    placeholder="0"
+                                    value={minPrice}
+                                    onChange={(event) => onMinPriceChange?.(event.target.value)}
+                                    className="h-9 rounded-lg"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="max-price" className="mb-1.5 block text-xs font-medium text-slate-500">
+                                    Max ($)
+                                </label>
+                                <Input
+                                    id="max-price"
+                                    type="number"
+                                    min="0"
+                                    inputMode="numeric"
+                                    placeholder="1000"
+                                    value={maxPrice}
+                                    onChange={(event) => onMaxPriceChange?.(event.target.value)}
+                                    className="h-9 rounded-lg"
+                                />
+                            </div>
+                        </div>
 
-            {RATINGS.map((rating) => (
-              <button
-                key={rating.value}
-                onClick={() => onRatingChange?.(rating.value)}
-                className={`block w-full text-left text-sm transition-colors ${
-                  selectedRating === rating.value
-                    ? 'font-medium text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {rating.label}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  )
+                        <Button type="button" onClick={onApplyPrice} className="w-full bg-indigo-600 hover:bg-indigo-700">
+                            Terapkan harga
+                        </Button>
+                    </div>
+                )}
+            </Card>
+
+            <Card className="gap-0 border border-slate-200/80 bg-white p-4 shadow-sm">
+                <button
+                    type="button"
+                    onClick={() => toggleSection('rating')}
+                    className="flex w-full items-center justify-between text-sm font-semibold text-slate-900 transition hover:text-indigo-600"
+                >
+                    Rating minimum
+                    <ChevronDown className={cn('h-4 w-4 text-slate-400 transition-transform', openSections.rating && 'rotate-180')} />
+                </button>
+
+                {openSections.rating && (
+                    <div className="mt-4 space-y-1">
+                        <button
+                            type="button"
+                            onClick={() => onRatingChange?.(null)}
+                            className={cn(
+                                'flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition',
+                                !selectedRating
+                                    ? 'bg-emerald-50 font-semibold text-emerald-700'
+                                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
+                            )}
+                        >
+                            Semua rating
+                            {!selectedRating && <Check className="h-4 w-4" />}
+                        </button>
+
+                        {ratingOptions.map((rating) => {
+                            const active = selectedRating === rating.value;
+
+                            return (
+                                <button
+                                    key={rating.value}
+                                    type="button"
+                                    onClick={() => onRatingChange?.(rating.value)}
+                                    className={cn(
+                                        'flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm transition',
+                                        active
+                                            ? 'bg-emerald-50 font-semibold text-emerald-700'
+                                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900',
+                                    )}
+                                >
+                                    {rating.label}
+                                    {active && <Check className="h-4 w-4" />}
+                                </button>
+                            );
+                        })}
+                    </div>
+                )}
+            </Card>
+
+            <Card className="gap-0 border border-slate-200/80 bg-white p-4 shadow-sm">
+                <button
+                    type="button"
+                    onClick={() => toggleSection('sort')}
+                    className="flex w-full items-center justify-between text-sm font-semibold text-slate-900 transition hover:text-indigo-600"
+                >
+                    Urutkan
+                    <ChevronDown className={cn('h-4 w-4 text-slate-400 transition-transform', openSections.sort && 'rotate-180')} />
+                </button>
+
+                {openSections.sort && (
+                    <div className="mt-4">
+                        <Select value={sort} onValueChange={onSortChange}>
+                            <SelectTrigger className="h-9 w-full rounded-lg">
+                                <SelectValue placeholder="Pilih urutan" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {sortOptions.map((option) => (
+                                    <SelectItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                )}
+            </Card>
+        </div>
+    );
 }

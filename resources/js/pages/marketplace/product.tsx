@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import type { ProductDetailPageProps } from '@/types/marketplace'
-import ProductDetailScreen from '@/components/screens/marketplace/product-detail-screen'
-import PublicLayout from '@/layouts/public-layout'
+import ProductDetailScreen from '@/components/screens/marketplace/product-detail-screen';
+import PublicLayout from '@/layouts/public-layout';
+import type { ProductDetailPageProps } from '@/types/marketplace';
 
 export default function ProductPage(props: ProductDetailPageProps) {
-  return (
-    <PublicLayout>
-      <ProductDetailScreen {...props} />
-    </PublicLayout>
-  )
+    return (
+        <PublicLayout>
+            <ProductDetailScreen {...props} />
+        </PublicLayout>
+    );
 }

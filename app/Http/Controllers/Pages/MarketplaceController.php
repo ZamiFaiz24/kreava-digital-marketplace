@@ -13,8 +13,23 @@ class MarketplaceController extends Controller
 {
     public function __invoke(Request $request): Response
     {
+        $sort = $request->string('sort')->toString();
+        $sort = in_array($sort, ['latest', 'price_asc', 'price_desc', 'rating_desc'], true) ? $sort : 'latest';
+
+        $minPrice = $request->filled('min_price') && is_numeric($request->input('min_price'))
+            ? max(0, (float) $request->input('min_price'))
+            : null;
+
+        $maxPrice = $request->filled('max_price') && is_numeric($request->input('max_price'))
+            ? max(0, (float) $request->input('max_price'))
+            : null;
+
+        $minRating = $request->filled('min_rating') && is_numeric($request->input('min_rating'))
+            ? max(0, min(5, (float) $request->input('min_rating')))
+            : null;
+
         $query = Product::query()
-            ->with(['seller.user:id,name,avatar', 'seller:id,user_id,store_name,slug,logo', 'category', 'images'])
+            ->with(['seller.user:id,name,avatar', 'seller:id,user_id,store_name,slug,logo', 'category:id,name,slug', 'images'])
             ->withCount('reviews')
             ->withAvg('reviews as reviews_avg_rating', 'rating')
             ->where('status', 'published');
@@ -33,11 +48,33 @@ class MarketplaceController extends Controller
             });
         }
 
-        $products = $query->latest()->paginate(12);
+        if ($minPrice !== null) {
+            $query->where('price', '>=', $minPrice);
+        }
+
+        if ($maxPrice !== null) {
+            $query->where('price', '<=', $maxPrice);
+        }
+
+        if ($minRating !== null && $minRating > 0) {
+            $query->whereRaw(
+                '(select avg(reviews.rating) from reviews where reviews.product_id = products.id) >= CAST(? AS REAL)',
+                [$minRating],
+            );
+        }
+
+        match ($sort) {
+            'price_asc' => $query->orderBy('price')->orderByDesc('id'),
+            'price_desc' => $query->orderByDesc('price')->orderByDesc('id'),
+            'rating_desc' => $query->orderByDesc('reviews_avg_rating')->orderByDesc('reviews_count')->orderByDesc('id'),
+            default => $query->latest()->orderByDesc('id'),
+        };
+
+        $products = $query->paginate(12)->withQueryString();
 
         $products->getCollection()->transform(function ($product) {
             $images = $product->images
-                ->map(fn($image) => [
+                ->map(fn ($image) => [
                     'id' => $image->id,
                     'url' => $image->url,
                     'alt' => $product->title,
@@ -70,10 +107,10 @@ class MarketplaceController extends Controller
         });
 
         $categories = Category::query()
-            ->withCount('products')
+            ->withCount(['products' => fn ($query) => $query->where('status', 'published')])
             ->orderBy('name')
             ->get()
-            ->map(fn($category) => [
+            ->map(fn ($category) => [
                 'id' => $category->id,
                 'name' => $category->name,
                 'slug' => $category->slug,
@@ -96,7 +133,10 @@ class MarketplaceController extends Controller
             'filters' => [
                 'query' => $request->string('query')->toString() ?: null,
                 'category' => $request->string('category')->toString() ?: null,
-                'sort' => $request->string('sort')->toString() ?: null,
+                'min_price' => $minPrice,
+                'max_price' => $maxPrice,
+                'min_rating' => $minRating,
+                'sort' => $sort,
             ],
         ]);
     }

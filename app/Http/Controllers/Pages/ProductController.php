@@ -20,7 +20,7 @@ class ProductController extends Controller
             ->firstOrFail();
 
         $images = $product->images
-            ->map(fn($image) => [
+            ->map(fn ($image) => [
                 'id' => $image->id,
                 'url' => $image->url,
                 'alt' => $product->title,
@@ -50,7 +50,7 @@ class ProductController extends Controller
                 'avatar' => $product->seller?->user?->avatar ?? $product->seller?->logo,
             ],
             'downloads_count' => $product->downloads_count ?? 0,
-            'long_description' => $product->long_description ?? null,
+            'long_description' => $product->description,
             'created_at' => $product->created_at?->toDateTimeString(),
         ];
 
@@ -59,7 +59,7 @@ class ProductController extends Controller
             ->latest()
             ->limit(10)
             ->get()
-            ->map(fn($r) => [
+            ->map(fn ($r) => [
                 'id' => $r->id,
                 'author' => $r->user?->name ?? 'Buyer',
                 'avatar' => $r->user?->avatar,
@@ -79,7 +79,7 @@ class ProductController extends Controller
 
         $related = Product::query()
             ->where('id', '!=', $product->id)
-            ->whereHas('category', fn($q) => $q->where('id', $product->category?->id))
+            ->whereHas('category', fn ($q) => $q->where('id', $product->category?->id))
             ->where('status', 'published')
             ->with(['seller.user:id,name,avatar', 'seller:id,user_id,store_name,slug,logo', 'images', 'category'])
             ->withCount('reviews')
@@ -88,7 +88,7 @@ class ProductController extends Controller
             ->limit(4)
             ->get()
             ->map(function ($p) {
-                $imgs = $p->images->map(fn($img) => ['id' => $img->id, 'url' => $img->url, 'alt' => $p->title])->values();
+                $imgs = $p->images->map(fn ($img) => ['id' => $img->id, 'url' => $img->url, 'alt' => $p->title])->values();
 
                 return [
                     'id' => $p->id,
