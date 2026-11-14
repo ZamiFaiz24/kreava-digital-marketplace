@@ -78,10 +78,10 @@ export function Footer() {
                 <div className="mb-12 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5">
                     {/* Brand */}
                     <div className="md:col-span-2 lg:col-span-1">
-                        <div className="mb-4 flex items-center gap-3">
-                            <img src="/images/Logo.png" alt="KREAVA mark" className="h-10 w-10 object-contain object-bottom" />
-                            <img src="/images/Brand.png" alt="KREAVA" className="h-8 w-[165px] object-contain object-bottom" />
-                        </div>
+                        <Link href={route('landing')} className="mb-4 inline-flex items-center gap-3 transition-opacity hover:opacity-85">
+                            <img src="/images/Logo/LogoMark-trimmed.png" alt="" className="h-10 w-10 object-contain" />
+                            <img src="/images/Logo/LogoName-trimmed.png" alt="KREAVA" className="h-8 w-auto object-contain" />
+                        </Link>
                         <p className="text-foreground/60 mb-6 text-sm">{t('landing.footer.description')}</p>
                         {/* Social Links */}
                         <div className="flex gap-4">

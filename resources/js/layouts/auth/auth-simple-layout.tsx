@@ -27,13 +27,7 @@ export default function AuthSimpleLayout({ children, title, description }: AuthL
                                 href={route('landing')}
                                 className="flex flex-col items-center gap-2 font-medium transition-opacity hover:opacity-85"
                             >
-                                <div className="relative h-20 w-52 overflow-hidden">
-                                    <img
-                                        src="/images/Logo/LogoFull.png"
-                                        alt="KREAVA"
-                                        className="absolute top-1/2 left-1/2 h-[240px] w-[240px] max-w-none -translate-x-1/2 -translate-y-1/2"
-                                    />
-                                </div>
+                                <img src="/images/Logo/LogoFull2-trimmed.png" alt="KREAVA" className="h-16 w-auto object-contain" />
                                 <span className="sr-only">{title}</span>
                             </Link>
 

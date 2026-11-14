@@ -118,21 +118,9 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                     <div className="flex items-center gap-2 md:gap-3">
                         <Link href={route('landing')} className="flex items-center">
                             {isMarketplace ? (
-                                <div className="relative h-11 w-11 overflow-hidden rounded-xl">
-                                    <img
-                                        src="/images/Logo/LogoMark.png"
-                                        alt="KREAVA"
-                                        className="absolute top-1/2 left-1/2 h-[115px] w-[115px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
-                                    />
-                                </div>
+                                <img src="/images/Logo/LogoMark-trimmed.png" alt="KREAVA" className="h-10 w-10 object-contain" />
                             ) : (
-                                <div className="relative h-14 w-40 overflow-hidden sm:h-16 sm:w-48">
-                                    <img
-                                        src="/images/Logo/LogoFull.png"
-                                        alt="KREAVA"
-                                        className="absolute top-1/2 left-1/2 h-[180px] w-[180px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
-                                    />
-                                </div>
+                                <img src="/images/Logo/LogoFull2-trimmed.png" alt="KREAVA" className="h-12 w-auto object-contain sm:h-14" />
                             )}
                         </Link>
 
