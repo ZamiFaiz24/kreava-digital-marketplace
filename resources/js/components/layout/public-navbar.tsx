@@ -16,12 +16,12 @@ import { useTranslation } from 'react-i18next';
 type PublicNavbarVariant = 'landing' | 'marketplace';
 
 const categoryLinks = [
-    { label: 'Templates', href: '/marketplace?category=templates' },
-    { label: 'UI Kits', href: '/marketplace?category=ui-kits' },
-    { label: 'Fonts', href: '/marketplace?category=fonts' },
-    { label: 'Mockups', href: '/marketplace?category=mockups' },
-    { label: 'Icons', href: '/marketplace?category=icons' },
-    { label: 'Illustrations', href: '/marketplace?category=illustrations' },
+    { label: 'Templates', slug: 'templates' },
+    { label: 'UI Kits', slug: 'ui-kits' },
+    { label: 'Fonts', slug: 'fonts' },
+    { label: 'Mockups', slug: 'mockups' },
+    { label: 'Icons', slug: 'icons' },
+    { label: 'Illustrations', slug: 'illustrations' },
 ];
 
 interface PublicNavbarProps {
@@ -57,14 +57,14 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
     const isMarketplace = variant === 'marketplace';
     const primaryNavHref = isMarketplace ? route('landing') : route('marketplace');
     const primaryNavLabel = isMarketplace ? t('common.nav.home') : t('common.nav.marketplace');
-    const sellerCtaHref = `${route('register')}?intent=seller`;
+    const sellerCtaHref = route('register', { intent: 'seller' });
     const isAuthenticated = Boolean(auth?.user);
     const normalizedCategories: NavbarCategoryItem[] = categories.map((category) =>
         'name' in category
             ? {
                   slug: category.slug,
                   title: category.name,
-                  href: `/marketplace?category=${category.slug}`,
+                  href: route('marketplace', { category: category.slug }),
                   count: category.count ?? category.products_count,
                   icon: category.icon,
               }
@@ -90,25 +90,15 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
         return String(n);
     };
 
-    // Safe route resolver - Ziggy's `route()` will throw if a named route isn't available
-    const safeRoute = (name: string, fallback = '#') => {
-        try {
-            // @ts-ignore - route is injected by Ziggy
-            return route(name);
-        } catch (err) {
-            return fallback;
-        }
-    };
-
     return (
         <>
             {variant === 'landing' && (
                 <div className="bg-primary/95 text-primary-foreground text-center text-sm">
                     <div className="mx-auto max-w-7xl px-4 py-1 sm:px-6 lg:px-8">
                         {t('common.banner.new_templates')}{' '}
-                        <a href="/marketplace?tag=new" className="underline">
+                        <Link href={route('marketplace', { category: 'templates', sort: 'latest' })} className="underline">
                             {t('common.banner.explore_now')}
-                        </a>
+                        </Link>
                     </div>
                 </div>
             )}
@@ -164,20 +154,20 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                                         {(normalizedCategories.length > 0
                                             ? normalizedCategories
                                             : categoryLinks.map((category) => ({
-                                                  slug: category.href,
+                                                  slug: category.slug,
                                                   title: category.label,
-                                                  href: category.href,
+                                                  href: route('marketplace', { category: category.slug }),
                                                   count: undefined,
                                               }))
                                         ).map((category) => (
-                                            <a
+                                            <Link
                                                 key={category.href}
                                                 href={category.href}
                                                 className="text-foreground/80 hover:bg-muted hover:text-foreground flex items-center justify-between rounded-xl px-3 py-2 text-sm transition"
                                             >
                                                 <span>{category.title}</span>
                                                 {category.count !== undefined && <span className="text-foreground/40 text-xs">{category.count}</span>}
-                                            </a>
+                                            </Link>
                                         ))}
                                     </div>
                                 </div>
@@ -215,11 +205,11 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                                                         : categoryLinks.map(
                                                               (item) =>
                                                                   ({
-                                                                      slug: item.href,
+                                                                      slug: item.slug,
                                                                       title: item.label,
                                                                       description: t('common.nav.browse_category_description'),
                                                                       icon: 'sparkles',
-                                                                      href: item.href,
+                                                                      href: route('marketplace', { category: item.slug }),
                                                                       count: undefined,
                                                                   }) as NavbarCategoryItem,
                                                           )
@@ -342,7 +332,7 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                             {isAuthenticated && (
                                 <>
                                     <Link
-                                        href={safeRoute('wishlist.index', '/wishlist')}
+                                        href={route('wishlist.index')}
                                         className="text-foreground/70 hover:bg-muted hover:text-foreground relative hidden h-9 w-9 items-center justify-center rounded-lg transition lg:flex"
                                         aria-label={t('common.nav.wishlist')}
                                     >
@@ -354,7 +344,7 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                                         )}
                                     </Link>
                                     <Link
-                                        href={safeRoute('cart.index', '/cart')}
+                                        href={route('cart.index')}
                                         className="text-foreground/70 hover:bg-muted hover:text-foreground relative hidden h-9 w-9 items-center justify-center rounded-lg transition lg:flex"
                                         aria-label={t('common.nav.cart')}
                                     >
@@ -432,13 +422,13 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                                     <div className="text-foreground/80 text-sm font-medium">{t('common.nav.categories')}</div>
                                     <div className="grid grid-cols-2 gap-2">
                                         {categoryLinks.map((category) => (
-                                            <a
-                                                key={category.href}
-                                                href={category.href}
+                                            <Link
+                                                key={category.slug}
+                                                href={route('marketplace', { category: category.slug })}
                                                 className="border-input text-foreground/80 hover:bg-muted hover:text-foreground rounded-lg border px-3 py-2 text-sm transition"
                                             >
                                                 {category.label}
-                                            </a>
+                                            </Link>
                                         ))}
                                     </div>
                                 </div>
@@ -451,11 +441,11 @@ export default function PublicNavbar({ variant = 'landing', categories = [] }: P
                                             : categoryLinks.map(
                                                   (item) =>
                                                       ({
-                                                          slug: item.href,
+                                                          slug: item.slug,
                                                           title: item.label,
                                                           description: t('common.nav.browse_category_description'),
                                                           icon: 'sparkles',
-                                                          href: item.href,
+                                                          href: route('marketplace', { category: item.slug }),
                                                           count: undefined,
                                                       }) as NavbarCategoryItem,
                                               )

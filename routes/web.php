@@ -12,6 +12,7 @@ use App\Http\Controllers\Customer\DownloadsController as CustomerDownloadsContro
 use App\Http\Controllers\Customer\OrdersController as CustomerOrdersController;
 use App\Http\Controllers\Customer\WishlistController as CustomerWishlistController;
 use App\Http\Controllers\Pages\CreatorsController;
+use App\Http\Controllers\Pages\InfoController;
 use App\Http\Controllers\Pages\LandingController;
 use App\Http\Controllers\Pages\MarketplaceController;
 use App\Http\Controllers\Pages\ProductController;
@@ -31,6 +32,10 @@ Route::get('/', LandingController::class)->name('landing');
 Route::get('/marketplace', MarketplaceController::class)->name('marketplace');
 Route::get('/products/{slug}', ProductController::class)->name('product.show');
 Route::get('/creators', CreatorsController::class)->name('creators');
+Route::get('/company', [InfoController::class, 'company'])->name('company');
+Route::get('/legal', [InfoController::class, 'legal'])->name('legal');
+Route::get('/resources', [InfoController::class, 'resources'])->name('resources');
+Route::get('/status', [InfoController::class, 'status'])->name('status');
 Route::get('/welcome', WelcomeController::class)->name('welcome');
 
 Route::middleware(['auth'])->group(function () {

@@ -10,7 +10,6 @@ const fallbackProducts: LandingProduct[] = [
     {
         title: 'Modern UI Kit Pro',
         slug: 'modern-ui-kit-pro',
-        href: '/marketplace',
         thumbnail: null,
         creator: 'Design Studio X',
         rating: 4.8,
@@ -22,7 +21,6 @@ const fallbackProducts: LandingProduct[] = [
     {
         title: 'Responsive Web Templates',
         slug: 'responsive-web-templates',
-        href: '/marketplace',
         thumbnail: null,
         creator: 'Code Masters',
         rating: 4.9,
@@ -34,7 +32,6 @@ const fallbackProducts: LandingProduct[] = [
     {
         title: 'React Component Library',
         slug: 'react-component-library',
-        href: '/marketplace',
         thumbnail: null,
         creator: 'DevTools Inc',
         rating: 4.7,
@@ -46,7 +43,6 @@ const fallbackProducts: LandingProduct[] = [
     {
         title: 'Complete Design System Guide',
         slug: 'complete-design-system-guide',
-        href: '/marketplace',
         thumbnail: null,
         creator: 'Creative Academy',
         rating: 4.9,
@@ -58,7 +54,6 @@ const fallbackProducts: LandingProduct[] = [
     {
         title: 'Premium Icon Collection',
         slug: 'premium-icon-collection',
-        href: '/marketplace',
         thumbnail: null,
         creator: 'Icon Creators',
         rating: 4.8,
@@ -70,7 +65,6 @@ const fallbackProducts: LandingProduct[] = [
     {
         title: 'Photography Asset Pack',
         slug: 'photography-asset-pack',
-        href: '/marketplace',
         thumbnail: null,
         creator: 'Asset Market',
         rating: 4.6,
@@ -116,7 +110,7 @@ export function TrendingProducts({ products = fallbackProducts }: { products?: L
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                         {products.map((product, index) => {
                             const gradient = product.gradient ?? gradientOptions[index % gradientOptions.length];
-                            const href = product.href ?? route('marketplace');
+                            const href = product.href ?? (product.slug ? route('product.show', product.slug) : route('marketplace'));
 
                             return (
                                 <Link key={`${product.title}-${index}`} href={href} className="group block h-full">
