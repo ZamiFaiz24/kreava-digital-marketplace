@@ -26,7 +26,7 @@ function createModerationSeller(string $storeName, string $status = 'pending'): 
     $seller = Seller::create([
         'user_id' => $user->id,
         'store_name' => $storeName,
-        'slug' => Str::slug($storeName) . '-' . Str::random(6),
+        'slug' => Str::slug($storeName).'-'.Str::random(6),
         'contact_email' => $user->email,
         'status' => $status,
     ]);
@@ -38,7 +38,7 @@ function createModerationCategory(): Category
 {
     return Category::create([
         'name' => 'Templates',
-        'slug' => 'templates-' . Str::random(8),
+        'slug' => 'templates-'.Str::random(8),
     ]);
 }
 
@@ -48,7 +48,7 @@ function createModerationProduct(Seller $seller, Category $category, string $tit
         'seller_id' => $seller->id,
         'category_id' => $category->id,
         'title' => $title,
-        'slug' => Str::slug($title) . '-' . Str::random(6),
+        'slug' => Str::slug($title).'-'.Str::random(6),
         'price' => 49.90,
         'status' => $status,
     ]);
@@ -156,11 +156,13 @@ test('admin can approve and reject products', function () {
 
     $this->actingAs($admin)
         ->post(route('admin.moderation.products.approve', $approvedProduct))
-        ->assertRedirect(route('admin.moderation.products'));
+        ->assertRedirect(route('admin.moderation.products'))
+        ->assertSessionHas('success', 'admin.moderation.products.flash.approved');
 
     $this->actingAs($admin)
         ->post(route('admin.moderation.products.reject', $rejectedProduct))
-        ->assertRedirect(route('admin.moderation.products'));
+        ->assertRedirect(route('admin.moderation.products'))
+        ->assertSessionHas('success', 'admin.moderation.products.flash.rejected');
 
     expect($approvedProduct->fresh()->status)->toBe('published')
         ->and($rejectedProduct->fresh()->status)->toBe('rejected');
@@ -177,14 +179,14 @@ test('admin can take down published products only', function () {
     $this->actingAs($admin)
         ->post(route('admin.moderation.products.takedown', $publishedProduct))
         ->assertRedirect(route('admin.moderation.products'))
-        ->assertSessionHas('success');
+        ->assertSessionHas('success', 'admin.moderation.products.flash.takedown');
 
     expect($publishedProduct->fresh()->status)->toBe('rejected');
 
     $this->actingAs($admin)
         ->post(route('admin.moderation.products.takedown', $pendingProduct))
         ->assertRedirect(route('admin.moderation.products'))
-        ->assertSessionHas('error');
+        ->assertSessionHas('error', 'admin.moderation.products.flash.not_published');
 
     expect($pendingProduct->fresh()->status)->toBe('pending');
 });
@@ -196,11 +198,13 @@ test('admin can approve and reject sellers', function () {
 
     $this->actingAs($admin)
         ->post(route('admin.moderation.sellers.approve', $approvedSeller))
-        ->assertRedirect(route('admin.moderation.sellers'));
+        ->assertRedirect(route('admin.moderation.sellers'))
+        ->assertSessionHas('success', 'admin.moderation.sellers.flash.approved');
 
     $this->actingAs($admin)
         ->post(route('admin.moderation.sellers.reject', $rejectedSeller))
-        ->assertRedirect(route('admin.moderation.sellers'));
+        ->assertRedirect(route('admin.moderation.sellers'))
+        ->assertSessionHas('success', 'admin.moderation.sellers.flash.rejected');
 
     expect($approvedSeller->fresh()->status)->toBe('approved')
         ->and($rejectedSeller->fresh()->status)->toBe('rejected');

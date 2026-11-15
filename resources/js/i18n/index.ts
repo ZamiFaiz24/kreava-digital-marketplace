@@ -1,11 +1,13 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+import enAdmin from './en/admin.json';
 import enAuth from './en/auth.json';
 import enCommon from './en/common.json';
 import enDashboard from './en/dashboard.json';
 import enLanding from './en/landing.json';
 import enMarketplace from './en/marketplace.json';
+import idAdmin from './id/admin.json';
 import idAuth from './id/auth.json';
 import idCommon from './id/common.json';
 import idDashboard from './id/dashboard.json';
@@ -27,6 +29,7 @@ export const resources = {
             ...enMarketplace,
             ...enAuth,
             ...enDashboard,
+            ...enAdmin,
         },
     },
     id: {
@@ -36,6 +39,7 @@ export const resources = {
             ...idMarketplace,
             ...idAuth,
             ...idDashboard,
+            ...idAdmin,
         },
     },
 };

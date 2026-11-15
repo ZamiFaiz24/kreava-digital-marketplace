@@ -36,7 +36,7 @@ class OrderController extends Controller
             ->through(fn (Order $order) => [
                 'id' => $order->id,
                 'order_number' => $this->orderNumber($order),
-                'customer' => $order->user?->name ?? 'Unknown Customer',
+                'customer' => $order->user?->name ?? '',
                 'email' => $order->user?->email ?? '',
                 'created_at' => $order->created_at?->format('Y-m-d H:i') ?? '',
                 'total_price' => (float) $order->total_price,
@@ -114,13 +114,13 @@ class OrderController extends Controller
         if ($order->payment_status !== 'paid') {
             return redirect()
                 ->route('admin.orders.index')
-                ->with('error', 'Hanya order berstatus paid yang dapat ditandai refund.');
+                ->with('error', 'admin.orders.flash.not_paid');
         }
 
         if ($order->refunded_at !== null) {
             return redirect()
                 ->route('admin.orders.index')
-                ->with('error', 'Order sudah ditandai refund.');
+                ->with('error', 'admin.orders.flash.already_refunded');
         }
 
         $order->update(['refunded_at' => now()]);
@@ -140,7 +140,7 @@ class OrderController extends Controller
 
         return redirect()
             ->route('admin.orders.index')
-            ->with('success', 'Order berhasil ditandai refund.');
+            ->with('success', 'admin.orders.flash.refunded');
     }
 
     private function applySearch(Builder $query, string $search): void

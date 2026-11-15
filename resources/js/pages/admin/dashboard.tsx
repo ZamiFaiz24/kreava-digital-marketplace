@@ -1,6 +1,7 @@
 import { Head, router, usePage } from '@inertiajs/react';
 import { BadgeCheck, DollarSign, Package, RefreshCw, ShoppingCart, Store, UserCheck, Users } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { adminNavItems } from '../../components/admin/nav-items';
 import DashboardLayout from '../../components/seller/layout/dashboard-layout';
 import StatCard from '../../components/seller/shared/stat-card';
@@ -55,11 +56,25 @@ const sellerStatusStyles: Record<string, string> = {
     suspended: 'bg-rose-100 text-rose-700',
 };
 
-function formatCurrency(value: number) {
-    return `$${value.toLocaleString('en-US', {
+function formatCurrency(value: number, locale: string) {
+    return `$${value.toLocaleString(locale, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     })}`;
+}
+
+function formatDate(value: string, locale: string) {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return new Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    }).format(date);
 }
 
 function capitalize(value: string) {
@@ -68,6 +83,9 @@ function capitalize(value: string) {
 
 export default function AdminDashboardPage({ stats, recentOrders, recentSellers }: AdminDashboardPageProps) {
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const { t, i18n } = useTranslation();
+    const locale = i18n.resolvedLanguage === 'id' ? 'id-ID' : 'en-US';
+    const translateStatus = (status: string) => t(`admin.status.${status}`, { defaultValue: capitalize(status) });
     const { errors } = usePage<{ errors: Record<string, string> }>().props;
     const errorMessage = Object.values(errors)[0];
 
@@ -80,14 +98,14 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
     };
 
     return (
-        <DashboardLayout navItems={adminNavItems} accountLabel="Administrator" showUploadAction={false}>
-            <Head title="Admin Dashboard" />
+        <DashboardLayout navItems={adminNavItems} accountLabel={t('admin.account_label')} showUploadAction={false}>
+            <Head title={t('admin.dashboard.head_title')} />
 
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <p className="text-primary text-sm font-medium">Admin Panel</p>
-                    <h1 className="text-foreground mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Dashboard</h1>
-                    <p className="text-muted-foreground mt-2 text-sm">Ringkasan aktivitas marketplace Kreava.</p>
+                    <p className="text-primary text-sm font-medium">{t('admin.panel')}</p>
+                    <h1 className="text-foreground mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{t('admin.dashboard.title')}</h1>
+                    <p className="text-muted-foreground mt-2 text-sm">{t('admin.dashboard.description')}</p>
                 </div>
 
                 <button
@@ -97,7 +115,7 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
                     className="bg-primary hover:bg-primary/90 inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-                    {isRefreshing ? 'Memuat...' : 'Refresh'}
+                    {isRefreshing ? t('admin.dashboard.refreshing') : t('admin.dashboard.refresh')}
                 </button>
             </div>
 
@@ -105,65 +123,65 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
 
             <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
                 <StatCard
-                    title="Total Users"
-                    value={stats.totalUsers}
-                    subtitle="All registered accounts"
+                    title={t('admin.dashboard.stats.total_users')}
+                    value={stats.totalUsers.toLocaleString(locale)}
+                    subtitle={t('admin.dashboard.stats.total_users_subtitle')}
                     icon={<Users className="h-8 w-8" />}
                     backgroundColor="bg-gradient-to-br from-indigo-50 to-indigo-100"
                     textColor="text-indigo-600"
                 />
                 <StatCard
-                    title="Total Sellers"
-                    value={stats.totalSellers}
-                    subtitle="Registered seller accounts"
+                    title={t('admin.dashboard.stats.total_sellers')}
+                    value={stats.totalSellers.toLocaleString(locale)}
+                    subtitle={t('admin.dashboard.stats.total_sellers_subtitle')}
                     icon={<Store className="h-8 w-8" />}
                     backgroundColor="bg-gradient-to-br from-emerald-50 to-emerald-100"
                     textColor="text-emerald-600"
                 />
                 <StatCard
-                    title="Total Customers"
-                    value={stats.totalCustomers}
-                    subtitle="Registered buyer accounts"
+                    title={t('admin.dashboard.stats.total_customers')}
+                    value={stats.totalCustomers.toLocaleString(locale)}
+                    subtitle={t('admin.dashboard.stats.total_customers_subtitle')}
                     icon={<UserCheck className="h-8 w-8" />}
                     backgroundColor="bg-gradient-to-br from-violet-50 to-violet-100"
                     textColor="text-violet-600"
                 />
                 <StatCard
-                    title="Total Revenue"
-                    value={formatCurrency(stats.totalRevenue)}
-                    subtitle="From paid orders"
+                    title={t('admin.dashboard.stats.total_revenue')}
+                    value={formatCurrency(stats.totalRevenue, locale)}
+                    subtitle={t('admin.dashboard.stats.total_revenue_subtitle')}
                     icon={<DollarSign className="h-8 w-8" />}
                     backgroundColor="bg-gradient-to-br from-emerald-50 to-emerald-100"
                     textColor="text-emerald-600"
                 />
                 <StatCard
-                    title="Total Orders"
-                    value={stats.totalOrders}
-                    subtitle="All orders"
+                    title={t('admin.dashboard.stats.total_orders')}
+                    value={stats.totalOrders.toLocaleString(locale)}
+                    subtitle={t('admin.dashboard.stats.total_orders_subtitle')}
                     icon={<ShoppingCart className="h-8 w-8" />}
                     backgroundColor="bg-gradient-to-br from-indigo-50 to-indigo-100"
                     textColor="text-indigo-600"
                 />
                 <StatCard
-                    title="Paid Orders"
-                    value={stats.paidOrders}
-                    subtitle="Successfully paid"
+                    title={t('admin.dashboard.stats.paid_orders')}
+                    value={stats.paidOrders.toLocaleString(locale)}
+                    subtitle={t('admin.dashboard.stats.paid_orders_subtitle')}
                     icon={<BadgeCheck className="h-8 w-8" />}
                     backgroundColor="bg-gradient-to-br from-emerald-50 to-emerald-100"
                     textColor="text-emerald-600"
                 />
                 <StatCard
-                    title="Total Products"
-                    value={stats.totalProducts}
-                    subtitle="All seller products"
+                    title={t('admin.dashboard.stats.total_products')}
+                    value={stats.totalProducts.toLocaleString(locale)}
+                    subtitle={t('admin.dashboard.stats.total_products_subtitle')}
                     icon={<Package className="h-8 w-8" />}
                     backgroundColor="bg-gradient-to-br from-violet-50 to-violet-100"
                     textColor="text-violet-600"
                 />
                 <StatCard
-                    title="Published Products"
-                    value={stats.publishedProducts}
-                    subtitle="Visible in marketplace"
+                    title={t('admin.dashboard.stats.published_products')}
+                    value={stats.publishedProducts.toLocaleString(locale)}
+                    subtitle={t('admin.dashboard.stats.published_products_subtitle')}
                     icon={<Store className="h-8 w-8" />}
                     backgroundColor="bg-gradient-to-br from-amber-50 to-amber-100"
                     textColor="text-amber-600"
@@ -172,26 +190,36 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
 
             <section className="border-border mb-8 rounded-2xl border bg-white p-6">
                 <div className="mb-6">
-                    <h2 className="text-foreground text-xl font-semibold tracking-tight">Recent Orders</h2>
-                    <p className="text-muted-foreground mt-1 text-sm">5 order terbaru di marketplace.</p>
+                    <h2 className="text-foreground text-xl font-semibold tracking-tight">{t('admin.dashboard.recent_orders.title')}</h2>
+                    <p className="text-muted-foreground mt-1 text-sm">{t('admin.dashboard.recent_orders.description')}</p>
                 </div>
 
                 {recentOrders.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                         <ShoppingCart className="text-muted-foreground/50 h-10 w-10" />
-                        <p className="text-foreground mt-3 text-sm font-medium">Belum ada order</p>
-                        <p className="text-muted-foreground mt-1 text-xs">Order akan muncul di sini setelah customer mulai membeli.</p>
+                        <p className="text-foreground mt-3 text-sm font-medium">{t('admin.dashboard.recent_orders.empty_title')}</p>
+                        <p className="text-muted-foreground mt-1 text-xs">{t('admin.dashboard.recent_orders.empty_description')}</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
                                 <tr className="border-border border-b">
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Order</th>
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Customer</th>
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Amount</th>
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Status</th>
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Date</th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_orders.order')}
+                                    </th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_orders.customer')}
+                                    </th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_orders.amount')}
+                                    </th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_orders.status')}
+                                    </th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_orders.date')}
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -202,17 +230,17 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
                                             <p className="text-foreground text-sm font-medium">{order.customer}</p>
                                             <p className="text-muted-foreground text-xs">{order.email}</p>
                                         </td>
-                                        <td className="text-foreground px-4 py-4 text-sm font-semibold">{formatCurrency(order.amount)}</td>
+                                        <td className="text-foreground px-4 py-4 text-sm font-semibold">{formatCurrency(order.amount, locale)}</td>
                                         <td className="px-4 py-4">
                                             <span
                                                 className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${
                                                     orderStatusStyles[order.status] ?? 'bg-slate-100 text-slate-700'
                                                 }`}
                                             >
-                                                {capitalize(order.status)}
+                                                {translateStatus(order.status)}
                                             </span>
                                         </td>
-                                        <td className="text-muted-foreground px-4 py-4 text-sm">{order.date}</td>
+                                        <td className="text-muted-foreground px-4 py-4 text-sm">{formatDate(order.date, locale)}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -223,26 +251,36 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
 
             <section className="border-border rounded-2xl border bg-white p-6">
                 <div className="mb-6">
-                    <h2 className="text-foreground text-xl font-semibold tracking-tight">Recent Sellers</h2>
-                    <p className="text-muted-foreground mt-1 text-sm">5 seller terbaru yang bergabung.</p>
+                    <h2 className="text-foreground text-xl font-semibold tracking-tight">{t('admin.dashboard.recent_sellers.title')}</h2>
+                    <p className="text-muted-foreground mt-1 text-sm">{t('admin.dashboard.recent_sellers.description')}</p>
                 </div>
 
                 {recentSellers.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-12 text-center">
                         <Store className="text-muted-foreground/50 h-10 w-10" />
-                        <p className="text-foreground mt-3 text-sm font-medium">Belum ada seller</p>
-                        <p className="text-muted-foreground mt-1 text-xs">Seller akan muncul di sini setelah mendaftar.</p>
+                        <p className="text-foreground mt-3 text-sm font-medium">{t('admin.dashboard.recent_sellers.empty_title')}</p>
+                        <p className="text-muted-foreground mt-1 text-xs">{t('admin.dashboard.recent_sellers.empty_description')}</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
                                 <tr className="border-border border-b">
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Store</th>
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Owner</th>
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Products</th>
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Status</th>
-                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Joined</th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_sellers.store')}
+                                    </th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_sellers.owner')}
+                                    </th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_sellers.products')}
+                                    </th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_sellers.status')}
+                                    </th>
+                                    <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                        {t('admin.dashboard.recent_sellers.joined')}
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -253,17 +291,17 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
                                             <p className="text-muted-foreground text-xs">{seller.email}</p>
                                         </td>
                                         <td className="text-foreground px-4 py-4 text-sm">{seller.owner}</td>
-                                        <td className="text-foreground px-4 py-4 text-sm">{seller.productsCount}</td>
+                                        <td className="text-foreground px-4 py-4 text-sm">{seller.productsCount.toLocaleString(locale)}</td>
                                         <td className="px-4 py-4">
                                             <span
                                                 className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${
                                                     sellerStatusStyles[seller.status] ?? 'bg-slate-100 text-slate-700'
                                                 }`}
                                             >
-                                                {capitalize(seller.status)}
+                                                {translateStatus(seller.status)}
                                             </span>
                                         </td>
-                                        <td className="text-muted-foreground px-4 py-4 text-sm">{seller.joinedDate}</td>
+                                        <td className="text-muted-foreground px-4 py-4 text-sm">{formatDate(seller.joinedDate, locale)}</td>
                                     </tr>
                                 ))}
                             </tbody>

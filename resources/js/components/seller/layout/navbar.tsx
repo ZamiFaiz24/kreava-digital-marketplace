@@ -3,6 +3,7 @@
 import { Link } from '@inertiajs/react';
 import { Bell, Menu, Search, Upload } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { LanguageSwitcher } from '@/components/shared/language-switcher';
 
@@ -15,6 +16,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ sellerName, sellerAvatar, profileEmail = 'seller@kreava.com', showUploadAction = true, onMenuClick }: NavbarProps) {
+    const { t } = useTranslation();
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -31,7 +33,7 @@ export default function Navbar({ sellerName, sellerAvatar, profileEmail = 'selle
                             <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
                             <input
                                 type="text"
-                                placeholder="Search products, orders..."
+                                placeholder={t('dashboard.layout.search_placeholder')}
                                 className="border-border bg-muted/50 text-foreground placeholder-muted-foreground focus:ring-primary/20 w-full rounded-lg border py-2 pr-4 pl-10 focus:ring-2 focus:outline-none"
                             />
                         </div>
@@ -45,7 +47,7 @@ export default function Navbar({ sellerName, sellerAvatar, profileEmail = 'selle
                     {showUploadAction && (
                         <button className="bg-primary hover:bg-primary/90 hidden items-center gap-2 rounded-lg px-4 py-2 text-white transition-colors sm:flex">
                             <Upload className="h-4 w-4" />
-                            <span className="text-sm font-medium">Upload Product</span>
+                            <span className="text-sm font-medium">{t('dashboard.layout.upload_product')}</span>
                         </button>
                     )}
 
@@ -66,14 +68,18 @@ export default function Navbar({ sellerName, sellerAvatar, profileEmail = 'selle
                         {isNotificationOpen && (
                             <div className="border-border absolute right-0 mt-2 w-80 rounded-lg border bg-white shadow-lg">
                                 <div className="border-border border-b p-4">
-                                    <p className="text-foreground font-semibold">Notifications</p>
+                                    <p className="text-foreground font-semibold">{t('dashboard.layout.notifications')}</p>
                                 </div>
                                 <div className="max-h-96 overflow-y-auto">
                                     {[1, 2, 3].map((i) => (
                                         <div key={i} className="border-border hover:bg-muted/50 cursor-pointer border-b p-4">
-                                            <p className="text-foreground text-sm font-medium">New order received</p>
-                                            <p className="text-muted-foreground mt-1 text-xs">You have a new order for &quot;UI Kit Pro&quot;</p>
-                                            <p className="text-muted-foreground mt-2 text-xs">{i} hour ago</p>
+                                            <p className="text-foreground text-sm font-medium">{t('dashboard.layout.notification_order_title')}</p>
+                                            <p className="text-muted-foreground mt-1 text-xs">
+                                                {t('dashboard.layout.notification_order_description', { product: 'UI Kit Pro' })}
+                                            </p>
+                                            <p className="text-muted-foreground mt-2 text-xs">
+                                                {t('dashboard.layout.notification_hours_ago', { hours: i })}
+                                            </p>
                                         </div>
                                     ))}
                                 </div>
@@ -103,13 +109,13 @@ export default function Navbar({ sellerName, sellerAvatar, profileEmail = 'selle
                                 </div>
                                 <div className="p-2">
                                     <a href="#" className="text-foreground hover:bg-muted block rounded px-4 py-2 text-sm transition-colors">
-                                        Profile Settings
+                                        {t('dashboard.layout.profile_settings')}
                                     </a>
                                     <a href="#" className="text-foreground hover:bg-muted block rounded px-4 py-2 text-sm transition-colors">
-                                        Store Settings
+                                        {t('dashboard.layout.store_settings')}
                                     </a>
                                     <a href="#" className="text-foreground hover:bg-muted block rounded px-4 py-2 text-sm transition-colors">
-                                        Billing
+                                        {t('dashboard.layout.billing')}
                                     </a>
                                     <div className="border-border my-2 border-t"></div>
                                     <Link
@@ -119,7 +125,7 @@ export default function Navbar({ sellerName, sellerAvatar, profileEmail = 'selle
                                         onClick={() => setIsProfileOpen(false)}
                                         className="w-full rounded px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50"
                                     >
-                                        Logout
+                                        {t('dashboard.layout.logout')}
                                     </Link>
                                 </div>
                             </div>

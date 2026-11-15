@@ -79,7 +79,7 @@ test('admin cannot change their own status', function () {
     $this->actingAs($admin)
         ->post(route('admin.users.status', $admin))
         ->assertRedirect(route('admin.users.index'))
-        ->assertSessionHas('error');
+        ->assertSessionHas('error', 'admin.users.cannot_toggle_self');
 
     expect($admin->fresh()->is_active)->toBeTrue();
 });
@@ -91,14 +91,14 @@ test('admin can toggle another users status', function () {
     $this->actingAs($admin)
         ->post(route('admin.users.status', $user))
         ->assertRedirect(route('admin.users.index'))
-        ->assertSessionHas('success');
+        ->assertSessionHas('success', 'admin.users.flash.deactivated');
 
     expect($user->fresh()->is_active)->toBeFalse();
 
     $this->actingAs($admin)
         ->post(route('admin.users.status', $user))
         ->assertRedirect(route('admin.users.index'))
-        ->assertSessionHas('success');
+        ->assertSessionHas('success', 'admin.users.flash.activated');
 
     expect($user->fresh()->is_active)->toBeTrue();
 });

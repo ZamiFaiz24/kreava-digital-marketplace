@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Head, router, usePage } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight, Loader2, Search, UserCheck, Users, UserX } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { adminNavItems } from '../../components/admin/nav-items';
 import DashboardLayout from '../../components/seller/layout/dashboard-layout';
 
@@ -49,19 +50,30 @@ const roleStyles: Record<UserRole, string> = {
     customer: 'bg-slate-100 text-slate-700',
 };
 
-const roleLabels: Record<UserRole, string> = {
-    admin: 'Admin',
-    seller: 'Seller',
-    customer: 'Customer',
-};
+function formatDate(value: string, locale: string) {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return new Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    }).format(date);
+}
 
 export default function AdminUsersPage({ users, filters }: UsersPageProps) {
     const [processingStatusId, setProcessingStatusId] = useState<number | null>(null);
     const [isFiltering, setIsFiltering] = useState(false);
     const [search, setSearch] = useState(filters.search);
     const [role, setRole] = useState(filters.role || 'all');
+    const { t, i18n } = useTranslation();
+    const locale = i18n.resolvedLanguage === 'id' ? 'id-ID' : 'en-US';
+    const translateFlash = (message?: string) => (message ? t(message, { defaultValue: message }) : null);
     const { errors, flash } = usePage<{ errors: Record<string, string>; flash?: UsersFlash }>().props;
-    const errorMessage = flash?.error ?? Object.values(errors)[0];
+    const errorMessage = translateFlash(flash?.error) ?? Object.values(errors)[0];
 
     useEffect(() => {
         setSearch(filters.search);
@@ -131,19 +143,21 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
     const endItem = Math.min(users.current_page * users.per_page, users.total);
 
     return (
-        <DashboardLayout navItems={adminNavItems} accountLabel="Administrator" showUploadAction={false}>
-            <Head title="User Management" />
+        <DashboardLayout navItems={adminNavItems} accountLabel={t('admin.account_label')} showUploadAction={false}>
+            <Head title={t('admin.users.head_title')} />
 
             <div className="mb-8">
-                <p className="text-primary text-sm font-medium">Admin Panel</p>
-                <h1 className="text-foreground mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">User Management</h1>
-                <p className="text-muted-foreground mt-2 text-sm">Pantau role dan kelola status akun pengguna Kreava.</p>
+                <p className="text-primary text-sm font-medium">{t('admin.panel')}</p>
+                <h1 className="text-foreground mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{t('admin.users.title')}</h1>
+                <p className="text-muted-foreground mt-2 text-sm">{t('admin.users.description')}</p>
             </div>
 
             {errorMessage && <div className="mb-6 rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-500">{errorMessage}</div>}
 
             {flash?.success && (
-                <div className="mb-6 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{flash.success}</div>
+                <div className="mb-6 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                    {translateFlash(flash.success)}
+                </div>
             )}
 
             <section className="border-border rounded-2xl border bg-white">
@@ -156,19 +170,19 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                         }}
                     >
                         <div className="grid gap-1.5">
-                            <Label htmlFor="search">Search</Label>
+                            <Label htmlFor="search">{t('admin.users.filters.search')}</Label>
                             <Input
                                 id="search"
                                 type="search"
                                 value={search}
                                 onChange={(event) => setSearch(event.target.value)}
-                                placeholder="Cari nama atau email"
+                                placeholder={t('admin.users.filters.search_placeholder')}
                                 className="w-full sm:w-[260px]"
                             />
                         </div>
 
                         <div className="grid gap-1.5">
-                            <Label htmlFor="role">Role</Label>
+                            <Label htmlFor="role">{t('admin.users.filters.role')}</Label>
                             <Select
                                 value={role}
                                 onValueChange={(value) => {
@@ -178,36 +192,48 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                                 disabled={isFiltering}
                             >
                                 <SelectTrigger id="role" className="w-[160px]">
-                                    <SelectValue placeholder="Semua role" />
+                                    <SelectValue placeholder={t('admin.users.filters.all_roles')} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">All roles</SelectItem>
-                                    <SelectItem value="customer">Customer</SelectItem>
-                                    <SelectItem value="seller">Seller</SelectItem>
-                                    <SelectItem value="admin">Admin</SelectItem>
+                                    <SelectItem value="all">{t('admin.users.filters.all_roles')}</SelectItem>
+                                    <SelectItem value="customer">{t('admin.roles.customer')}</SelectItem>
+                                    <SelectItem value="seller">{t('admin.roles.seller')}</SelectItem>
+                                    <SelectItem value="admin">{t('admin.roles.admin')}</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <Button type="submit" disabled={isFiltering} className="bg-indigo-600 hover:bg-indigo-700">
                             {isFiltering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                            Search
+                            {t('admin.users.filters.search')}
                         </Button>
                     </form>
 
-                    <p className="text-muted-foreground text-sm">{users.total} pengguna</p>
+                    <p className="text-muted-foreground text-sm">{t('admin.users.count', { total: users.total })}</p>
                 </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full min-w-[900px]">
                         <thead>
                             <tr className="border-border bg-muted/40 border-b">
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Name</th>
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Email</th>
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Role</th>
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Status</th>
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Joined</th>
-                                <th className="text-muted-foreground px-4 py-3 text-right text-xs font-semibold uppercase">Actions</th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.users.table.name')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.users.table.email')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.users.table.role')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.users.table.status')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.users.table.joined')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-right text-xs font-semibold uppercase">
+                                    {t('admin.users.table.actions')}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -215,8 +241,8 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                                 <tr>
                                     <td colSpan={6} className="px-4 py-12 text-center">
                                         <Users className="text-muted-foreground mx-auto mb-3 h-10 w-10" />
-                                        <p className="text-foreground text-sm font-semibold">Tidak ada pengguna ditemukan</p>
-                                        <p className="text-muted-foreground mt-1 text-sm">Coba ubah filter atau kata kunci pencarian.</p>
+                                        <p className="text-foreground text-sm font-semibold">{t('admin.users.empty.title')}</p>
+                                        <p className="text-muted-foreground mt-1 text-sm">{t('admin.users.empty.description')}</p>
                                     </td>
                                 </tr>
                             ) : (
@@ -230,7 +256,7 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                                                     <p className="text-foreground text-sm font-medium">{user.name}</p>
                                                     {user.is_self && (
                                                         <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-semibold text-indigo-700">
-                                                            You
+                                                            {t('admin.users.you')}
                                                         </span>
                                                     )}
                                                 </div>
@@ -240,7 +266,7 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                                                 <span
                                                     className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${roleStyles[user.role]}`}
                                                 >
-                                                    {roleLabels[user.role]}
+                                                    {t(`admin.roles.${user.role}`)}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-4">
@@ -249,17 +275,17 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                                                         user.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
                                                     }`}
                                                 >
-                                                    {user.is_active ? 'Aktif' : 'Nonaktif'}
+                                                    {user.is_active ? t('admin.status.active') : t('admin.status.inactive')}
                                                 </span>
                                             </td>
-                                            <td className="text-muted-foreground px-4 py-4 text-sm">{user.joined_at}</td>
+                                            <td className="text-muted-foreground px-4 py-4 text-sm">{formatDate(user.joined_at, locale)}</td>
                                             <td className="px-4 py-4">
                                                 <div className="flex items-center justify-end">
                                                     <button
                                                         type="button"
                                                         onClick={() => toggleStatus(user)}
                                                         disabled={user.is_self || isTogglingStatus}
-                                                        title={user.is_self ? 'Tidak dapat mengubah status akun sendiri' : undefined}
+                                                        title={user.is_self ? t('admin.users.cannot_toggle_self') : undefined}
                                                         className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
                                                             user.is_active
                                                                 ? 'border-rose-200 text-rose-500 hover:bg-rose-50'
@@ -273,7 +299,7 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                                                         ) : (
                                                             <UserCheck className="h-4 w-4" />
                                                         )}
-                                                        {user.is_active ? 'Deactivate' : 'Activate'}
+                                                        {user.is_active ? t('admin.users.actions.deactivate') : t('admin.users.actions.activate')}
                                                     </button>
                                                 </div>
                                             </td>
@@ -288,9 +314,7 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                 {users.last_page > 1 && (
                     <div className="border-border flex flex-col items-center justify-between gap-3 border-t px-4 py-4 text-sm sm:flex-row">
                         <p className="text-muted-foreground">
-                            Showing <span className="text-foreground font-medium">{startItem}</span> to{' '}
-                            <span className="text-foreground font-medium">{endItem}</span> of{' '}
-                            <span className="text-foreground font-medium">{users.total}</span> users
+                            {t('admin.users.pagination.showing', { start: startItem, end: endItem, total: users.total })}
                         </p>
                         <div className="flex items-center gap-2">
                             <Button
@@ -301,10 +325,10 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                                 disabled={users.current_page <= 1}
                             >
                                 <ChevronLeft className="h-4 w-4" />
-                                Previous
+                                {t('admin.users.pagination.previous')}
                             </Button>
                             <span className="text-muted-foreground px-2">
-                                Page {users.current_page} of {users.last_page}
+                                {t('admin.users.pagination.page', { current: users.current_page, last: users.last_page })}
                             </span>
                             <Button
                                 type="button"
@@ -313,7 +337,7 @@ export default function AdminUsersPage({ users, filters }: UsersPageProps) {
                                 onClick={() => goToPage(users.current_page + 1)}
                                 disabled={users.current_page >= users.last_page}
                             >
-                                Next
+                                {t('admin.users.pagination.next')}
                                 <ChevronRight className="h-4 w-4" />
                             </Button>
                         </div>

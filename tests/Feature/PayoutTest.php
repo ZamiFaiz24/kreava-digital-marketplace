@@ -24,7 +24,7 @@ function createPayoutTestSeller(string $storeName = 'Payout Studio'): array
     $seller = Seller::create([
         'user_id' => $user->id,
         'store_name' => $storeName,
-        'slug' => Str::slug($storeName) . '-' . Str::random(6),
+        'slug' => Str::slug($storeName).'-'.Str::random(6),
         'contact_email' => $user->email,
         'status' => 'approved',
     ]);
@@ -36,7 +36,7 @@ function createPayoutTestCategory(): Category
 {
     return Category::create([
         'name' => 'Templates',
-        'slug' => 'templates-' . Str::random(8),
+        'slug' => 'templates-'.Str::random(8),
     ]);
 }
 
@@ -46,7 +46,7 @@ function createPayoutTestProduct(Seller $seller, Category $category, string $tit
         'seller_id' => $seller->id,
         'category_id' => $category->id,
         'title' => $title,
-        'slug' => Str::slug($title) . '-' . Str::random(6),
+        'slug' => Str::slug($title).'-'.Str::random(6),
         'status' => 'published',
     ]);
 }
@@ -227,14 +227,38 @@ test('admin can see all payouts and approve or reject pending payouts', function
 
     $this->actingAs($admin)
         ->post(route('admin.payouts.approve', $approvedPayout))
-        ->assertRedirect(route('admin.payouts'));
+        ->assertRedirect(route('admin.payouts'))
+        ->assertSessionHas('success', 'admin.payouts.flash.approved');
 
     $this->actingAs($admin)
         ->post(route('admin.payouts.reject', $rejectedPayout))
-        ->assertRedirect(route('admin.payouts'));
+        ->assertRedirect(route('admin.payouts'))
+        ->assertSessionHas('success', 'admin.payouts.flash.rejected');
 
     expect($approvedPayout->fresh()->status)->toBe('paid')
         ->and($approvedPayout->fresh()->paid_at)->not->toBeNull()
         ->and($rejectedPayout->fresh()->status)->toBe('failed')
         ->and($rejectedPayout->fresh()->paid_at)->toBeNull();
+});
+
+test('admin cannot process a payout twice', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    [, $seller] = createPayoutTestSeller('Processed Payout Studio');
+
+    $payout = Payout::create([
+        'seller_id' => $seller->id,
+        'amount' => 30,
+        'status' => 'paid',
+        'paid_at' => now(),
+    ]);
+
+    $this->actingAs($admin)
+        ->post(route('admin.payouts.approve', $payout))
+        ->assertRedirect(route('admin.payouts'))
+        ->assertSessionHas('error', 'admin.payouts.flash.already_processed');
+
+    $this->actingAs($admin)
+        ->post(route('admin.payouts.reject', $payout))
+        ->assertRedirect(route('admin.payouts'))
+        ->assertSessionHas('error', 'admin.payouts.flash.already_processed');
 });

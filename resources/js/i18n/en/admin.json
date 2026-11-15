@@ -1,0 +1,340 @@
+{
+    "admin": {
+        "panel": "Admin Panel",
+        "account_label": "Administrator",
+        "nav": {
+            "dashboard": "Dashboard",
+            "users": "Users",
+            "orders": "Orders",
+            "products": "Products",
+            "sellers": "Sellers",
+            "payouts": "Payouts",
+            "audit_logs": "Audit Logs"
+        },
+        "status": {
+            "pending": "Pending",
+            "paid": "Paid",
+            "failed": "Failed",
+            "expired": "Expired",
+            "refunded": "Refunded",
+            "approved": "Approved",
+            "rejected": "Rejected",
+            "suspended": "Suspended",
+            "published": "Published",
+            "draft": "Draft",
+            "active": "Active",
+            "inactive": "Inactive"
+        },
+        "roles": {
+            "admin": "Admin",
+            "seller": "Seller",
+            "customer": "Customer"
+        },
+        "users": {
+            "head_title": "User Management",
+            "title": "User Management",
+            "description": "Monitor roles and manage Kreava user account status.",
+            "count": "{{total}} users",
+            "you": "You",
+            "cannot_toggle_self": "You cannot change your own account status.",
+            "filters": {
+                "search": "Search",
+                "search_placeholder": "Search name or email",
+                "role": "Role",
+                "all_roles": "All roles"
+            },
+            "table": {
+                "name": "Name",
+                "email": "Email",
+                "role": "Role",
+                "status": "Status",
+                "joined": "Joined",
+                "actions": "Actions"
+            },
+            "empty": {
+                "title": "No users found",
+                "description": "Try changing the filters or search keyword."
+            },
+            "actions": {
+                "activate": "Activate",
+                "deactivate": "Deactivate"
+            },
+            "pagination": {
+                "showing": "Showing {{start}} to {{end}} of {{total}} users",
+                "page": "Page {{current}} of {{last}}",
+                "previous": "Previous",
+                "next": "Next"
+            },
+            "flash": {
+                "activated": "User account activated successfully.",
+                "deactivated": "User account deactivated successfully."
+            }
+        },
+        "orders": {
+            "head_title": "Order Management",
+            "title": "Order Management",
+            "description": "Monitor payments and mark refunds. Payment status cannot be changed manually.",
+            "count": "{{total}} orders",
+            "unknown_customer": "Unknown Customer",
+            "export": "Export CSV",
+            "not_refunded": "Not refunded",
+            "refunded": "Refunded",
+            "not_available": "Not available",
+            "filters": {
+                "search": "Search",
+                "search_placeholder": "Search order number, name, or email",
+                "status": "Status",
+                "all_statuses": "All statuses"
+            },
+            "table": {
+                "order": "Order",
+                "customer": "Customer",
+                "date": "Date",
+                "total": "Total",
+                "payment": "Payment",
+                "refund": "Refund",
+                "actions": "Actions"
+            },
+            "empty": {
+                "title": "No orders found",
+                "description": "Try changing the filters or search keyword."
+            },
+            "actions": {
+                "mark_refund": "Mark as Refund"
+            },
+            "pagination": {
+                "showing": "Showing {{start}} to {{end}} of {{total}} orders",
+                "page": "Page {{current}} of {{last}}",
+                "previous": "Previous",
+                "next": "Next"
+            },
+            "flash": {
+                "not_paid": "Only paid orders can be marked as refunded.",
+                "already_refunded": "Order has already been marked as refunded.",
+                "refunded": "Order marked as refunded successfully."
+            }
+        },
+        "payouts": {
+            "head_title": "Payout Management",
+            "title": "Payout Management",
+            "description": "Review and process withdrawal requests from sellers.",
+            "unknown_seller": "Unknown Seller",
+            "all": "All Payouts",
+            "processed": "Processed",
+            "summary": {
+                "pending": "Pending Payouts",
+                "paid": "Paid Out",
+                "failed": "Failed Payouts"
+            },
+            "table": {
+                "seller": "Seller",
+                "amount": "Amount",
+                "status": "Status",
+                "requested": "Requested",
+                "paid_at": "Paid At",
+                "actions": "Actions"
+            },
+            "empty": {
+                "title": "No payouts yet",
+                "description": "Seller payout requests will appear here."
+            },
+            "actions": {
+                "approve": "Approve",
+                "reject": "Reject"
+            },
+            "feedback": {
+                "approved": "Payout \"{{seller}}\" approved.",
+                "rejected": "Payout \"{{seller}}\" rejected."
+            },
+            "flash": {
+                "already_processed": "Payout has already been processed.",
+                "approved": "Payout approved successfully.",
+                "rejected": "Payout rejected successfully."
+            }
+        },
+        "audit_logs": {
+            "head_title": "Audit Log",
+            "title": "Audit Log",
+            "description": "History of Kreava admin actions. Logs are read-only and cannot be changed.",
+            "count": "{{total}} logs",
+            "unknown_admin": "Unknown Admin",
+            "filters": {
+                "search": "Search",
+                "search_placeholder": "Search action, target, target ID, or admin",
+                "action": "Action",
+                "all_actions": "All actions"
+            },
+            "table": {
+                "time": "Time",
+                "admin": "Admin",
+                "action": "Action",
+                "target_type": "Target Type",
+                "target_id": "Target ID",
+                "details": "Details"
+            },
+            "empty": {
+                "title": "No audit logs found",
+                "description": "Try changing the filters or search keyword."
+            },
+            "pagination": {
+                "showing": "Showing {{start}} to {{end}} of {{total}} logs",
+                "page": "Page {{current}} of {{last}}",
+                "previous": "Previous",
+                "next": "Next"
+            },
+            "actions": {
+                "product_approve": "Product approved",
+                "product_reject": "Product rejected",
+                "product_takedown": "Product taken down",
+                "seller_approve": "Seller approved",
+                "seller_reject": "Seller rejected",
+                "user_activate": "User activated",
+                "user_deactivate": "User deactivated",
+                "order_refund": "Order refunded",
+                "payout_approve": "Payout approved",
+                "payout_reject": "Payout rejected"
+            },
+            "target_types": {
+                "product": "Product",
+                "seller": "Seller",
+                "user": "User",
+                "order": "Order",
+                "payout": "Payout"
+            },
+            "details": {
+                "title": "Title",
+                "previous_status": "Previous Status",
+                "new_status": "New Status",
+                "store_name": "Store Name",
+                "order_number": "Order Number",
+                "total_price": "Total Price",
+                "payment_status": "Payment Status",
+                "refunded_at": "Refunded At",
+                "seller": "Seller",
+                "amount": "Amount",
+                "name": "Name",
+                "email": "Email"
+            },
+            "boolean": {
+                "true": "Yes",
+                "false": "No"
+            }
+        },
+        "moderation": {
+            "eyebrow": "Admin Moderation",
+            "products": {
+                "head_title": "Product Moderation",
+                "title": "Product Moderation",
+                "description": "Review all products and manage their publish status.",
+                "moderate_sellers": "Moderate Sellers",
+                "all": "All Products",
+                "all_description": "All products, including published ones, are shown here.",
+                "unknown_seller": "Unknown Seller",
+                "uncategorized": "Uncategorized",
+                "table": {
+                    "product": "Product",
+                    "category": "Category",
+                    "price": "Price",
+                    "status": "Status",
+                    "submitted": "Submitted",
+                    "actions": "Actions"
+                },
+                "empty": {
+                    "title": "No products yet",
+                    "description": "Products will appear here after sellers upload them."
+                },
+                "actions": {
+                    "approve": "Approve",
+                    "reject": "Reject",
+                    "takedown": "Takedown"
+                },
+                "flash": {
+                    "approved": "Product approved successfully.",
+                    "rejected": "Product rejected successfully.",
+                    "takedown": "Product taken down successfully.",
+                    "not_published": "Only published products can be taken down."
+                }
+            },
+            "sellers": {
+                "head_title": "Seller Moderation",
+                "title": "Seller Moderation",
+                "description": "Review creators waiting for approval.",
+                "moderate_products": "Moderate Products",
+                "pending": "Pending Sellers",
+                "pending_description": "Sellers with non-approved status need an admin decision.",
+                "unknown_owner": "Seller",
+                "table": {
+                    "store": "Store",
+                    "owner": "Owner",
+                    "products": "Products",
+                    "status": "Status",
+                    "joined": "Joined",
+                    "actions": "Actions"
+                },
+                "empty": {
+                    "title": "No sellers to moderate",
+                    "description": "New sellers will appear here after they register."
+                },
+                "actions": {
+                    "approve": "Approve",
+                    "reject": "Reject"
+                },
+                "feedback": {
+                    "approved": "Seller \"{{seller}}\" approved.",
+                    "rejected": "Seller \"{{seller}}\" rejected."
+                },
+                "flash": {
+                    "approved": "Seller approved successfully.",
+                    "rejected": "Seller rejected successfully."
+                }
+            }
+        },
+        "dashboard": {
+            "head_title": "Admin Dashboard",
+            "title": "Dashboard",
+            "description": "Overview of Kreava marketplace activity.",
+            "refresh": "Refresh",
+            "refreshing": "Loading...",
+            "stats": {
+                "total_users": "Total Users",
+                "total_users_subtitle": "All registered accounts",
+                "total_sellers": "Total Sellers",
+                "total_sellers_subtitle": "Registered seller accounts",
+                "total_customers": "Total Customers",
+                "total_customers_subtitle": "Registered buyer accounts",
+                "total_revenue": "Total Revenue",
+                "total_revenue_subtitle": "From paid orders",
+                "total_orders": "Total Orders",
+                "total_orders_subtitle": "All orders",
+                "paid_orders": "Paid Orders",
+                "paid_orders_subtitle": "Successfully paid",
+                "total_products": "Total Products",
+                "total_products_subtitle": "All seller products",
+                "published_products": "Published Products",
+                "published_products_subtitle": "Visible in marketplace"
+            },
+            "recent_orders": {
+                "title": "Recent Orders",
+                "description": "Latest 5 orders in the marketplace.",
+                "empty_title": "No orders yet",
+                "empty_description": "Orders will appear here once customers start buying.",
+                "order": "Order",
+                "customer": "Customer",
+                "amount": "Amount",
+                "status": "Status",
+                "date": "Date"
+            },
+            "recent_sellers": {
+                "title": "Recent Sellers",
+                "description": "Latest 5 sellers who joined.",
+                "empty_title": "No sellers yet",
+                "empty_description": "Sellers will appear here after they register.",
+                "store": "Store",
+                "owner": "Owner",
+                "products": "Products",
+                "status": "Status",
+                "joined": "Joined"
+            }
+        }
+    }
+}

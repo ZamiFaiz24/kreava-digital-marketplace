@@ -28,9 +28,9 @@ class ModerationController extends Controller
                     'id' => $product->id,
                     'title' => $product->title,
                     'thumbnail' => $product->thumbnail ?? '/images/Brand.png',
-                    'seller' => $product->seller?->store_name ?? 'Unknown Seller',
+                    'seller' => $product->seller?->store_name ?? '',
                     'sellerEmail' => $product->seller?->user?->email ?? '',
-                    'category' => $product->category?->name ?? 'Uncategorized',
+                    'category' => $product->category?->name ?? '',
                     'price' => (float) $product->price,
                     'status' => $product->status,
                     'createdAt' => $product->created_at?->format('Y-m-d') ?? '',
@@ -52,7 +52,7 @@ class ModerationController extends Controller
 
         return redirect()
             ->route('admin.moderation.products')
-            ->with('success', 'Produk berhasil disetujui.');
+            ->with('success', 'admin.moderation.products.flash.approved');
     }
 
     public function rejectProduct(Request $request, Product $product): RedirectResponse
@@ -64,7 +64,7 @@ class ModerationController extends Controller
 
         return redirect()
             ->route('admin.moderation.products')
-            ->with('success', 'Produk berhasil ditolak.');
+            ->with('success', 'admin.moderation.products.flash.rejected');
     }
 
     public function takedownProduct(Request $request, Product $product): RedirectResponse
@@ -72,7 +72,7 @@ class ModerationController extends Controller
         if ($product->status !== 'published') {
             return redirect()
                 ->route('admin.moderation.products')
-                ->with('error', 'Hanya produk yang sudah tayang yang dapat ditakedown.');
+                ->with('error', 'admin.moderation.products.flash.not_published');
         }
 
         $previousStatus = $product->status;
@@ -82,7 +82,7 @@ class ModerationController extends Controller
 
         return redirect()
             ->route('admin.moderation.products')
-            ->with('success', 'Produk berhasil ditakedown.');
+            ->with('success', 'admin.moderation.products.flash.takedown');
     }
 
     public function sellers(): Response
@@ -97,7 +97,7 @@ class ModerationController extends Controller
                 return [
                     'id' => $seller->id,
                     'storeName' => $seller->store_name,
-                    'owner' => $seller->user?->name ?? 'Seller',
+                    'owner' => $seller->user?->name ?? '',
                     'email' => $seller->contact_email ?: ($seller->user?->email ?? ''),
                     'productsCount' => (int) $seller->products_count,
                     'status' => $seller->status,
@@ -120,7 +120,7 @@ class ModerationController extends Controller
 
         return redirect()
             ->route('admin.moderation.sellers')
-            ->with('success', 'Seller berhasil disetujui.');
+            ->with('success', 'admin.moderation.sellers.flash.approved');
     }
 
     public function rejectSeller(Request $request, Seller $seller): RedirectResponse
@@ -132,7 +132,7 @@ class ModerationController extends Controller
 
         return redirect()
             ->route('admin.moderation.sellers')
-            ->with('success', 'Seller berhasil ditolak.');
+            ->with('success', 'admin.moderation.sellers.flash.rejected');
     }
 
     private function recordProductAudit(Request $request, Product $product, string $action, string $previousStatus, string $newStatus): void

@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Head, router, usePage } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight, Download, Loader2, RotateCcw, Search, ShoppingBag } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { adminNavItems } from '../../components/admin/nav-items';
 import DashboardLayout from '../../components/seller/layout/dashboard-layout';
 
@@ -52,15 +53,31 @@ const paymentStatusStyles: Record<PaymentStatus, string> = {
     expired: 'bg-slate-100 text-slate-700',
 };
 
-function capitalize(value: string) {
-    return value.charAt(0).toUpperCase() + value.slice(1);
-}
-
-function formatCurrency(value: number) {
-    return `$${value.toLocaleString('en-US', {
+function formatCurrency(value: number, locale: string) {
+    return `$${value.toLocaleString(locale, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     })}`;
+}
+
+function formatDateTime(value: string, locale: string) {
+    if (!value) {
+        return '-';
+    }
+
+    const date = new Date(value.replace(' ', 'T'));
+
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return new Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    }).format(date);
 }
 
 export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
@@ -68,8 +85,11 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
     const [isFiltering, setIsFiltering] = useState(false);
     const [search, setSearch] = useState(filters.search);
     const [status, setStatus] = useState(filters.status || 'all');
+    const { t, i18n } = useTranslation();
+    const locale = i18n.resolvedLanguage === 'id' ? 'id-ID' : 'en-US';
+    const translateFlash = (message?: string) => (message ? t(message, { defaultValue: message }) : null);
     const { errors, flash } = usePage<{ errors: Record<string, string>; flash?: OrdersFlash }>().props;
-    const errorMessage = flash?.error ?? Object.values(errors)[0];
+    const errorMessage = translateFlash(flash?.error) ?? Object.values(errors)[0];
 
     useEffect(() => {
         setSearch(filters.search);
@@ -148,21 +168,21 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
     }
 
     return (
-        <DashboardLayout navItems={adminNavItems} accountLabel="Administrator" showUploadAction={false}>
-            <Head title="Order Management" />
+        <DashboardLayout navItems={adminNavItems} accountLabel={t('admin.account_label')} showUploadAction={false}>
+            <Head title={t('admin.orders.head_title')} />
 
             <div className="mb-8">
-                <p className="text-primary text-sm font-medium">Admin Panel</p>
-                <h1 className="text-foreground mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Order Management</h1>
-                <p className="text-muted-foreground mt-2 text-sm">
-                    Pantau pembayaran dan tandai refund. Status pembayaran tidak dapat diubah manual.
-                </p>
+                <p className="text-primary text-sm font-medium">{t('admin.panel')}</p>
+                <h1 className="text-foreground mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{t('admin.orders.title')}</h1>
+                <p className="text-muted-foreground mt-2 text-sm">{t('admin.orders.description')}</p>
             </div>
 
             {errorMessage && <div className="mb-6 rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-500">{errorMessage}</div>}
 
             {flash?.success && (
-                <div className="mb-6 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{flash.success}</div>
+                <div className="mb-6 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                    {translateFlash(flash.success)}
+                </div>
             )}
 
             <section className="border-border rounded-2xl border bg-white">
@@ -175,19 +195,19 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                         }}
                     >
                         <div className="grid gap-1.5">
-                            <Label htmlFor="search">Search</Label>
+                            <Label htmlFor="search">{t('admin.orders.filters.search')}</Label>
                             <Input
                                 id="search"
                                 type="search"
                                 value={search}
                                 onChange={(event) => setSearch(event.target.value)}
-                                placeholder="Cari nomor order, nama, atau email"
+                                placeholder={t('admin.orders.filters.search_placeholder')}
                                 className="w-full sm:w-[300px]"
                             />
                         </div>
 
                         <div className="grid gap-1.5">
-                            <Label htmlFor="status">Status</Label>
+                            <Label htmlFor="status">{t('admin.orders.filters.status')}</Label>
                             <Select
                                 value={status}
                                 onValueChange={(value) => {
@@ -197,29 +217,29 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                                 disabled={isFiltering}
                             >
                                 <SelectTrigger id="status" className="w-[160px]">
-                                    <SelectValue placeholder="Semua status" />
+                                    <SelectValue placeholder={t('admin.orders.filters.all_statuses')} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">All statuses</SelectItem>
-                                    <SelectItem value="pending">Pending</SelectItem>
-                                    <SelectItem value="paid">Paid</SelectItem>
-                                    <SelectItem value="refunded">Refunded</SelectItem>
+                                    <SelectItem value="all">{t('admin.orders.filters.all_statuses')}</SelectItem>
+                                    <SelectItem value="pending">{t('admin.status.pending')}</SelectItem>
+                                    <SelectItem value="paid">{t('admin.status.paid')}</SelectItem>
+                                    <SelectItem value="refunded">{t('admin.status.refunded')}</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <Button type="submit" disabled={isFiltering} className="bg-indigo-600 hover:bg-indigo-700">
                             {isFiltering ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                            Search
+                            {t('admin.orders.filters.search')}
                         </Button>
                     </form>
 
                     <div className="flex flex-wrap items-center gap-3">
-                        <p className="text-muted-foreground text-sm">{orders.total} orders</p>
+                        <p className="text-muted-foreground text-sm">{t('admin.orders.count', { total: orders.total })}</p>
                         <Button asChild variant="outline" size="sm" className="border-indigo-200 text-indigo-700 hover:bg-indigo-50">
                             <a href={route('admin.orders.export', exportParams)}>
                                 <Download className="h-4 w-4" />
-                                Export CSV
+                                {t('admin.orders.export')}
                             </a>
                         </Button>
                     </div>
@@ -229,13 +249,27 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                     <table className="w-full min-w-[980px]">
                         <thead>
                             <tr className="border-border bg-muted/40 border-b">
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Order</th>
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Customer</th>
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Date</th>
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Total</th>
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Payment</th>
-                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">Refund</th>
-                                <th className="text-muted-foreground px-4 py-3 text-right text-xs font-semibold uppercase">Actions</th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.orders.table.order')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.orders.table.customer')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.orders.table.date')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.orders.table.total')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.orders.table.payment')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
+                                    {t('admin.orders.table.refund')}
+                                </th>
+                                <th className="text-muted-foreground px-4 py-3 text-right text-xs font-semibold uppercase">
+                                    {t('admin.orders.table.actions')}
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -243,8 +277,8 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                                 <tr>
                                     <td colSpan={7} className="px-4 py-12 text-center">
                                         <ShoppingBag className="text-muted-foreground mx-auto mb-3 h-10 w-10" />
-                                        <p className="text-foreground text-sm font-semibold">Tidak ada order ditemukan</p>
-                                        <p className="text-muted-foreground mt-1 text-sm">Coba ubah filter atau kata kunci pencarian.</p>
+                                        <p className="text-foreground text-sm font-semibold">{t('admin.orders.empty.title')}</p>
+                                        <p className="text-muted-foreground mt-1 text-sm">{t('admin.orders.empty.description')}</p>
                                     </td>
                                 </tr>
                             ) : (
@@ -257,30 +291,36 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                                                 <p className="text-foreground text-sm font-medium">{order.order_number}</p>
                                             </td>
                                             <td className="px-4 py-4">
-                                                <p className="text-foreground text-sm font-medium">{order.customer}</p>
+                                                <p className="text-foreground text-sm font-medium">
+                                                    {order.customer || t('admin.orders.unknown_customer')}
+                                                </p>
                                                 <p className="text-muted-foreground text-xs">{order.email}</p>
                                             </td>
-                                            <td className="text-muted-foreground px-4 py-4 text-sm">{order.created_at}</td>
-                                            <td className="text-foreground px-4 py-4 text-sm font-semibold">{formatCurrency(order.total_price)}</td>
+                                            <td className="text-muted-foreground px-4 py-4 text-sm">{formatDateTime(order.created_at, locale)}</td>
+                                            <td className="text-foreground px-4 py-4 text-sm font-semibold">
+                                                {formatCurrency(order.total_price, locale)}
+                                            </td>
                                             <td className="px-4 py-4">
                                                 <span
                                                     className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${
                                                         paymentStatusStyles[order.payment_status] ?? 'bg-slate-100 text-slate-700'
                                                     }`}
                                                 >
-                                                    {capitalize(order.payment_status)}
+                                                    {t(`admin.status.${order.payment_status}`)}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-4">
                                                 {order.refunded_at ? (
                                                     <div>
                                                         <span className="inline-block rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">
-                                                            Refunded
+                                                            {t('admin.status.refunded')}
                                                         </span>
-                                                        <p className="text-muted-foreground mt-1 text-xs">{order.refunded_at}</p>
+                                                        <p className="text-muted-foreground mt-1 text-xs">
+                                                            {formatDateTime(order.refunded_at, locale)}
+                                                        </p>
                                                     </div>
                                                 ) : (
-                                                    <span className="text-muted-foreground text-xs">Belum refund</span>
+                                                    <span className="text-muted-foreground text-xs">{t('admin.orders.not_refunded')}</span>
                                                 )}
                                             </td>
                                             <td className="px-4 py-4">
@@ -297,11 +337,11 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                                                             ) : (
                                                                 <RotateCcw className="h-4 w-4" />
                                                             )}
-                                                            Tandai Refund
+                                                            {t('admin.orders.actions.mark_refund')}
                                                         </button>
                                                     ) : (
                                                         <span className="text-muted-foreground text-xs">
-                                                            {order.refunded_at ? 'Sudah refund' : 'Tidak tersedia'}
+                                                            {order.refunded_at ? t('admin.orders.refunded') : t('admin.orders.not_available')}
                                                         </span>
                                                     )}
                                                 </div>
@@ -317,9 +357,7 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                 {orders.last_page > 1 && (
                     <div className="border-border flex flex-col items-center justify-between gap-3 border-t px-4 py-4 text-sm sm:flex-row">
                         <p className="text-muted-foreground">
-                            Showing <span className="text-foreground font-medium">{startItem}</span> to{' '}
-                            <span className="text-foreground font-medium">{endItem}</span> of{' '}
-                            <span className="text-foreground font-medium">{orders.total}</span> orders
+                            {t('admin.orders.pagination.showing', { start: startItem, end: endItem, total: orders.total })}
                         </p>
                         <div className="flex items-center gap-2">
                             <Button
@@ -330,10 +368,10 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                                 disabled={isFiltering || orders.current_page <= 1}
                             >
                                 <ChevronLeft className="h-4 w-4" />
-                                Previous
+                                {t('admin.orders.pagination.previous')}
                             </Button>
                             <span className="text-muted-foreground px-2">
-                                Page {orders.current_page} of {orders.last_page}
+                                {t('admin.orders.pagination.page', { current: orders.current_page, last: orders.last_page })}
                             </span>
                             <Button
                                 type="button"
@@ -342,7 +380,7 @@ export default function AdminOrdersPage({ orders, filters }: OrdersPageProps) {
                                 onClick={() => goToPage(orders.current_page + 1)}
                                 disabled={isFiltering || orders.current_page >= orders.last_page}
                             >
-                                Next
+                                {t('admin.orders.pagination.next')}
                                 <ChevronRight className="h-4 w-4" />
                             </Button>
                         </div>

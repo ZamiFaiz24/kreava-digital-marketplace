@@ -45,7 +45,7 @@ class AuditLogController extends Controller
             ->through(fn (AuditLog $log) => [
                 'id' => $log->id,
                 'created_at' => $log->created_at?->format('Y-m-d H:i:s') ?? '',
-                'admin' => $log->user?->name ?? 'Unknown Admin',
+                'admin' => $log->user?->name ?? '',
                 'email' => $log->user?->email ?? '',
                 'action' => $log->action,
                 'target_type' => $log->target_type,

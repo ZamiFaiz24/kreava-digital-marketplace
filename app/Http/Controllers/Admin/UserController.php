@@ -57,7 +57,7 @@ class UserController extends Controller
         if ($user->id === $request->user()->id) {
             return redirect()
                 ->route('admin.users.index')
-                ->with('error', 'Tidak dapat mengubah status akun sendiri.');
+                ->with('error', 'admin.users.cannot_toggle_self');
         }
 
         $wasActive = (bool) $user->is_active;
@@ -78,6 +78,6 @@ class UserController extends Controller
 
         return redirect()
             ->route('admin.users.index')
-            ->with('success', $user->is_active ? 'Akun pengguna berhasil diaktifkan.' : 'Akun pengguna berhasil dinonaktifkan.');
+            ->with('success', $user->is_active ? 'admin.users.flash.activated' : 'admin.users.flash.deactivated');
     }
 }

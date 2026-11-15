@@ -3,6 +3,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import { BarChart3, LayoutGrid, LogOut, Package, ScrollText, Settings, ShoppingCart, Users, Wallet } from 'lucide-react';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const iconMap: Record<string, React.ReactNode> = {
     grid: <LayoutGrid className="h-5 w-5" />,
@@ -18,6 +19,7 @@ const iconMap: Record<string, React.ReactNode> = {
 interface SidebarProps {
     navItems: Array<{
         label: string;
+        labelKey?: string;
         icon: string;
         href: string;
         badge?: number;
@@ -27,9 +29,11 @@ interface SidebarProps {
     accountLabel?: string;
 }
 
-export default function Sidebar({ navItems, sellerName, sellerAvatar, accountLabel = 'Seller Account' }: SidebarProps) {
+export default function Sidebar({ navItems, sellerName, sellerAvatar, accountLabel }: SidebarProps) {
     const { url } = usePage();
+    const { t } = useTranslation();
     const isActive = (href: string) => url === href || url.startsWith(`${href}/`);
+    const resolvedAccountLabel = accountLabel ?? t('dashboard.layout.seller_account');
 
     return (
         <div className="border-border sticky top-0 h-screen w-64 overflow-y-auto border-r bg-white">
@@ -49,7 +53,7 @@ export default function Sidebar({ navItems, sellerName, sellerAvatar, accountLab
                     <img src={sellerAvatar} alt={sellerName} className="h-10 w-10 rounded-full object-cover" />
                     <div className="min-w-0 flex-1">
                         <p className="text-foreground truncate text-sm font-semibold">{sellerName}</p>
-                        <p className="text-muted-foreground text-xs">{accountLabel}</p>
+                        <p className="text-muted-foreground text-xs">{resolvedAccountLabel}</p>
                     </div>
                 </div>
             </div>
@@ -66,7 +70,7 @@ export default function Sidebar({ navItems, sellerName, sellerAvatar, accountLab
                     >
                         <div className="flex items-center gap-3">
                             {iconMap[item.icon]}
-                            <span>{item.label}</span>
+                            <span>{item.labelKey ? t(item.labelKey) : item.label}</span>
                         </div>
                         {item.badge ? <span className="bg-accent rounded-full px-2 py-1 text-xs font-semibold text-white">{item.badge}</span> : null}
                     </Link>
@@ -82,7 +86,7 @@ export default function Sidebar({ navItems, sellerName, sellerAvatar, accountLab
                     className="text-foreground hover:bg-muted flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-colors"
                 >
                     <LogOut className="h-5 w-5" />
-                    <span>Logout</span>
+                    <span>{t('dashboard.layout.logout')}</span>
                 </Link>
             </div>
         </div>

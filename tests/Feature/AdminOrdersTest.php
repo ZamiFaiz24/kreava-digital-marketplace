@@ -170,7 +170,7 @@ test('admin can mark a paid order as refunded without changing payment status', 
     $this->actingAs($admin)
         ->post(route('admin.orders.refund', $order))
         ->assertRedirect(route('admin.orders.index'))
-        ->assertSessionHas('success');
+        ->assertSessionHas('success', 'admin.orders.flash.refunded');
 
     $order->refresh();
 
@@ -187,12 +187,12 @@ test('admin cannot refund orders that are not paid', function () {
     $this->actingAs($admin)
         ->post(route('admin.orders.refund', $pendingOrder))
         ->assertRedirect(route('admin.orders.index'))
-        ->assertSessionHas('error');
+        ->assertSessionHas('error', 'admin.orders.flash.not_paid');
 
     $this->actingAs($admin)
         ->post(route('admin.orders.refund', $failedOrder))
         ->assertRedirect(route('admin.orders.index'))
-        ->assertSessionHas('error');
+        ->assertSessionHas('error', 'admin.orders.flash.not_paid');
 
     expect($pendingOrder->fresh()->refunded_at)->toBeNull()
         ->and($failedOrder->fresh()->refunded_at)->toBeNull();
@@ -206,7 +206,7 @@ test('admin cannot refund an order twice', function () {
     $this->actingAs($admin)
         ->post(route('admin.orders.refund', $order))
         ->assertRedirect(route('admin.orders.index'))
-        ->assertSessionHas('error');
+        ->assertSessionHas('error', 'admin.orders.flash.already_refunded');
 
     $order->refresh();
 

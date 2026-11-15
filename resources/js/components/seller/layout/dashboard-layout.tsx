@@ -2,6 +2,7 @@
 
 import { usePage } from '@inertiajs/react';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Navbar from './navbar';
 import Sidebar from './sidebar';
 
@@ -19,6 +20,7 @@ interface DashboardLayoutProps {
     children: React.ReactNode;
     navItems?: Array<{
         label: string;
+        labelKey?: string;
         icon: string;
         href: string;
         badge?: number;
@@ -27,32 +29,29 @@ interface DashboardLayoutProps {
     showUploadAction?: boolean;
 }
 
-export default function DashboardLayout({
-    children,
-    navItems = sidebarNavItems,
-    accountLabel = 'Seller Account',
-    showUploadAction = true,
-}: DashboardLayoutProps) {
+export default function DashboardLayout({ children, navItems = sidebarNavItems, accountLabel, showUploadAction = true }: DashboardLayoutProps) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const { t } = useTranslation();
     const { auth } = usePage<{
         auth: { user?: { name?: string; avatar?: string | null; email?: string } };
     }>().props;
 
-    const sellerName = auth?.user?.name || 'Seller';
+    const sellerName = auth?.user?.name || t('dashboard.layout.seller_fallback');
     const sellerAvatar = auth?.user?.avatar || '/images/Brand.png';
+    const resolvedAccountLabel = accountLabel ?? t('dashboard.layout.seller_account');
 
     return (
         <div className="bg-background flex h-screen">
             {/* Sidebar - Hidden on mobile, visible on desktop */}
             <div className="hidden lg:block">
-                <Sidebar navItems={navItems} sellerName={sellerName} sellerAvatar={sellerAvatar} accountLabel={accountLabel} />
+                <Sidebar navItems={navItems} sellerName={sellerName} sellerAvatar={sellerAvatar} accountLabel={resolvedAccountLabel} />
             </div>
 
             {/* Mobile Sidebar Overlay */}
             {isSidebarOpen && (
                 <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={() => setIsSidebarOpen(false)}>
                     <div onClick={(e) => e.stopPropagation()}>
-                        <Sidebar navItems={navItems} sellerName={sellerName} sellerAvatar={sellerAvatar} accountLabel={accountLabel} />
+                        <Sidebar navItems={navItems} sellerName={sellerName} sellerAvatar={sellerAvatar} accountLabel={resolvedAccountLabel} />
                     </div>
                 </div>
             )}

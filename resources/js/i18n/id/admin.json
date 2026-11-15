@@ -1,0 +1,340 @@
+{
+    "admin": {
+        "panel": "Panel Admin",
+        "account_label": "Administrator",
+        "nav": {
+            "dashboard": "Dashboard",
+            "users": "Pengguna",
+            "orders": "Pesanan",
+            "products": "Produk",
+            "sellers": "Seller",
+            "payouts": "Pencairan",
+            "audit_logs": "Log Audit"
+        },
+        "status": {
+            "pending": "Menunggu",
+            "paid": "Dibayar",
+            "failed": "Gagal",
+            "expired": "Kedaluwarsa",
+            "refunded": "Dikembalikan",
+            "approved": "Disetujui",
+            "rejected": "Ditolak",
+            "suspended": "Ditangguhkan",
+            "published": "Tayang",
+            "draft": "Draf",
+            "active": "Aktif",
+            "inactive": "Nonaktif"
+        },
+        "roles": {
+            "admin": "Admin",
+            "seller": "Seller",
+            "customer": "Pelanggan"
+        },
+        "users": {
+            "head_title": "Manajemen Pengguna",
+            "title": "Manajemen Pengguna",
+            "description": "Pantau role dan kelola status akun pengguna Kreava.",
+            "count": "{{total}} pengguna",
+            "you": "Anda",
+            "cannot_toggle_self": "Tidak dapat mengubah status akun sendiri.",
+            "filters": {
+                "search": "Cari",
+                "search_placeholder": "Cari nama atau email",
+                "role": "Role",
+                "all_roles": "Semua role"
+            },
+            "table": {
+                "name": "Nama",
+                "email": "Email",
+                "role": "Role",
+                "status": "Status",
+                "joined": "Bergabung",
+                "actions": "Aksi"
+            },
+            "empty": {
+                "title": "Tidak ada pengguna ditemukan",
+                "description": "Coba ubah filter atau kata kunci pencarian."
+            },
+            "actions": {
+                "activate": "Aktifkan",
+                "deactivate": "Nonaktifkan"
+            },
+            "pagination": {
+                "showing": "Menampilkan {{start}} sampai {{end}} dari {{total}} pengguna",
+                "page": "Halaman {{current}} dari {{last}}",
+                "previous": "Sebelumnya",
+                "next": "Berikutnya"
+            },
+            "flash": {
+                "activated": "Akun pengguna berhasil diaktifkan.",
+                "deactivated": "Akun pengguna berhasil dinonaktifkan."
+            }
+        },
+        "orders": {
+            "head_title": "Manajemen Pesanan",
+            "title": "Manajemen Pesanan",
+            "description": "Pantau pembayaran dan tandai refund. Status pembayaran tidak dapat diubah manual.",
+            "count": "{{total}} pesanan",
+            "unknown_customer": "Pelanggan tidak dikenal",
+            "export": "Ekspor CSV",
+            "not_refunded": "Belum refund",
+            "refunded": "Sudah refund",
+            "not_available": "Tidak tersedia",
+            "filters": {
+                "search": "Cari",
+                "search_placeholder": "Cari nomor order, nama, atau email",
+                "status": "Status",
+                "all_statuses": "Semua status"
+            },
+            "table": {
+                "order": "Pesanan",
+                "customer": "Pelanggan",
+                "date": "Tanggal",
+                "total": "Total",
+                "payment": "Pembayaran",
+                "refund": "Refund",
+                "actions": "Aksi"
+            },
+            "empty": {
+                "title": "Tidak ada pesanan ditemukan",
+                "description": "Coba ubah filter atau kata kunci pencarian."
+            },
+            "actions": {
+                "mark_refund": "Tandai Refund"
+            },
+            "pagination": {
+                "showing": "Menampilkan {{start}} sampai {{end}} dari {{total}} pesanan",
+                "page": "Halaman {{current}} dari {{last}}",
+                "previous": "Sebelumnya",
+                "next": "Berikutnya"
+            },
+            "flash": {
+                "not_paid": "Hanya pesanan berstatus paid yang dapat ditandai refund.",
+                "already_refunded": "Pesanan sudah ditandai refund.",
+                "refunded": "Pesanan berhasil ditandai refund."
+            }
+        },
+        "payouts": {
+            "head_title": "Manajemen Pencairan",
+            "title": "Manajemen Pencairan",
+            "description": "Tinjau dan proses permintaan penarikan dari seller.",
+            "unknown_seller": "Seller tidak dikenal",
+            "all": "Semua Pencairan",
+            "processed": "Sudah diproses",
+            "summary": {
+                "pending": "Pencairan Menunggu",
+                "paid": "Sudah Dibayar",
+                "failed": "Pencairan Gagal"
+            },
+            "table": {
+                "seller": "Seller",
+                "amount": "Jumlah",
+                "status": "Status",
+                "requested": "Diminta",
+                "paid_at": "Dibayar Pada",
+                "actions": "Aksi"
+            },
+            "empty": {
+                "title": "Belum ada pencairan",
+                "description": "Permintaan pencairan seller akan muncul di sini."
+            },
+            "actions": {
+                "approve": "Setujui",
+                "reject": "Tolak"
+            },
+            "feedback": {
+                "approved": "Pencairan \"{{seller}}\" disetujui.",
+                "rejected": "Pencairan \"{{seller}}\" ditolak."
+            },
+            "flash": {
+                "already_processed": "Pencairan sudah diproses sebelumnya.",
+                "approved": "Pencairan berhasil disetujui.",
+                "rejected": "Pencairan berhasil ditolak."
+            }
+        },
+        "audit_logs": {
+            "head_title": "Log Audit",
+            "title": "Log Audit",
+            "description": "Riwayat aksi admin Kreava. Log bersifat read-only dan tidak dapat diubah.",
+            "count": "{{total}} log",
+            "unknown_admin": "Admin tidak dikenal",
+            "filters": {
+                "search": "Cari",
+                "search_placeholder": "Cari aksi, target, ID target, atau admin",
+                "action": "Aksi",
+                "all_actions": "Semua aksi"
+            },
+            "table": {
+                "time": "Waktu",
+                "admin": "Admin",
+                "action": "Aksi",
+                "target_type": "Tipe Target",
+                "target_id": "ID Target",
+                "details": "Detail"
+            },
+            "empty": {
+                "title": "Tidak ada log audit ditemukan",
+                "description": "Coba ubah filter atau kata kunci pencarian."
+            },
+            "pagination": {
+                "showing": "Menampilkan {{start}} sampai {{end}} dari {{total}} log",
+                "page": "Halaman {{current}} dari {{last}}",
+                "previous": "Sebelumnya",
+                "next": "Berikutnya"
+            },
+            "actions": {
+                "product_approve": "Produk disetujui",
+                "product_reject": "Produk ditolak",
+                "product_takedown": "Produk diturunkan",
+                "seller_approve": "Seller disetujui",
+                "seller_reject": "Seller ditolak",
+                "user_activate": "Pengguna diaktifkan",
+                "user_deactivate": "Pengguna dinonaktifkan",
+                "order_refund": "Pesanan di-refund",
+                "payout_approve": "Pencairan disetujui",
+                "payout_reject": "Pencairan ditolak"
+            },
+            "target_types": {
+                "product": "Produk",
+                "seller": "Seller",
+                "user": "Pengguna",
+                "order": "Pesanan",
+                "payout": "Pencairan"
+            },
+            "details": {
+                "title": "Judul",
+                "previous_status": "Status Sebelumnya",
+                "new_status": "Status Baru",
+                "store_name": "Nama Toko",
+                "order_number": "Nomor Pesanan",
+                "total_price": "Total Harga",
+                "payment_status": "Status Pembayaran",
+                "refunded_at": "Di-refund Pada",
+                "seller": "Seller",
+                "amount": "Jumlah",
+                "name": "Nama",
+                "email": "Email"
+            },
+            "boolean": {
+                "true": "Ya",
+                "false": "Tidak"
+            }
+        },
+        "moderation": {
+            "eyebrow": "Moderasi Admin",
+            "products": {
+                "head_title": "Moderasi Produk",
+                "title": "Moderasi Produk",
+                "description": "Tinjau semua produk dan kelola status tayangnya.",
+                "moderate_sellers": "Moderasi Seller",
+                "all": "Semua Produk",
+                "all_description": "Semua produk, termasuk yang sudah tayang, ditampilkan di sini.",
+                "unknown_seller": "Seller tidak dikenal",
+                "uncategorized": "Tanpa kategori",
+                "table": {
+                    "product": "Produk",
+                    "category": "Kategori",
+                    "price": "Harga",
+                    "status": "Status",
+                    "submitted": "Diajukan",
+                    "actions": "Aksi"
+                },
+                "empty": {
+                    "title": "Belum ada produk",
+                    "description": "Produk akan muncul di sini setelah seller mengunggahnya."
+                },
+                "actions": {
+                    "approve": "Setujui",
+                    "reject": "Tolak",
+                    "takedown": "Takedown"
+                },
+                "flash": {
+                    "approved": "Produk berhasil disetujui.",
+                    "rejected": "Produk berhasil ditolak.",
+                    "takedown": "Produk berhasil ditakedown.",
+                    "not_published": "Hanya produk yang sudah tayang yang dapat ditakedown."
+                }
+            },
+            "sellers": {
+                "head_title": "Moderasi Seller",
+                "title": "Moderasi Seller",
+                "description": "Tinjau kreator yang menunggu persetujuan.",
+                "moderate_products": "Moderasi Produk",
+                "pending": "Seller Menunggu",
+                "pending_description": "Seller dengan status non-approved memerlukan keputusan admin.",
+                "unknown_owner": "Seller",
+                "table": {
+                    "store": "Toko",
+                    "owner": "Pemilik",
+                    "products": "Produk",
+                    "status": "Status",
+                    "joined": "Bergabung",
+                    "actions": "Aksi"
+                },
+                "empty": {
+                    "title": "Tidak ada seller untuk dimoderasi",
+                    "description": "Seller baru akan muncul di sini setelah mendaftar."
+                },
+                "actions": {
+                    "approve": "Setujui",
+                    "reject": "Tolak"
+                },
+                "feedback": {
+                    "approved": "Seller \"{{seller}}\" disetujui.",
+                    "rejected": "Seller \"{{seller}}\" ditolak."
+                },
+                "flash": {
+                    "approved": "Seller berhasil disetujui.",
+                    "rejected": "Seller berhasil ditolak."
+                }
+            }
+        },
+        "dashboard": {
+            "head_title": "Dashboard Admin",
+            "title": "Dashboard",
+            "description": "Ringkasan aktivitas marketplace Kreava.",
+            "refresh": "Muat Ulang",
+            "refreshing": "Memuat...",
+            "stats": {
+                "total_users": "Total Pengguna",
+                "total_users_subtitle": "Semua akun terdaftar",
+                "total_sellers": "Total Seller",
+                "total_sellers_subtitle": "Akun seller terdaftar",
+                "total_customers": "Total Pelanggan",
+                "total_customers_subtitle": "Akun pelanggan terdaftar",
+                "total_revenue": "Total Pendapatan",
+                "total_revenue_subtitle": "Dari pesanan yang dibayar",
+                "total_orders": "Total Pesanan",
+                "total_orders_subtitle": "Semua pesanan",
+                "paid_orders": "Pesanan Dibayar",
+                "paid_orders_subtitle": "Berhasil dibayar",
+                "total_products": "Total Produk",
+                "total_products_subtitle": "Semua produk seller",
+                "published_products": "Produk Tayang",
+                "published_products_subtitle": "Terlihat di marketplace"
+            },
+            "recent_orders": {
+                "title": "Pesanan Terbaru",
+                "description": "5 pesanan terbaru di marketplace.",
+                "empty_title": "Belum ada pesanan",
+                "empty_description": "Pesanan akan muncul di sini setelah pelanggan mulai membeli.",
+                "order": "Pesanan",
+                "customer": "Pelanggan",
+                "amount": "Jumlah",
+                "status": "Status",
+                "date": "Tanggal"
+            },
+            "recent_sellers": {
+                "title": "Seller Terbaru",
+                "description": "5 seller terbaru yang bergabung.",
+                "empty_title": "Belum ada seller",
+                "empty_description": "Seller akan muncul di sini setelah mendaftar.",
+                "store": "Toko",
+                "owner": "Pemilik",
+                "products": "Produk",
+                "status": "Status",
+                "joined": "Bergabung"
+            }
+        }
+    }
+}

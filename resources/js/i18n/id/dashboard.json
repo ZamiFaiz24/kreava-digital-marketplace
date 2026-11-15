@@ -64,6 +64,20 @@
             "total_revenue": "Total Pendapatan",
             "avg_per_day": "Rata-rata per Hari",
             "total_sales": "Total Penjualan"
+        },
+        "layout": {
+            "seller_account": "Akun Seller",
+            "seller_fallback": "Seller",
+            "logout": "Keluar",
+            "search_placeholder": "Cari produk, pesanan...",
+            "upload_product": "Unggah Produk",
+            "notifications": "Notifikasi",
+            "notification_order_title": "Pesanan baru diterima",
+            "notification_order_description": "Kamu mendapat pesanan baru untuk \"{{product}}\"",
+            "notification_hours_ago": "{{hours}} jam lalu",
+            "profile_settings": "Pengaturan Profil",
+            "store_settings": "Pengaturan Toko",
+            "billing": "Tagihan"
         }
     }
 }

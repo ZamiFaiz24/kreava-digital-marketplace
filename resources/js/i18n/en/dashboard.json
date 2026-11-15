@@ -64,6 +64,20 @@
             "total_revenue": "Total Revenue",
             "avg_per_day": "Avg per Day",
             "total_sales": "Total Sales"
+        },
+        "layout": {
+            "seller_account": "Seller Account",
+            "seller_fallback": "Seller",
+            "logout": "Logout",
+            "search_placeholder": "Search products, orders...",
+            "upload_product": "Upload Product",
+            "notifications": "Notifications",
+            "notification_order_title": "New order received",
+            "notification_order_description": "You have a new order for \"{{product}}\"",
+            "notification_hours_ago": "{{hours}}h ago",
+            "profile_settings": "Profile Settings",
+            "store_settings": "Store Settings",
+            "billing": "Billing"
         }
     }
 }

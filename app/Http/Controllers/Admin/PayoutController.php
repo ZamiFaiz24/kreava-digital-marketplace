@@ -24,7 +24,7 @@ class PayoutController extends Controller
             ->map(function (Payout $payout) {
                 return [
                     'id' => $payout->id,
-                    'seller' => $payout->seller?->store_name ?? 'Unknown Seller',
+                    'seller' => $payout->seller?->store_name ?? '',
                     'email' => $payout->seller?->user?->email ?? '',
                     'amount' => (float) $payout->amount,
                     'status' => $payout->status,
@@ -44,7 +44,7 @@ class PayoutController extends Controller
         if ($payout->status !== 'pending') {
             return redirect()
                 ->route('admin.payouts')
-                ->with('error', 'Payout sudah diproses sebelumnya.');
+                ->with('error', 'admin.payouts.flash.already_processed');
         }
 
         $previousStatus = $payout->status;
@@ -57,7 +57,7 @@ class PayoutController extends Controller
 
         return redirect()
             ->route('admin.payouts')
-            ->with('success', 'Payout berhasil disetujui.');
+            ->with('success', 'admin.payouts.flash.approved');
     }
 
     public function reject(Request $request, Payout $payout): RedirectResponse
@@ -65,7 +65,7 @@ class PayoutController extends Controller
         if ($payout->status !== 'pending') {
             return redirect()
                 ->route('admin.payouts')
-                ->with('error', 'Payout sudah diproses sebelumnya.');
+                ->with('error', 'admin.payouts.flash.already_processed');
         }
 
         $previousStatus = $payout->status;
@@ -78,7 +78,7 @@ class PayoutController extends Controller
 
         return redirect()
             ->route('admin.payouts')
-            ->with('success', 'Payout berhasil ditolak.');
+            ->with('success', 'admin.payouts.flash.rejected');
     }
 
     private function recordPayoutAudit(Request $request, Payout $payout, string $action, string $previousStatus, string $newStatus): void
