@@ -182,20 +182,38 @@
             }
         },
         "preview": {
+            "eyebrow": "Seller experience",
             "title": "Creator Dashboard",
             "subtitle": "Track your sales, revenue, and product performance in real-time with our powerful analytics dashboard.",
-            "overview": "Dashboard Overview",
-            "month": "May 2024",
-            "change": "{{change}} from last month",
-            "stats": {
-                "total_revenue": "Total Revenue",
-                "total_sales": "Total Sales",
-                "downloads": "Downloads",
-                "avg_response": "Avg. Response"
+            "badge": "Live preview",
+            "browser_url": "seller.kreava.com/dashboard",
+            "banner_text": "Here is how your store is performing this month.",
+            "store_live": "Store is live",
+            "accepting_orders": "Accepting orders",
+            "nav": {
+                "dashboard": "Dashboard",
+                "products": "Products",
+                "orders": "Orders",
+                "analytics": "Analytics",
+                "customers": "Customers",
+                "payouts": "Payouts",
+                "settings": "Settings"
             },
-            "revenue_trend": "Revenue Trend",
-            "sales_by_category": "Sales by Category",
-            "recent_orders": "Recent Orders",
+            "days": {
+                "mon": "Mon",
+                "tue": "Tue",
+                "wed": "Wed",
+                "thu": "Thu",
+                "fri": "Fri",
+                "sat": "Sat",
+                "sun": "Sun"
+            },
+            "weeks": {
+                "w1": "Week 1",
+                "w2": "Week 2",
+                "w3": "Week 3",
+                "w4": "Week 4"
+            },
             "dates": {
                 "two_hours": "2 hours ago",
                 "five_hours": "5 hours ago",

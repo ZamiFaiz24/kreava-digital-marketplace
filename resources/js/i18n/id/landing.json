@@ -182,20 +182,38 @@
             }
         },
         "preview": {
+            "eyebrow": "Pengalaman seller",
             "title": "Dashboard Kreator",
             "subtitle": "Pantau penjualan, pendapatan, dan performa produk secara real-time dengan dashboard analitik kami yang powerful.",
-            "overview": "Ringkasan Dashboard",
-            "month": "Mei 2024",
-            "change": "{{change}} dari bulan lalu",
-            "stats": {
-                "total_revenue": "Total Pendapatan",
-                "total_sales": "Total Penjualan",
-                "downloads": "Download",
-                "avg_response": "Rata-rata Respons"
+            "badge": "Pratinjau langsung",
+            "browser_url": "seller.kreava.com/dashboard",
+            "banner_text": "Berikut performa tokomu bulan ini.",
+            "store_live": "Toko aktif",
+            "accepting_orders": "Menerima pesanan",
+            "nav": {
+                "dashboard": "Dashboard",
+                "products": "Produk",
+                "orders": "Pesanan",
+                "analytics": "Analitik",
+                "customers": "Pelanggan",
+                "payouts": "Pencairan",
+                "settings": "Pengaturan"
             },
-            "revenue_trend": "Tren Pendapatan",
-            "sales_by_category": "Penjualan per Kategori",
-            "recent_orders": "Pesanan Terbaru",
+            "days": {
+                "mon": "Sen",
+                "tue": "Sel",
+                "wed": "Rab",
+                "thu": "Kam",
+                "fri": "Jum",
+                "sat": "Sab",
+                "sun": "Min"
+            },
+            "weeks": {
+                "w1": "Minggu 1",
+                "w2": "Minggu 2",
+                "w3": "Minggu 3",
+                "w4": "Minggu 4"
+            },
             "dates": {
                 "two_hours": "2 jam lalu",
                 "five_hours": "5 jam lalu",
