@@ -3,6 +3,12 @@
         "panel": "Admin Panel",
         "account_label": "Administrator",
         "nav": {
+            "groups": {
+                "platform": "Platform",
+                "catalog": "Catalog",
+                "transactions": "Transactions",
+                "system": "System"
+            },
             "dashboard": "Dashboard",
             "users": "Users",
             "orders": "Orders",

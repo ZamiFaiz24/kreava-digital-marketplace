@@ -3,6 +3,12 @@
         "panel": "Panel Admin",
         "account_label": "Administrator",
         "nav": {
+            "groups": {
+                "platform": "Platform",
+                "catalog": "Katalog",
+                "transactions": "Transaksi",
+                "system": "Sistem"
+            },
             "dashboard": "Dashboard",
             "users": "Pengguna",
             "orders": "Pesanan",

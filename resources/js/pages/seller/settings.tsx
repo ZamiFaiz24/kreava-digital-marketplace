@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Head, useForm } from '@inertiajs/react';
 import { AlertCircle, Loader2, Store } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../../components/seller/layout/dashboard-layout';
 
 interface SellerSettings {
@@ -16,6 +17,7 @@ interface SellerSettings {
     phone: string | null;
     logo: string | null;
     banner: string | null;
+    monthly_target: number;
 }
 
 interface SettingsPageProps {
@@ -28,11 +30,13 @@ interface SettingsForm {
     description: string;
     contact_email: string;
     phone: string;
+    monthly_target: string;
     logo: File | null;
     banner: File | null;
 }
 
 export default function SellerSettingsPage({ seller }: SettingsPageProps) {
+    const { t } = useTranslation();
     const [logoPreview, setLogoPreview] = useState<string | null>(seller.logo);
     const [bannerPreview, setBannerPreview] = useState<string | null>(seller.banner);
 
@@ -41,6 +45,7 @@ export default function SellerSettingsPage({ seller }: SettingsPageProps) {
         description: seller.description ?? '',
         contact_email: seller.contact_email ?? '',
         phone: seller.phone ?? '',
+        monthly_target: String(seller.monthly_target ?? 0),
         logo: null,
         banner: null,
     });
@@ -66,12 +71,12 @@ export default function SellerSettingsPage({ seller }: SettingsPageProps) {
 
     return (
         <>
-            <Head title="Seller Settings" />
+            <Head title={t('dashboard.settings.title')} />
             <DashboardLayout>
                 <div className="mx-auto max-w-4xl space-y-6">
                     <div>
-                        <h1 className="text-foreground text-2xl font-bold">Seller Settings</h1>
-                        <p className="text-muted-foreground text-sm">Atur profil toko, branding, dan informasi kontak yang dilihat pembeli.</p>
+                        <h1 className="text-2xl font-semibold text-slate-900">{t('dashboard.settings.title')}</h1>
+                        <p className="mt-1 text-sm text-slate-500">Atur profil toko, branding, dan informasi kontak yang dilihat pembeli.</p>
                     </div>
 
                     {Object.keys(errors).length > 0 && (
@@ -83,7 +88,7 @@ export default function SellerSettingsPage({ seller }: SettingsPageProps) {
 
                     <form onSubmit={submit} className="space-y-6">
                         <div className="border-border overflow-hidden rounded-xl border bg-white shadow-sm">
-                            <div className="from-primary/20 via-primary/10 to-accent/20 relative h-36 bg-gradient-to-r">
+                            <div className="relative h-36 bg-slate-100">
                                 {bannerPreview ? (
                                     <img src={bannerPreview} alt="Banner toko" className="h-full w-full object-cover" />
                                 ) : (
@@ -176,6 +181,20 @@ export default function SellerSettingsPage({ seller }: SettingsPageProps) {
                                     placeholder="08123456789"
                                 />
                                 <InputError message={errors.phone} className="text-rose-500" />
+                            </div>
+
+                            <div className="grid gap-2 md:col-span-2">
+                                <Label htmlFor="monthly_target">{t('dashboard.settings.monthly_target')}</Label>
+                                <Input
+                                    id="monthly_target"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={data.monthly_target}
+                                    onChange={(event) => setData('monthly_target', event.target.value)}
+                                />
+                                <p className="text-muted-foreground text-xs">{t('dashboard.settings.monthly_target_help')}</p>
+                                <InputError message={errors.monthly_target} className="text-rose-500" />
                             </div>
                         </div>
 

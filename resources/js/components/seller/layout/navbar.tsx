@@ -1,6 +1,6 @@
 'use client';
 
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Bell, Menu, Search, Upload } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,124 +15,101 @@ interface NavbarProps {
     onMenuClick?: () => void;
 }
 
-export default function Navbar({ sellerName, sellerAvatar, profileEmail = 'seller@kreava.com', showUploadAction = true, onMenuClick }: NavbarProps) {
+export default function Navbar({ sellerName, sellerAvatar, profileEmail, showUploadAction = true, onMenuClick }: NavbarProps) {
     const { t } = useTranslation();
-    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const { auth } = usePage<{ auth: { user?: { role?: string } } }>().props;
+    const isSeller = auth?.user?.role === 'seller';
 
     return (
-        <div className="border-border sticky top-0 z-40 h-16 border-b bg-white">
-            <div className="flex h-full items-center justify-between px-6">
-                {/* Left: Search */}
-                <div className="flex flex-1 items-center gap-4">
-                    <button onClick={onMenuClick} className="hover:bg-muted rounded-lg p-2 lg:hidden">
-                        <Menu className="h-5 w-5" />
-                    </button>
-                    <div className="hidden max-w-sm flex-1 md:flex">
-                        <div className="relative w-full">
-                            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
-                            <input
-                                type="text"
-                                placeholder={t('dashboard.layout.search_placeholder')}
-                                className="border-border bg-muted/50 text-foreground placeholder-muted-foreground focus:ring-primary/20 w-full rounded-lg border py-2 pr-4 pl-10 focus:ring-2 focus:outline-none"
-                            />
-                        </div>
+        <header className="sticky top-0 z-30 h-16 shrink-0 border-b border-slate-200/70 bg-white/80">
+            <div className="flex h-full items-center gap-3 px-4 md:px-6">
+                <button
+                    type="button"
+                    onClick={onMenuClick}
+                    aria-label={t('dashboard.layout.open_menu')}
+                    className="rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 lg:hidden"
+                >
+                    <Menu className="h-5 w-5" aria-hidden="true" />
+                </button>
+
+                <div className="hidden w-full max-w-sm md:block">
+                    <div className="relative">
+                        <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                        <input
+                            type="search"
+                            placeholder={t('dashboard.layout.search_placeholder')}
+                            className="h-9 w-full rounded-lg border border-slate-200/70 bg-slate-50 pr-3 pl-9 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus:outline-none"
+                        />
                     </div>
                 </div>
 
-                {/* Right: Actions */}
-                <div className="ml-4 flex items-center gap-4">
-                    <LanguageSwitcher />
-                    {/* Upload Product Button */}
+                <div className="ml-auto flex items-center gap-2 sm:gap-3">
+                    <LanguageSwitcher variant="dashboard" />
+
                     {showUploadAction && (
-                        <button className="bg-primary hover:bg-primary/90 hidden items-center gap-2 rounded-lg px-4 py-2 text-white transition-colors sm:flex">
-                            <Upload className="h-4 w-4" />
-                            <span className="text-sm font-medium">{t('dashboard.layout.upload_product')}</span>
-                        </button>
+                        <Link
+                            href={route('seller.products.new')}
+                            aria-label={t('dashboard.layout.upload_product')}
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-semibold transition-colors"
+                        >
+                            <Upload className="h-4 w-4" aria-hidden="true" />
+                            <span className="hidden sm:inline">{t('dashboard.layout.upload_product')}</span>
+                        </Link>
                     )}
 
-                    {/* Notifications */}
+                    <button
+                        type="button"
+                        aria-label={t('dashboard.layout.notifications')}
+                        className="relative rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
+                    >
+                        <Bell className="h-5 w-5" aria-hidden="true" />
+                    </button>
+
                     <div className="relative">
                         <button
-                            onClick={() => {
-                                setIsNotificationOpen(!isNotificationOpen);
-                                setIsProfileOpen(false);
-                            }}
-                            className="hover:bg-muted relative rounded-lg p-2 transition-colors"
+                            type="button"
+                            onClick={() => setIsProfileOpen((open) => !open)}
+                            aria-label={t('dashboard.layout.open_profile')}
+                            aria-expanded={isProfileOpen}
+                            aria-haspopup="menu"
+                            className="flex items-center gap-2 rounded-lg p-1 transition-colors hover:bg-slate-100"
                         >
-                            <Bell className="text-foreground h-5 w-5" />
-                            <span className="bg-accent absolute top-1 right-1 h-2 w-2 rounded-full"></span>
+                            <img src={sellerAvatar} alt="" className="h-8 w-8 rounded-full object-cover" />
+                            <span className="hidden max-w-[140px] truncate text-sm font-medium text-slate-900 md:inline">{sellerName}</span>
                         </button>
 
-                        {/* Notification Dropdown */}
-                        {isNotificationOpen && (
-                            <div className="border-border absolute right-0 mt-2 w-80 rounded-lg border bg-white shadow-lg">
-                                <div className="border-border border-b p-4">
-                                    <p className="text-foreground font-semibold">{t('dashboard.layout.notifications')}</p>
-                                </div>
-                                <div className="max-h-96 overflow-y-auto">
-                                    {[1, 2, 3].map((i) => (
-                                        <div key={i} className="border-border hover:bg-muted/50 cursor-pointer border-b p-4">
-                                            <p className="text-foreground text-sm font-medium">{t('dashboard.layout.notification_order_title')}</p>
-                                            <p className="text-muted-foreground mt-1 text-xs">
-                                                {t('dashboard.layout.notification_order_description', { product: 'UI Kit Pro' })}
-                                            </p>
-                                            <p className="text-muted-foreground mt-2 text-xs">
-                                                {t('dashboard.layout.notification_hours_ago', { hours: i })}
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Profile Dropdown */}
-                    <div className="relative">
-                        <button
-                            onClick={() => {
-                                setIsProfileOpen(!isProfileOpen);
-                                setIsNotificationOpen(false);
-                            }}
-                            className="hover:bg-muted flex items-center gap-2 rounded-lg p-1 transition-colors"
-                        >
-                            <img src={sellerAvatar} alt={sellerName} className="h-8 w-8 rounded-full object-cover" />
-                            <span className="text-foreground hidden text-sm font-medium sm:inline">{sellerName}</span>
-                        </button>
-
-                        {/* Profile Dropdown Menu */}
                         {isProfileOpen && (
-                            <div className="border-border absolute right-0 mt-2 w-48 rounded-lg border bg-white shadow-lg">
-                                <div className="border-border border-b p-4">
-                                    <p className="text-foreground text-sm font-semibold">{sellerName}</p>
-                                    <p className="text-muted-foreground text-xs">{profileEmail}</p>
+                            <div role="menu" className="absolute right-0 mt-2 w-56 rounded-lg border border-slate-200/70 bg-white p-2 shadow-lg">
+                                <div className="border-b border-slate-200/70 px-3 py-2">
+                                    <p className="truncate text-sm font-semibold text-slate-900">{sellerName}</p>
+                                    {profileEmail && <p className="truncate text-xs text-slate-500">{profileEmail}</p>}
                                 </div>
-                                <div className="p-2">
-                                    <a href="#" className="text-foreground hover:bg-muted block rounded px-4 py-2 text-sm transition-colors">
-                                        {t('dashboard.layout.profile_settings')}
-                                    </a>
-                                    <a href="#" className="text-foreground hover:bg-muted block rounded px-4 py-2 text-sm transition-colors">
-                                        {t('dashboard.layout.store_settings')}
-                                    </a>
-                                    <a href="#" className="text-foreground hover:bg-muted block rounded px-4 py-2 text-sm transition-colors">
-                                        {t('dashboard.layout.billing')}
-                                    </a>
-                                    <div className="border-border my-2 border-t"></div>
+                                {isSeller && (
                                     <Link
-                                        href={route('logout')}
-                                        method="post"
-                                        as="button"
+                                        href={route('seller.settings')}
+                                        role="menuitem"
                                         onClick={() => setIsProfileOpen(false)}
-                                        className="w-full rounded px-4 py-2 text-left text-sm text-red-600 transition-colors hover:bg-red-50"
+                                        className="mt-1 block rounded-md px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900"
                                     >
-                                        {t('dashboard.layout.logout')}
+                                        {t('dashboard.layout.store_settings')}
                                     </Link>
-                                </div>
+                                )}
+                                <Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
+                                    role="menuitem"
+                                    onClick={() => setIsProfileOpen(false)}
+                                    className="mt-1 w-full rounded-md px-3 py-2 text-left text-sm text-rose-600 transition-colors hover:bg-rose-50"
+                                >
+                                    {t('dashboard.layout.logout')}
+                                </Link>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
-        </div>
+        </header>
     );
 }

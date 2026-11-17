@@ -1,78 +1,98 @@
-import { ChevronRight, Star } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { Product } from '../../../types/seller';
+import type { TopProduct } from '@/types/seller';
 
 interface TopProductsProps {
-    products: Product[];
+    products: TopProduct[];
+}
+
+function initials(name: string): string {
+    return (
+        name
+            .split(' ')
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((part) => part[0]?.toUpperCase() ?? '')
+            .join('') || '?'
+    );
+}
+
+function formatCurrency(value: number, locale: string): string {
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 2,
+    }).format(value);
 }
 
 export default function TopProducts({ products }: TopProductsProps) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const locale = i18n.resolvedLanguage === 'id' ? 'id-ID' : 'en-US';
+    const maxRevenue = Math.max(...products.map((product) => product.revenue), 0);
 
     return (
-        <div className="border-border mb-8 rounded-2xl border bg-white p-6">
-            {/* Header */}
-            <div className="mb-6 flex items-center justify-between">
-                <div>
-                    <h2 className="text-foreground text-xl font-bold">{t('dashboard.top_products.title')}</h2>
-                    <p className="text-muted-foreground text-sm">{t('dashboard.top_products.description')}</p>
+        <section className="rounded-xl border border-slate-200/70 bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-between gap-3">
+                <h2 className="text-base font-semibold text-slate-900">{t('dashboard.top_products.title')}</h2>
+                <Link href={route('seller.products')} className="text-primary inline-flex items-center gap-1 text-sm font-medium hover:underline">
+                    {t('dashboard.top_products.view_all')}
+                    <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+            </div>
+
+            {products.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-10 text-center">
+                    <p className="text-sm font-medium text-slate-700">{t('dashboard.top_products.empty_title')}</p>
+                    <p className="mt-1 text-sm text-slate-500">{t('dashboard.top_products.empty_description')}</p>
                 </div>
-                <a href="#" className="text-primary hover:text-primary/80 flex items-center gap-1 text-sm font-semibold">
-                    {t('dashboard.top_products.view_all')} <ChevronRight className="h-4 w-4" />
-                </a>
-            </div>
+            ) : (
+                <div className="mt-4 divide-y divide-slate-100">
+                    {products.map((product) => {
+                        const contribution = maxRevenue > 0 ? (product.revenue / maxRevenue) * 100 : 0;
 
-            {/* Products Grid */}
-            <div className="space-y-4">
-                {products.map((product) => (
-                    <div key={product.id} className="hover:bg-muted/50 group flex cursor-pointer items-center gap-4 rounded-lg p-4 transition-colors">
-                        {/* Thumbnail */}
-                        <div className="bg-muted h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg">
-                            <img
-                                src={product.thumbnail}
-                                alt={product.name}
-                                className="h-full w-full object-cover transition-transform group-hover:scale-110"
-                            />
-                        </div>
+                        return (
+                            <div key={product.id} className="py-3 first:pt-0 last:pb-0">
+                                <div className="flex items-center gap-3">
+                                    {product.thumbnail ? (
+                                        <img src={product.thumbnail} alt="" className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+                                    ) : (
+                                        <span className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm font-semibold">
+                                            {initials(product.name)}
+                                        </span>
+                                    )}
 
-                        {/* Product Info */}
-                        <div className="min-w-0 flex-1">
-                            <p className="text-foreground line-clamp-1 font-semibold">{product.name}</p>
-                            <p className="text-muted-foreground text-xs">{product.category}</p>
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-sm font-medium text-slate-900">{product.name}</p>
+                                        <p className="mt-0.5 text-xs text-slate-500">
+                                            {t('dashboard.top_products.orders', { count: product.ordersCount })}
+                                        </p>
+                                    </div>
 
-                            {/* Rating */}
-                            <div className="mt-2 flex items-center gap-1">
-                                <div className="flex items-center gap-0.5">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className={`h-3 w-3 ${
-                                                i < Math.floor(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'
-                                            }`}
-                                        />
-                                    ))}
+                                    <p className="shrink-0 text-sm font-semibold text-slate-900 tabular-nums">
+                                        {formatCurrency(product.price, locale)}
+                                    </p>
                                 </div>
-                                <span className="text-foreground text-xs font-semibold">{product.rating}</span>
+
+                                <div
+                                    role="progressbar"
+                                    aria-label={t('dashboard.top_products.contribution')}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                    aria-valuenow={Math.round(contribution)}
+                                    className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-100"
+                                >
+                                    <div
+                                        className="bg-primary h-full rounded-full transition-[width] duration-500 ease-out"
+                                        style={{ width: `${Math.max(0, Math.min(100, contribution))}%` }}
+                                    />
+                                </div>
                             </div>
-                        </div>
-
-                        {/* Stats */}
-                        <div className="flex-shrink-0 text-right">
-                            <p className="text-foreground text-sm font-bold">{product.salesCount.toLocaleString()}</p>
-                            <p className="text-muted-foreground text-xs">{t('dashboard.top_products.sales')}</p>
-
-                            <p className="text-primary mt-2 text-sm font-bold">
-                                ${product.revenue.toLocaleString('en-US', { maximumFractionDigits: 2 })}
-                            </p>
-                            <p className="text-muted-foreground text-xs">{t('dashboard.top_products.revenue')}</p>
-                        </div>
-
-                        {/* Chevron */}
-                        <ChevronRight className="text-muted-foreground group-hover:text-foreground h-5 w-5 transition-colors" />
-                    </div>
-                ))}
-            </div>
-        </div>
+                        );
+                    })}
+                </div>
+            )}
+        </section>
     );
 }

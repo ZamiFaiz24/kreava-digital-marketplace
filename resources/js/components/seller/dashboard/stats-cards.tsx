@@ -1,60 +1,69 @@
 import { DollarSign, Package, ShoppingCart, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { SellerDashboardStats } from '../../../types/seller';
-import StatCard from '../shared/stat-card';
+import StatCard from '@/components/seller/shared/stat-card';
+import type { SellerDashboardStats } from '@/types/seller';
 
 interface StatsCardsProps {
     stats: SellerDashboardStats;
 }
 
+function formatCurrency(value: number, locale: string): string {
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+    }).format(value);
+}
+
+function formatCount(value: number, locale: string): string {
+    if (value === 0) {
+        return '0';
+    }
+
+    return new Intl.NumberFormat(locale, {
+        notation: 'compact',
+        maximumFractionDigits: 1,
+    }).format(value);
+}
+
+function formatPercent(value: number, locale: string): string {
+    return `${new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(value)}%`;
+}
+
 export default function StatsCards({ stats }: StatsCardsProps) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const locale = i18n.resolvedLanguage === 'id' ? 'id-ID' : 'en-US';
 
     return (
-        <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {/* Total Revenue */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-6">
             <StatCard
                 title={t('dashboard.stats.total_revenue')}
-                value={`$${stats.totalRevenue.toLocaleString('en-US', { maximumFractionDigits: 2 })}`}
+                value={formatCurrency(stats.totalRevenue, locale)}
                 subtitle={t('dashboard.stats.this_month')}
-                icon={<DollarSign className="h-8 w-8" />}
-                trend={{ value: 12.5, direction: 'up' }}
-                backgroundColor="bg-gradient-to-br from-emerald-50 to-emerald-100"
-                textColor="text-emerald-600"
+                delta={stats.deltas.revenue}
+                icon={<DollarSign />}
             />
-
-            {/* Total Sales */}
             <StatCard
                 title={t('dashboard.stats.total_sales')}
-                value={stats.totalSales}
-                subtitle={t('dashboard.stats.number_of_sales')}
-                icon={<ShoppingCart className="h-8 w-8" />}
-                trend={{ value: 8.2, direction: 'up' }}
-                backgroundColor="bg-gradient-to-br from-blue-50 to-blue-100"
-                textColor="text-blue-600"
+                value={formatCount(stats.totalSales, locale)}
+                subtitle={t('dashboard.stats.orders_this_month')}
+                delta={stats.deltas.sales}
+                icon={<ShoppingCart />}
             />
-
-            {/* Products Sold */}
             <StatCard
                 title={t('dashboard.stats.products_sold')}
-                value={`${(stats.productsSold / 1000).toFixed(1)}K`}
-                subtitle={t('dashboard.stats.all_time')}
-                icon={<Package className="h-8 w-8" />}
-                trend={{ value: 5.3, direction: 'up' }}
-                backgroundColor="bg-gradient-to-br from-purple-50 to-purple-100"
-                textColor="text-purple-600"
+                value={formatCount(stats.productsSold, locale)}
+                subtitle={t('dashboard.stats.units_this_month')}
+                delta={stats.deltas.products}
+                icon={<Package />}
             />
-
-            {/* Conversion Rate */}
             <StatCard
                 title={t('dashboard.stats.conversion_rate')}
-                value={`${stats.conversionRate}%`}
-                subtitle={t('dashboard.stats.from_visitors')}
-                icon={<TrendingUp className="h-8 w-8" />}
-                trend={{ value: 2.1, direction: 'up' }}
-                backgroundColor="bg-gradient-to-br from-orange-50 to-orange-100"
-                textColor="text-orange-600"
+                value={formatPercent(stats.conversionRate, locale)}
+                subtitle={t('dashboard.stats.from_total_orders')}
+                delta={stats.deltas.conversion}
+                icon={<TrendingUp />}
             />
         </div>
     );

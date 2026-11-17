@@ -1,70 +1,70 @@
 export interface SellerDashboardStats {
-  totalRevenue: number;
-  totalSales: number;
-  productsSold: number;
-  conversionRate: number;
-  monthlyGrowth: number;
+    totalRevenue: number;
+    totalSales: number;
+    productsSold: number;
+    conversionRate: number;
+    deltas: {
+        revenue: number;
+        sales: number;
+        products: number;
+        conversion: number;
+    };
 }
 
 export interface RevenueDataPoint {
-  date: string;
-  revenue: number;
-  sales: number;
+    date: string;
+    revenue: number;
+    sales: number;
 }
 
-export interface Order {
-  id: string;
-  productName: string;
-  buyer: string;
-  amount: number;
-  status: 'completed' | 'pending' | 'processing' | 'failed';
-  date: string;
+export interface RevenueData {
+    weekly: RevenueDataPoint[];
+    monthly: RevenueDataPoint[];
 }
 
-export interface Product {
-  id: string;
-  name: string;
-  thumbnail: string;
-  salesCount: number;
-  revenue: number;
-  rating: number;
-  category: string;
+export type RecentOrderStatus = 'completed' | 'processing' | 'cancelled';
+
+export interface RecentOrder {
+    id: string;
+    productName: string;
+    buyer: string;
+    amount: number;
+    status: RecentOrderStatus;
+    date: string;
+}
+
+export interface TopProduct {
+    id: string;
+    name: string;
+    thumbnail: string | null;
+    ordersCount: number;
+    salesCount: number;
+    price: number;
+    revenue: number;
 }
 
 export interface SellerProfile {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-  storeUrl: string;
-  joinedDate: string;
-  totalEarnings: number;
+    id: string;
+    name: string;
+    email: string;
+    avatar: string;
+    storeUrl: string;
+    joinedDate: string;
+    totalEarnings: number;
+    status: 'pending' | 'approved' | 'rejected' | 'suspended';
+    monthlyTarget: number;
 }
 
-export interface NotificationItem {
-  id: string;
-  type: 'order' | 'message' | 'system';
-  title: string;
-  description: string;
-  timestamp: string;
-  read: boolean;
+export interface PendingActions {
+    pendingOrders: number;
+    availablePayout: number;
 }
 
-export interface SidebarNavItem {
-  label: string;
-  icon: string;
-  href: string;
-  badge?: number;
-}
-
-export interface DashboardCardProps {
-  title: string;
-  value: string | number;
-  subtitle?: string;
-  icon?: string;
-  trend?: {
-    value: number;
-    direction: 'up' | 'down';
-  };
-  backgroundColor?: string;
+export interface SellerDashboardProps {
+    sellerProfile: SellerProfile;
+    dashboardStats: SellerDashboardStats;
+    revenueData: RevenueData;
+    recentOrders: RecentOrder[];
+    topProducts: TopProduct[];
+    pendingActions: PendingActions;
 }

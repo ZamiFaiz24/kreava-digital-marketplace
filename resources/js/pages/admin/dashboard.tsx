@@ -104,7 +104,7 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <p className="text-primary text-sm font-medium">{t('admin.panel')}</p>
-                    <h1 className="text-foreground mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{t('admin.dashboard.title')}</h1>
+                    <h1 className="text-foreground mt-1 text-2xl font-semibold tracking-tight">{t('admin.dashboard.title')}</h1>
                     <p className="text-muted-foreground mt-2 text-sm">{t('admin.dashboard.description')}</p>
                 </div>
 
@@ -121,76 +121,60 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
 
             {errorMessage && <div className="mb-6 rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-500">{errorMessage}</div>}
 
-            <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4 xl:gap-6">
                 <StatCard
                     title={t('admin.dashboard.stats.total_users')}
                     value={stats.totalUsers.toLocaleString(locale)}
                     subtitle={t('admin.dashboard.stats.total_users_subtitle')}
                     icon={<Users className="h-8 w-8" />}
-                    backgroundColor="bg-gradient-to-br from-indigo-50 to-indigo-100"
-                    textColor="text-indigo-600"
                 />
                 <StatCard
                     title={t('admin.dashboard.stats.total_sellers')}
                     value={stats.totalSellers.toLocaleString(locale)}
                     subtitle={t('admin.dashboard.stats.total_sellers_subtitle')}
                     icon={<Store className="h-8 w-8" />}
-                    backgroundColor="bg-gradient-to-br from-emerald-50 to-emerald-100"
-                    textColor="text-emerald-600"
                 />
                 <StatCard
                     title={t('admin.dashboard.stats.total_customers')}
                     value={stats.totalCustomers.toLocaleString(locale)}
                     subtitle={t('admin.dashboard.stats.total_customers_subtitle')}
                     icon={<UserCheck className="h-8 w-8" />}
-                    backgroundColor="bg-gradient-to-br from-violet-50 to-violet-100"
-                    textColor="text-violet-600"
                 />
                 <StatCard
                     title={t('admin.dashboard.stats.total_revenue')}
                     value={formatCurrency(stats.totalRevenue, locale)}
                     subtitle={t('admin.dashboard.stats.total_revenue_subtitle')}
                     icon={<DollarSign className="h-8 w-8" />}
-                    backgroundColor="bg-gradient-to-br from-emerald-50 to-emerald-100"
-                    textColor="text-emerald-600"
                 />
                 <StatCard
                     title={t('admin.dashboard.stats.total_orders')}
                     value={stats.totalOrders.toLocaleString(locale)}
                     subtitle={t('admin.dashboard.stats.total_orders_subtitle')}
                     icon={<ShoppingCart className="h-8 w-8" />}
-                    backgroundColor="bg-gradient-to-br from-indigo-50 to-indigo-100"
-                    textColor="text-indigo-600"
                 />
                 <StatCard
                     title={t('admin.dashboard.stats.paid_orders')}
                     value={stats.paidOrders.toLocaleString(locale)}
                     subtitle={t('admin.dashboard.stats.paid_orders_subtitle')}
                     icon={<BadgeCheck className="h-8 w-8" />}
-                    backgroundColor="bg-gradient-to-br from-emerald-50 to-emerald-100"
-                    textColor="text-emerald-600"
                 />
                 <StatCard
                     title={t('admin.dashboard.stats.total_products')}
                     value={stats.totalProducts.toLocaleString(locale)}
                     subtitle={t('admin.dashboard.stats.total_products_subtitle')}
                     icon={<Package className="h-8 w-8" />}
-                    backgroundColor="bg-gradient-to-br from-violet-50 to-violet-100"
-                    textColor="text-violet-600"
                 />
                 <StatCard
                     title={t('admin.dashboard.stats.published_products')}
                     value={stats.publishedProducts.toLocaleString(locale)}
                     subtitle={t('admin.dashboard.stats.published_products_subtitle')}
                     icon={<Store className="h-8 w-8" />}
-                    backgroundColor="bg-gradient-to-br from-amber-50 to-amber-100"
-                    textColor="text-amber-600"
                 />
             </div>
 
-            <section className="border-border mb-8 rounded-2xl border bg-white p-6">
-                <div className="mb-6">
-                    <h2 className="text-foreground text-xl font-semibold tracking-tight">{t('admin.dashboard.recent_orders.title')}</h2>
+            <section className="mb-8 rounded-xl border border-slate-200/70 bg-white p-5 shadow-sm">
+                <div className="mb-5">
+                    <h2 className="text-base font-semibold text-slate-900">{t('admin.dashboard.recent_orders.title')}</h2>
                     <p className="text-muted-foreground mt-1 text-sm">{t('admin.dashboard.recent_orders.description')}</p>
                 </div>
 
@@ -249,9 +233,9 @@ export default function AdminDashboardPage({ stats, recentOrders, recentSellers 
                 )}
             </section>
 
-            <section className="border-border rounded-2xl border bg-white p-6">
-                <div className="mb-6">
-                    <h2 className="text-foreground text-xl font-semibold tracking-tight">{t('admin.dashboard.recent_sellers.title')}</h2>
+            <section className="rounded-xl border border-slate-200/70 bg-white p-5 shadow-sm">
+                <div className="mb-5">
+                    <h2 className="text-base font-semibold text-slate-900">{t('admin.dashboard.recent_sellers.title')}</h2>
                     <p className="text-muted-foreground mt-1 text-sm">{t('admin.dashboard.recent_sellers.description')}</p>
                 </div>
 

@@ -1,94 +1,114 @@
+import { Link } from '@inertiajs/react';
 import { ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { Order } from '../../../types/seller';
+import { cn } from '@/lib/utils';
+import type { RecentOrder, RecentOrderStatus } from '@/types/seller';
 
 interface RecentOrdersProps {
-    orders: Order[];
+    orders: RecentOrder[];
 }
 
-const statusStyles = {
-    completed: 'bg-green-100 text-green-700',
-    pending: 'bg-yellow-100 text-yellow-700',
-    processing: 'bg-blue-100 text-blue-700',
-    failed: 'bg-red-100 text-red-700',
+const statusClass: Record<RecentOrderStatus, string> = {
+    completed: 'bg-emerald-50 text-emerald-700',
+    processing: 'bg-amber-50 text-amber-700',
+    cancelled: 'bg-rose-50 text-rose-700',
 };
 
-export default function RecentOrders({ orders }: RecentOrdersProps) {
-    const { t } = useTranslation();
+function initials(name: string): string {
+    return (
+        name
+            .split(' ')
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((part) => part[0]?.toUpperCase() ?? '')
+            .join('') || '?'
+    );
+}
 
-    const statusLabels: Record<string, string> = {
-        completed: t('dashboard.recent_orders.statuses.completed'),
-        pending: t('dashboard.recent_orders.statuses.pending'),
-        processing: t('dashboard.recent_orders.statuses.processing'),
-        failed: t('dashboard.recent_orders.statuses.failed'),
-    };
+function formatCurrency(value: number, locale: string): string {
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 2,
+    }).format(value);
+}
+
+export default function RecentOrders({ orders }: RecentOrdersProps) {
+    const { t, i18n } = useTranslation();
+    const locale = i18n.resolvedLanguage === 'id' ? 'id-ID' : 'en-US';
+    const dateFormatter = new Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    });
 
     return (
-        <div className="border-border mb-8 rounded-2xl border bg-white p-6">
-            {/* Header */}
-            <div className="mb-6 flex items-center justify-between">
-                <div>
-                    <h2 className="text-foreground text-xl font-bold">{t('dashboard.recent_orders.title')}</h2>
-                    <p className="text-muted-foreground text-sm">{t('dashboard.recent_orders.description')}</p>
-                </div>
-                <a href="#" className="text-primary hover:text-primary/80 flex items-center gap-1 text-sm font-semibold">
-                    {t('dashboard.recent_orders.view_all')} <ChevronRight className="h-4 w-4" />
-                </a>
+        <section className="rounded-xl border border-slate-200/70 bg-white p-5 shadow-sm">
+            <div className="flex items-center justify-between gap-3">
+                <h2 className="text-base font-semibold text-slate-900">{t('dashboard.recent_orders.title')}</h2>
+                <Link href={route('seller.orders')} className="text-primary inline-flex items-center gap-1 text-sm font-medium hover:underline">
+                    {t('dashboard.recent_orders.view_all')}
+                    <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
             </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead>
-                        <tr className="border-border border-b">
-                            <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
-                                {t('dashboard.recent_orders.product')}
-                            </th>
-                            <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
-                                {t('dashboard.recent_orders.buyer')}
-                            </th>
-                            <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
-                                {t('dashboard.recent_orders.amount')}
-                            </th>
-                            <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
-                                {t('dashboard.recent_orders.status')}
-                            </th>
-                            <th className="text-muted-foreground px-4 py-3 text-left text-xs font-semibold uppercase">
-                                {t('dashboard.recent_orders.date')}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {orders.map((order) => (
-                            <tr key={order.id} className="border-border hover:bg-muted/50 border-b transition-colors">
-                                <td className="px-4 py-4">
-                                    <p className="text-foreground line-clamp-1 text-sm font-medium">{order.productName}</p>
-                                    <p className="text-muted-foreground text-xs">{order.id}</p>
-                                </td>
-                                <td className="px-4 py-4">
-                                    <p className="text-foreground text-sm font-medium">{order.buyer}</p>
-                                </td>
-                                <td className="px-4 py-4">
-                                    <p className="text-foreground text-sm font-semibold">${order.amount.toFixed(2)}</p>
-                                </td>
-                                <td className="px-4 py-4">
-                                    <span
-                                        className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${
-                                            statusStyles[order.status as keyof typeof statusStyles]
-                                        }`}
-                                    >
-                                        {statusLabels[order.status] ?? order.status}
-                                    </span>
-                                </td>
-                                <td className="px-4 py-4">
-                                    <p className="text-muted-foreground text-sm">{order.date}</p>
-                                </td>
+            {orders.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-10 text-center">
+                    <p className="text-sm font-medium text-slate-700">{t('dashboard.recent_orders.empty_title')}</p>
+                    <p className="mt-1 text-sm text-slate-500">{t('dashboard.recent_orders.empty_description')}</p>
+                </div>
+            ) : (
+                <div className="mt-4 overflow-x-auto">
+                    <table className="w-full min-w-[640px] border-collapse text-left">
+                        <thead>
+                            <tr className="border-b border-slate-200/70">
+                                <th scope="col" className="pr-4 pb-3 text-xs font-medium tracking-wide text-slate-500 uppercase">
+                                    {t('dashboard.recent_orders.customer')}
+                                </th>
+                                <th scope="col" className="pr-4 pb-3 text-xs font-medium tracking-wide text-slate-500 uppercase">
+                                    {t('dashboard.recent_orders.product')}
+                                </th>
+                                <th scope="col" className="pr-4 pb-3 text-xs font-medium tracking-wide text-slate-500 uppercase">
+                                    {t('dashboard.recent_orders.date')}
+                                </th>
+                                <th scope="col" className="pr-4 pb-3 text-xs font-medium tracking-wide text-slate-500 uppercase">
+                                    {t('dashboard.recent_orders.status')}
+                                </th>
+                                <th scope="col" className="pb-3 text-right text-xs font-medium tracking-wide text-slate-500 uppercase">
+                                    {t('dashboard.recent_orders.total')}
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        </thead>
+                        <tbody>
+                            {orders.map((order) => (
+                                <tr key={order.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
+                                    <td className="py-3 pr-4">
+                                        <div className="flex items-center gap-2.5">
+                                            <span className="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+                                                {initials(order.buyer)}
+                                            </span>
+                                            <span className="max-w-[160px] truncate text-sm font-medium text-slate-900">{order.buyer}</span>
+                                        </div>
+                                    </td>
+                                    <td className="max-w-[220px] truncate py-3 pr-4 text-sm text-slate-700">{order.productName}</td>
+                                    <td className="py-3 pr-4 text-sm whitespace-nowrap text-slate-500">
+                                        {dateFormatter.format(new Date(`${order.date}T00:00:00`))}
+                                    </td>
+                                    <td className="py-3 pr-4">
+                                        <span className={cn('inline-flex rounded-full px-2 py-0.5 text-xs font-medium', statusClass[order.status])}>
+                                            {t(`dashboard.recent_orders.statuses.${order.status}`)}
+                                        </span>
+                                    </td>
+                                    <td className="py-3 text-right text-sm font-semibold text-slate-900 tabular-nums">
+                                        {formatCurrency(order.amount, locale)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </section>
     );
 }

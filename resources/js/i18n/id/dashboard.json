@@ -1,69 +1,104 @@
 {
     "dashboard": {
         "title": "Dashboard",
-        "welcome": "Selamat datang kembali!",
-        "greeting": "Halo, {{name}}! 👋",
-        "overview": "Kamu sudah melakukan yang terbaik! Lihat statistik terbaru dan kelola tokomu di bawah ini.",
+        "welcome": "Dashboard",
+        "greeting": "Selamat datang kembali, {{name}}",
+        "overview": "Berikut ringkasan aktivitasmu.",
         "revenue_this_month": "Pendapatan Bulan Ini",
-        "quick_insights": "Insight Singkat",
-        "insight_orders": "✓ 12 pesanan baru minggu ini",
-        "insight_reviews": "✓ 2 ulasan menunggu balasan",
-        "insight_payout": "✓ Pencairan siap pada 30 Mei",
-        "upload_product": "Unggah Produk Baru",
-        "view_analytics": "Lihat Analitik",
+        "hero": {
+            "title": "Selamat datang kembali, {{name}}",
+            "subtitle": "Berikut performa tokomu bulan ini.",
+            "upload_product": "Unggah Produk",
+            "view_analytics": "Lihat Analitik"
+        },
         "stats": {
             "total_revenue": "Total Pendapatan",
             "this_month": "Bulan ini",
             "total_sales": "Total Penjualan",
-            "number_of_sales": "Jumlah penjualan",
+            "orders_this_month": "Pesanan bulan ini",
             "products_sold": "Produk Terjual",
-            "all_time": "Sepanjang waktu",
+            "units_this_month": "Unit bulan ini",
             "conversion_rate": "Tingkat Konversi",
-            "from_visitors": "Dari pengunjung"
+            "from_total_orders": "Pesanan dibayar dari total pesanan",
+            "delta_up": "Naik {{value}}% dari bulan lalu",
+            "delta_down": "Turun {{value}}% dari bulan lalu",
+            "delta_flat": "Tidak ada perubahan dari bulan lalu"
         },
-        "quick_actions": {
-            "title": "Aksi Cepat",
-            "upload_product": "Unggah Produk",
-            "upload_product_description": "Tambahkan produk digital baru ke tokomu",
-            "view_marketplace": "Lihat Marketplace",
-            "view_marketplace_description": "Lihat tampilan tokomu bagi pelanggan",
-            "edit_store": "Edit Toko",
-            "edit_store_description": "Sesuaikan pengaturan dan branding tokomu",
-            "view_analytics": "Lihat Analitik",
-            "view_analytics_description": "Telusuri analitik penjualanmu lebih dalam",
-            "go": "Buka"
+        "nav": {
+            "groups": {
+                "store": "Toko",
+                "analytics_finance": "Analitik & Keuangan",
+                "account": "Akun"
+            },
+            "dashboard": "Dashboard",
+            "products": "Produk",
+            "orders": "Pesanan",
+            "customers": "Pelanggan",
+            "analytics": "Analitik",
+            "payouts": "Pencairan",
+            "settings": "Pengaturan"
         },
-        "recent_orders": {
-            "title": "Pesanan Terbaru",
-            "description": "5 pesanan terakhir dari pelanggan",
-            "view_all": "Lihat Semua",
-            "product": "Produk",
-            "buyer": "Pembeli",
-            "amount": "Jumlah",
-            "status": "Status",
-            "date": "Tanggal",
-            "statuses": {
-                "completed": "Selesai",
-                "pending": "Menunggu",
-                "processing": "Diproses",
-                "failed": "Gagal"
-            }
-        },
-        "top_products": {
-            "title": "Produk Teratas",
-            "description": "Produk paling laris milikmu",
-            "view_all": "Lihat Semua",
-            "sales": "penjualan",
-            "revenue": "pendapatan"
+        "profile": {
+            "verified": "Terverifikasi",
+            "pending_verification": "Menunggu verifikasi",
+            "administrator": "Administrator"
         },
         "analytics": {
             "title": "Analitik Pendapatan",
             "description": "Pantau performa penjualanmu",
             "weekly": "Mingguan",
             "monthly": "Bulanan",
+            "revenue": "Pendapatan",
+            "sales": "Penjualan",
             "total_revenue": "Total Pendapatan",
             "avg_per_day": "Rata-rata per Hari",
-            "total_sales": "Total Penjualan"
+            "total_sales": "Total Penjualan",
+            "empty_title": "Belum ada data pendapatan",
+            "empty_description": "Penjualan akan muncul di sini setelah pesanan pertama masuk."
+        },
+        "pending_actions": {
+            "title": "Tindakan Tertunda",
+            "pending_orders": "Pesanan baru untuk diproses",
+            "available_payout": "Saldo siap dicairkan",
+            "all_done": "Semua sudah beres",
+            "all_done_description": "Tidak ada tindakan tertunda saat ini."
+        },
+        "target": {
+            "title": "Target Bulan Ini",
+            "caption": "dari target {{target}}",
+            "no_target": "Target belum diatur",
+            "set_target": "Atur target"
+        },
+        "recent_orders": {
+            "title": "Pesanan Terbaru",
+            "view_all": "Lihat semua",
+            "customer": "Pelanggan",
+            "product": "Produk",
+            "date": "Tanggal",
+            "status": "Status",
+            "total": "Total",
+            "empty_title": "Belum ada pesanan",
+            "empty_description": "Pesanan baru akan muncul di sini.",
+            "statuses": {
+                "completed": "Selesai",
+                "processing": "Diproses",
+                "cancelled": "Dibatalkan"
+            }
+        },
+        "top_products": {
+            "title": "Produk Teratas",
+            "view_all": "Lihat semua",
+            "orders_one": "{{count}} pesanan",
+            "orders_other": "{{count}} pesanan",
+            "contribution": "Kontribusi pendapatan",
+            "empty_title": "Belum ada produk",
+            "empty_description": "Tambahkan produk untuk mulai berjualan.",
+            "sales": "penjualan"
+        },
+        "settings": {
+            "title": "Pengaturan Toko",
+            "monthly_target": "Target bulanan",
+            "monthly_target_help": "Dipakai untuk gauge target bulanan di dashboard."
         },
         "layout": {
             "seller_account": "Akun Seller",
@@ -72,12 +107,9 @@
             "search_placeholder": "Cari produk, pesanan...",
             "upload_product": "Unggah Produk",
             "notifications": "Notifikasi",
-            "notification_order_title": "Pesanan baru diterima",
-            "notification_order_description": "Kamu mendapat pesanan baru untuk \"{{product}}\"",
-            "notification_hours_ago": "{{hours}} jam lalu",
-            "profile_settings": "Pengaturan Profil",
-            "store_settings": "Pengaturan Toko",
-            "billing": "Tagihan"
+            "open_profile": "Buka menu profil",
+            "open_menu": "Buka menu",
+            "store_settings": "Pengaturan Toko"
         }
     }
 }

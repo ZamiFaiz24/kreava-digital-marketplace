@@ -1,69 +1,104 @@
 {
     "dashboard": {
         "title": "Dashboard",
-        "welcome": "Welcome back!",
-        "greeting": "Hey, {{name}}! 👋",
-        "overview": "You're doing great! Check your latest stats and manage your store below.",
-        "revenue_this_month": "This Month Revenue",
-        "quick_insights": "Quick Insights",
-        "insight_orders": "✓ 12 new orders this week",
-        "insight_reviews": "✓ 2 pending reviews to respond",
-        "insight_payout": "✓ Payout ready on May 30th",
-        "upload_product": "Upload New Product",
-        "view_analytics": "View Analytics",
+        "welcome": "Dashboard",
+        "greeting": "Welcome back, {{name}}",
+        "overview": "Here is an overview of your activity.",
+        "revenue_this_month": "Revenue this month",
+        "hero": {
+            "title": "Welcome back, {{name}}",
+            "subtitle": "Here is how your store is performing this month.",
+            "upload_product": "Upload Product",
+            "view_analytics": "View Analytics"
+        },
         "stats": {
             "total_revenue": "Total Revenue",
             "this_month": "This month",
             "total_sales": "Total Sales",
-            "number_of_sales": "Number of sales",
+            "orders_this_month": "Orders this month",
             "products_sold": "Products Sold",
-            "all_time": "All time",
+            "units_this_month": "Units this month",
             "conversion_rate": "Conversion Rate",
-            "from_visitors": "From visitors"
+            "from_total_orders": "Paid orders out of total orders",
+            "delta_up": "Up {{value}}% from last month",
+            "delta_down": "Down {{value}}% from last month",
+            "delta_flat": "No change from last month"
         },
-        "quick_actions": {
-            "title": "Quick Actions",
-            "upload_product": "Upload Product",
-            "upload_product_description": "Add a new digital product to your store",
-            "view_marketplace": "View Marketplace",
-            "view_marketplace_description": "See how your store looks to customers",
-            "edit_store": "Edit Store",
-            "edit_store_description": "Customize your store settings and branding",
-            "view_analytics": "View Analytics",
-            "view_analytics_description": "Deep dive into your sales analytics",
-            "go": "Go"
+        "nav": {
+            "groups": {
+                "store": "Store",
+                "analytics_finance": "Analytics & Finance",
+                "account": "Account"
+            },
+            "dashboard": "Dashboard",
+            "products": "Products",
+            "orders": "Orders",
+            "customers": "Customers",
+            "analytics": "Analytics",
+            "payouts": "Payouts",
+            "settings": "Settings"
         },
-        "recent_orders": {
-            "title": "Recent Orders",
-            "description": "Latest 5 orders from customers",
-            "view_all": "View All",
-            "product": "Product",
-            "buyer": "Buyer",
-            "amount": "Amount",
-            "status": "Status",
-            "date": "Date",
-            "statuses": {
-                "completed": "Completed",
-                "pending": "Pending",
-                "processing": "Processing",
-                "failed": "Failed"
-            }
-        },
-        "top_products": {
-            "title": "Top Products",
-            "description": "Your best selling products",
-            "view_all": "View All",
-            "sales": "sales",
-            "revenue": "revenue"
+        "profile": {
+            "verified": "Verified",
+            "pending_verification": "Pending verification",
+            "administrator": "Administrator"
         },
         "analytics": {
             "title": "Revenue Analytics",
             "description": "Track your sales performance",
             "weekly": "Weekly",
             "monthly": "Monthly",
+            "revenue": "Revenue",
+            "sales": "Sales",
             "total_revenue": "Total Revenue",
             "avg_per_day": "Avg per Day",
-            "total_sales": "Total Sales"
+            "total_sales": "Total Sales",
+            "empty_title": "No revenue data yet",
+            "empty_description": "Sales will appear here once you receive your first order."
+        },
+        "pending_actions": {
+            "title": "Pending Actions",
+            "pending_orders": "New orders to process",
+            "available_payout": "Available payout",
+            "all_done": "All caught up",
+            "all_done_description": "No pending actions right now."
+        },
+        "target": {
+            "title": "This Month's Target",
+            "caption": "of {{target}} target",
+            "no_target": "No target set",
+            "set_target": "Set target"
+        },
+        "recent_orders": {
+            "title": "Recent Orders",
+            "view_all": "View all",
+            "customer": "Customer",
+            "product": "Product",
+            "date": "Date",
+            "status": "Status",
+            "total": "Total",
+            "empty_title": "No orders yet",
+            "empty_description": "New orders will appear here.",
+            "statuses": {
+                "completed": "Completed",
+                "processing": "Processing",
+                "cancelled": "Cancelled"
+            }
+        },
+        "top_products": {
+            "title": "Top Products",
+            "view_all": "View all",
+            "orders_one": "{{count}} order",
+            "orders_other": "{{count}} orders",
+            "contribution": "Revenue contribution",
+            "empty_title": "No products yet",
+            "empty_description": "Add a product to start selling.",
+            "sales": "sales"
+        },
+        "settings": {
+            "title": "Seller Settings",
+            "monthly_target": "Monthly target",
+            "monthly_target_help": "Used for the monthly target gauge on your dashboard."
         },
         "layout": {
             "seller_account": "Seller Account",
@@ -72,12 +107,9 @@
             "search_placeholder": "Search products, orders...",
             "upload_product": "Upload Product",
             "notifications": "Notifications",
-            "notification_order_title": "New order received",
-            "notification_order_description": "You have a new order for \"{{product}}\"",
-            "notification_hours_ago": "{{hours}}h ago",
-            "profile_settings": "Profile Settings",
-            "store_settings": "Store Settings",
-            "billing": "Billing"
+            "open_profile": "Open profile menu",
+            "open_menu": "Open menu",
+            "store_settings": "Store Settings"
         }
     }
 }
