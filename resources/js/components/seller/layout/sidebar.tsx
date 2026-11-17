@@ -39,11 +39,8 @@ export default function Sidebar({ navItems, sellerName, sellerAvatar, accountLab
         <div className="border-border sticky top-0 h-screen w-64 overflow-y-auto border-r bg-white">
             {/* Logo Section */}
             <div className="border-border border-b p-6">
-                <Link href="/" className="flex items-center gap-2">
-                    <div className="from-primary to-accent flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br">
-                        <span className="text-sm font-bold text-white">K</span>
-                    </div>
-                    <span className="text-foreground text-lg font-bold">KREAVA</span>
+                <Link href="/" className="flex items-center justify-center">
+                    <img src="/images/Logo/LogoFull2-trimmed.png" alt="KREAVA" className="h-10 w-auto object-contain" />
                 </Link>
             </div>
 

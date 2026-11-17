@@ -160,11 +160,8 @@ export function DashboardPreview() {
                         <div className="flex">
                             {/* Mini Sidebar */}
                             <aside className="border-border bg-background hidden w-44 shrink-0 flex-col border-r md:flex lg:w-52">
-                                <div className="border-border flex items-center gap-2 border-b px-4 py-3.5">
-                                    <div className="from-primary to-accent flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br">
-                                        <span className="text-xs font-bold text-white">K</span>
-                                    </div>
-                                    <span className="text-foreground text-sm font-bold tracking-tight">KREAVA</span>
+                                <div className="border-border flex items-center border-b px-4 py-3">
+                                    <img src="/images/Logo/LogoFull2-trimmed.png" alt="KREAVA" className="h-8 w-auto object-contain" />
                                 </div>
 
                                 <div className="border-border flex items-center gap-2.5 border-b px-4 py-3">
