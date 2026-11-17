@@ -27,6 +27,7 @@ class SettingsController extends Controller
                 'phone' => $seller->phone,
                 'logo' => $seller->logo,
                 'banner' => $seller->banner,
+                'monthly_target' => (float) $seller->monthly_target,
             ],
         ]);
     }
@@ -42,11 +43,16 @@ class SettingsController extends Controller
             'description' => ['nullable', 'string'],
             'contact_email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
+            'monthly_target' => ['nullable', 'numeric', 'min:0', 'max:999999999.99'],
             'logo' => ['nullable', 'image', 'max:2048'],
             'banner' => ['nullable', 'image', 'max:4096'],
         ]);
 
         unset($validated['logo'], $validated['banner']);
+
+        if (array_key_exists('monthly_target', $validated) && $validated['monthly_target'] === null) {
+            unset($validated['monthly_target']);
+        }
 
         if ($request->hasFile('logo')) {
             $validated['logo'] = Storage::disk('public')->url(

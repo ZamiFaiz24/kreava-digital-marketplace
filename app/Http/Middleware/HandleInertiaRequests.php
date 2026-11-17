@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Seller;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -67,6 +68,10 @@ class HandleInertiaRequests extends Middleware
             'wishlist_count' => $wishlistCount,
             'cart_count' => $cartCount,
         ];
+
+        $shared['seller_status'] = $user?->role === 'seller'
+            ? Seller::query()->where('user_id', $user->id)->value('status')
+            : null;
 
         $shared['flash'] = [
             'success' => $request->session()->get('success'),

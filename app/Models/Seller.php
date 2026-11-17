@@ -19,6 +19,11 @@ class Seller extends Model
         'contact_email',
         'phone',
         'status',
+        'monthly_target',
+    ];
+
+    protected $casts = [
+        'monthly_target' => 'float',
     ];
 
     public function products()

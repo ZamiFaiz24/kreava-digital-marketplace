@@ -3,16 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
-use App\Models\Cart;
-use App\Models\Wishlist;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -63,7 +62,7 @@ class User extends Authenticatable
             return $value;
         }
 
-        return '/' . ltrim($value, '/');
+        return '/'.ltrim($value, '/');
     }
 
     public function wishlist()
@@ -74,5 +73,10 @@ class User extends Authenticatable
     public function cart()
     {
         return $this->hasOne(Cart::class);
+    }
+
+    public function seller()
+    {
+        return $this->hasOne(Seller::class);
     }
 }
