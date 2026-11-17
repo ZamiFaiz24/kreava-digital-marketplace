@@ -11,7 +11,6 @@ import {
     Search,
     Settings,
     ShoppingCart,
-    Star,
     TrendingUp,
     Upload,
     Users,
@@ -37,35 +36,27 @@ const stats = [
         subtitleKey: 'dashboard.stats.this_month',
         change: '+12.5%',
         icon: DollarSign,
-        card: 'from-emerald-50 to-emerald-100 border-emerald-100',
-        accent: 'text-emerald-600',
     },
     {
         titleKey: 'dashboard.stats.total_sales',
         value: '324',
-        subtitleKey: 'dashboard.stats.number_of_sales',
+        subtitleKey: 'dashboard.stats.orders_this_month',
         change: '+8.2%',
         icon: ShoppingCart,
-        card: 'from-blue-50 to-blue-100 border-blue-100',
-        accent: 'text-blue-600',
     },
     {
         titleKey: 'dashboard.stats.products_sold',
         value: '1.2K',
-        subtitleKey: 'dashboard.stats.all_time',
+        subtitleKey: 'dashboard.stats.units_this_month',
         change: '+5.3%',
         icon: Package,
-        card: 'from-purple-50 to-purple-100 border-purple-100',
-        accent: 'text-purple-600',
     },
     {
         titleKey: 'dashboard.stats.conversion_rate',
         value: '4.8%',
-        subtitleKey: 'dashboard.stats.from_visitors',
+        subtitleKey: 'dashboard.stats.from_total_orders',
         change: '+2.1%',
         icon: TrendingUp,
-        card: 'from-orange-50 to-orange-100 border-orange-100',
-        accent: 'text-orange-600',
     },
 ];
 
@@ -94,14 +85,14 @@ const recentOrders = [
 ];
 
 const statusStyles: Record<string, string> = {
-    completed: 'bg-emerald-100 text-emerald-700',
-    processing: 'bg-blue-100 text-blue-700',
+    completed: 'bg-emerald-50 text-emerald-700',
+    processing: 'bg-amber-50 text-amber-700',
 };
 
 const topProducts = [
-    { name: 'UI Kit Pro Pack', category: 'UI Kits', rating: 4.9, sales: 128, revenue: 6272, gradient: 'from-indigo-500 to-violet-500' },
-    { name: 'Web Template Bundle', category: 'Templates', rating: 4.8, sales: 96, revenue: 3744, gradient: 'from-emerald-500 to-teal-500' },
-    { name: 'React Components', category: 'Source Code', rating: 4.7, sales: 74, revenue: 2146, gradient: 'from-orange-500 to-rose-500' },
+    { name: 'UI Kit Pro Pack', category: 'UI Kits', sales: 128, revenue: 6272 },
+    { name: 'Web Template Bundle', category: 'Templates', sales: 96, revenue: 3744 },
+    { name: 'React Components', category: 'Source Code', sales: 74, revenue: 2146 },
 ];
 
 const formatCurrency = (value: number) => `$${value.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
@@ -224,18 +215,7 @@ export function DashboardPreview() {
 
                                 <div className="space-y-3 p-3 sm:space-y-4 sm:p-4">
                                     {/* Welcome Banner */}
-                                    <div className="from-primary via-accent to-primary/80 relative overflow-hidden rounded-xl bg-gradient-to-r p-4 text-white sm:p-5">
-                                        <div aria-hidden className="absolute inset-0 opacity-10">
-                                            <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                                <defs>
-                                                    <pattern id="preview-grid" width="12" height="12" patternUnits="userSpaceOnUse">
-                                                        <path d="M 12 0 L 0 0 0 12" fill="none" stroke="white" strokeWidth="0.5" />
-                                                    </pattern>
-                                                </defs>
-                                                <rect width="100" height="100" fill="url(#preview-grid)" />
-                                            </svg>
-                                        </div>
-
+                                    <div className="bg-primary relative overflow-hidden rounded-xl p-4 text-white sm:p-5">
                                         <div className="relative z-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                                             <div>
                                                 <p className="text-[11px] font-medium text-white/80">{t('dashboard.welcome')}</p>
@@ -243,11 +223,11 @@ export function DashboardPreview() {
                                                 <p className="mt-1 text-[11px] text-white/75">{t('landing.preview.banner_text')}</p>
                                             </div>
 
-                                            <div className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 backdrop-blur-md">
+                                            <div className="rounded-lg border border-white/20 bg-white/10 px-3 py-2">
                                                 <p className="text-[10px] font-medium text-white/70">{t('dashboard.revenue_this_month')}</p>
                                                 <div className="mt-0.5 flex items-baseline gap-2">
                                                     <span className="text-lg font-bold sm:text-xl">$12,450.00</span>
-                                                    <span className="flex items-center gap-1 rounded-full bg-green-500/25 px-2 py-0.5 text-[10px] font-semibold text-green-50">
+                                                    <span className="flex items-center gap-1 rounded-full bg-emerald-400/25 px-2 py-0.5 text-[10px] font-semibold text-emerald-50">
                                                         <TrendingUp className="h-3 w-3" />
                                                         12.5%
                                                     </span>
@@ -261,19 +241,23 @@ export function DashboardPreview() {
                                         {stats.map((stat) => {
                                             const Icon = stat.icon;
                                             return (
-                                                <div key={stat.titleKey} className={`rounded-xl border bg-gradient-to-br p-3 sm:p-3.5 ${stat.card}`}>
+                                                <div key={stat.titleKey} className="rounded-xl border border-slate-200/70 bg-white p-3 sm:p-3.5">
                                                     <div className="mb-1.5 flex items-start justify-between gap-2">
-                                                        <p className="text-muted-foreground text-[10px] font-medium">{t(stat.titleKey)}</p>
-                                                        <Icon className={`h-4 w-4 shrink-0 opacity-60 ${stat.accent}`} />
+                                                        <p className="text-[10px] font-medium text-slate-500">{t(stat.titleKey)}</p>
+                                                        <span className="bg-primary/10 text-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-md">
+                                                            <Icon className="h-3.5 w-3.5" />
+                                                        </span>
                                                     </div>
                                                     <div className="flex flex-wrap items-baseline gap-1.5">
-                                                        <p className={`text-base font-bold tracking-tight sm:text-lg ${stat.accent}`}>{stat.value}</p>
-                                                        <span className="flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600">
+                                                        <p className="text-base font-semibold tracking-tight text-slate-900 tabular-nums sm:text-lg">
+                                                            {stat.value}
+                                                        </p>
+                                                        <span className="flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
                                                             <TrendingUp className="h-2.5 w-2.5" />
                                                             {stat.change}
                                                         </span>
                                                     </div>
-                                                    <p className="text-muted-foreground mt-0.5 truncate text-[10px]">{t(stat.subtitleKey)}</p>
+                                                    <p className="mt-0.5 truncate text-[10px] text-slate-500">{t(stat.subtitleKey)}</p>
                                                 </div>
                                             );
                                         })}
@@ -406,18 +390,12 @@ export function DashboardPreview() {
                                                         key={product.name}
                                                         className="border-border flex items-center gap-2.5 border-b pb-2 last:border-0 last:pb-0"
                                                     >
-                                                        <div
-                                                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${product.gradient}`}
-                                                        >
-                                                            <Package className="h-4 w-4 text-white/85" />
+                                                        <div className="bg-primary/10 text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
+                                                            <Package className="h-4 w-4" />
                                                         </div>
                                                         <div className="min-w-0 flex-1">
                                                             <p className="text-foreground truncate text-[11px] font-semibold">{product.name}</p>
                                                             <p className="text-muted-foreground truncate text-[10px]">{product.category}</p>
-                                                            <div className="mt-0.5 flex items-center gap-1">
-                                                                <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
-                                                                <span className="text-foreground text-[10px] font-semibold">{product.rating}</span>
-                                                            </div>
                                                         </div>
                                                         <div className="shrink-0 text-right">
                                                             <p className="text-foreground text-[11px] font-bold">
